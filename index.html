@@ -5,10 +5,13 @@
 		<meta charset="utf-8">
 		<title>Aaron Zhu</title>
 		<link rel="stylesheet" type="text/css" href="css/styles.css" />
-		<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" 
+		rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Red+Hat+Mono:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
 	</head>
 	<body>
 		<div class="main">
+			<button id="darkModeToggle" onclick="toggleDarkMode()" style="font-size: 2em; background: none; border: none; cursor: pointer;">🌙</button>
 			<div class="section about">
 				<h1 class="center-text">aaron zhu</h1>
 				<h4>
@@ -60,10 +63,22 @@
 					tools: <i>react, mysql</i><br>
 				</div>
 			</div>
+			<div class="section">
+				<h2><span>let's play a game</span></h2>
+				<div id="game">
+					<h3>Rock Paper Scissors</h3>
+					<p>Make your choice:</p>
+					<button onclick="play('rock')">🪨 Rock</button>
+					<button onclick="play('paper')">📄 Paper</button>
+					<button onclick="play('scissors')">✂️ Scissors</button>
+					<p id="result"></p>
+					<p id="final-result"></p>
+				</div>
+			</div>
 			<div>
 				<div class="section">
 					<h2><span>get in touch</span></h2>
-					<p>Send me an <a href="mailto:amzhu@wisc.edu">email</a>, connect with me on <a href="https://www.linkedin.com/in/aazhu/">LinkedIn</a>, or check out my code on <a href="https://github.com/icexorb">Github</a>.</p>
+					<p>Send me an <a href="mailto:amzhu@wisc.edu">email</a>, connect with me on <a href="https://www.linkedin.com/in/aazhu/">LinkedIn</a>, or check out my code on <a href="https://github.com/iceorb">Github</a>.</p>
 				</div>
 
 				<footer>
@@ -72,4 +87,64 @@
 			</div>
 		</div>
 	</body>
+	<script>
+		function play(userChoice) {
+			const choices = ['rock', 'paper', 'scissors'];
+			const computerChoice = choices[Math.floor(Math.random() * 3)];
+			let result;
+
+			// Display initial message
+			document.getElementById('result').innerHTML = `You chose ${getEmoji(userChoice)}...`;
+			
+			// Add suspense with setTimeout
+			setTimeout(() => {
+				document.getElementById('result').innerHTML += ` I choose ${getEmoji(computerChoice)}...`;
+				
+				setTimeout(() => {
+					if (userChoice === computerChoice) {
+						result = "It's a tie! 🤝";
+					} else if (
+						(userChoice === 'rock' && computerChoice === 'scissors') ||
+						(userChoice === 'paper' && computerChoice === 'rock') ||
+						(userChoice === 'scissors' && computerChoice === 'paper')
+					) {
+						result = "You win! 🎉";
+					} else {
+						result = "I win! 🐧";
+					}
+
+					document.getElementById('final-result').innerHTML = result;
+				}, 1000);
+			}, 1000);
+		}
+
+		function getEmoji(choice) {
+			switch(choice) {
+				case 'rock': return '🪨';
+				case 'paper': return '📄';
+				case 'scissors': return '✂️';
+			}
+		}
+		
+		function toggleDarkMode() {
+			document.body.classList.toggle('dark-mode');
+			const isDarkMode = document.body.classList.contains('dark-mode');
+			localStorage.setItem('darkMode', isDarkMode);
+		}
+		
+		// Apply dark mode on page load if previously set
+		if (localStorage.getItem('darkMode') === 'true') {
+			document.body.classList.add('dark-mode');
+		}
+		
+		// Add fade-in animation to sections on page load
+		document.addEventListener('DOMContentLoaded', function() {
+			const sections = document.querySelectorAll('.section');
+			sections.forEach((section, index) => {
+				setTimeout(() => {
+					section.classList.add('fade-in');
+				}, index * 200);
+			});
+		});
+	</script>
 </html>
