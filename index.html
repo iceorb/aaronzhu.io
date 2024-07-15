@@ -5,21 +5,35 @@
 		<meta charset="utf-8">
 		<title>Aaron Zhu</title>
 		<link rel="stylesheet" type="text/css" href="css/styles.css" />
+		<link rel="icon" type="image/x-icon" href="favicon.ico">
 		<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" 
 		rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Red+Hat+Mono:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+		<style>
+			#darkModeToggle {
+				position: fixed;
+				top: 10px;
+				left: 10px;
+				z-index: 1000;
+				font-size: 1.5em;
+				background: none;
+				border: none;
+				cursor: pointer;
+				padding: 5px;
+			}
+		</style>
 	</head>
 	<body>
+		<button id="darkModeToggle" onclick="toggleDarkMode()">🌙</button>
 		<div class="main">
-			<button id="darkModeToggle" onclick="toggleDarkMode()" style="font-size: 2em; background: none; border: none; cursor: pointer;">🌙</button>
 			<div class="section about">
 				<h1 class="center-text">aaron zhu</h1>
 				<h4>
 				<div class="image">
-					<img src="imgs/me2.jpg" />
+						<img src="imgs/me2.jpg" />
 				</div>
-				<h3>I'm a software engineer studying <br>CS and Economics @ the University of Wisconsin-Madison.</h3>
-				<h3>I focus on using data to help drive statistical decision-making. I have particular skillsets in machine learning, data engineering and front end work.</h3>
+				<h3><br>CS, Math, and Economics @ UW-Madison.</h3>
+				<h3>I focus on  data-driven decision making, whether that be in humans or computers. I am involved in AI research @ SaFo Lab. I'm also keen on creating artistic and pleasant front-end experiences.</h3>
 				<h3><br>you can also talk to me about soccer, photography, design, travel or hiking</h3>
 			</div>
 
@@ -66,7 +80,7 @@
 			<div class="section">
 				<h2><span>let's play a game</span></h2>
 				<div id="game">
-					<h3>Rock Paper Scissors</h3>
+					<h4>Rock Paper Scissors</h3>
 					<p>Make your choice:</p>
 					<button onclick="play('rock')">🪨 Rock</button>
 					<button onclick="play('paper')">📄 Paper</button>

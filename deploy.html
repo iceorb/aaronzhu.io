@@ -4,6 +4,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" 
     rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Red+Hat+Mono:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bucky's Last Stand</title>
@@ -12,81 +13,156 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: #f0f0f0;
+            background-color: #2c3e50;
             font-family: 'Noto Sans Mono', sans-serif;
+            color: #ecf0f1;
+            margin: 0;
+            padding: 20px;
         }
         h1 {
-            color: #8B4513;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            color: #e74c3c;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        #gameContainer {
+            position: relative;
+            max-width: 100%;
+            margin-bottom: 20px;
+            background-color: #34495e;
+            padding: 10px;
+            border-radius: 15px;
         }
         canvas {
-            border: 1px solid black;
+            border: 3px solid #e74c3c;
+            border-radius: 10px;
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
         }
-        #controls {
+        #gameInfo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-top: 10px;
-            text-align: center;
-            background-color: #e0e0e0;
-            padding: 10px;
+            font-size: 16px;
+            color: #ecf0f1;
+        }
+        #gameInfo > div {
+            background-color: rgba(44, 62, 80, 0.8);
+            padding: 5px 10px;
             border-radius: 5px;
+        }
+        #healthBar {
+            width: 200px;
+            height: 23px;
+            background-color: #2c3e50;
+            border-radius: 5px;
+            overflow: hidden;
+            display: flex;
+        }
+        .healthBlock {
+            flex: 1;
+            height: 100%;
+            background-color: #e74c3c;
+            margin: 0 1px;
+            transition: background-color 0.3s ease-in-out;
         }
         #gameOver {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 48px;
-            color: red;
-            display: none;
-        }
-        #gameCanvas {
-            border: 1px solid black;
-        }
-        #gameOver {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 24px;
-            color: red;
-            display: none;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
             text-align: center;
+            display: none;
         }
-        #controls {
+        #controls, #currentWeapon {
+            background-color: rgba(44, 62, 80, 0.8);
+            padding: 15px;
+            border-radius: 10px;
             margin-top: 10px;
             text-align: center;
-            background-color: #e0e0e0;
-            padding: 10px;
-            border-radius: 5px;
+            max-width: 600px;
+            width: 100%;
         }
         #restartButton {
             font-family: 'Noto Sans Mono', sans-serif;
-            font-size: 16px;
-            padding: 5px 10px;
+            font-size: 18px;
+            padding: 10px 20px;
             cursor: pointer;
+            background-color: #e74c3c;
+            color: #ecf0f1;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        #restartButton:hover {
+            background-color: #c0392b;
+        }
+        #weaponNotification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #ecf0f1;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+        }
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            #controls, #score, #currentWeapon {
+                font-size: 0.9em;
+            }
         }
     </style>
 </head>
 <body>
     <h1>BUCKY'S LAST STAND</h1>
-    <canvas id="gameCanvas" width="800" height="800"></canvas>
-    <div id="gameOver">
-        GAME OVER<br>
-        Survival Time: <span id="survivalTime"></span><br>
-        Score: <span id="finalScore"></span><br>
-        <button id="restartButton">Restart</button>
+    <div id="gameContainer">
+        <canvas id="gameCanvas" width="600" height="600"></canvas>
+        <div id="gameInfo">
+            <div id="score">Score: <span id="currentScore">0</span></div>
+            <div id="healthBar">
+                <div class="healthBlock"></div>
+                <div class="healthBlock"></div>
+                <div class="healthBlock"></div>
+                <div class="healthBlock"></div>
+                <div class="healthBlock"></div>
+                <div class="healthBlock"></div>
+                <div class="healthBlock"></div>
+                <div class="healthBlock"></div>
+                <div class="healthBlock"></div>
+                <div class="healthBlock"></div>
+            </div>
+            <div id="time">Time: <span id="survivalTime">0:00</span></div>
+        </div>
+        <div id="gameOver">
+            GAME OVER<br>
+            Survival Time: <span id="finalSurvivalTime"></span><br>
+            Score: <span id="finalScore"></span><br>
+            <button id="restartButton">Restart</button>
+        </div>
     </div>
     <div id="controls">
         <strong>Controls:</strong><br>
-        Arrow keys to move<br>
+        Arrow keys to move, mouse to aim<br>
+        <br>
         🍯 Honey: Temporarily increases speed for 5 seconds<br>
         🍺 Beer: Temporary invincibility for 5 seconds<br>
         🌭 Brat: Heals 10 HP<br>
         🍦 Ice Cream: Slows down zombies for 10 seconds<br>
         📦 Weapon Box: Pick up to change weapon
     </div>
-    <div id="score">Score: <span id="currentScore">0</span></div>
-    <div id="currentWeapon">Current Weapon: <span id="weaponName">Squeaky Cheese Curds</span></div>
-    <div id="weaponNotification" style="display: none;"></div>
+    <div id="weaponNotification"></div>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -94,7 +170,7 @@
         const obstacles = [];
 
         // Create obstacles
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 7; i++) {
             obstacles.push({
                 x: Math.random() * (canvas.width - 60),
                 y: Math.random() * (canvas.height - 60),
@@ -290,9 +366,6 @@
                 }
             });
 
-            // Update score
-            document.getElementById('currentScore').textContent = score;
-
             // Game over condition
             if (bucky.health <= 0) {
                 gameOver();
@@ -300,7 +373,8 @@
         }
 
         function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#34495e'; // Set canvas background color
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             // Draw obstacles
             ctx.fillStyle = 'gray';
@@ -338,43 +412,40 @@
                 ctx.fillText(powerUp.emoji, powerUp.x, powerUp.y + powerUp.size);
             });
 
-            // Draw health bar
-            drawHealthBar();
-
-            // Draw survival time
-            ctx.fillStyle = 'black';
-            ctx.font = '20px monospace';
-            ctx.fillText(`Survival Time: ${getSurvivalTime()}`, 10, 30);
+            // Update game info
+            document.getElementById('currentScore').textContent = score;
+            document.getElementById('survivalTime').textContent = getSurvivalTime();
+            updateHealthBar();
 
             // Draw weapon boxes
             ctx.font = '30px Arial';
             weaponBoxes.forEach(box => {
                 ctx.fillText('📦', box.x, box.y + box.size);
             });
+
+            // Draw current weapon info
+            ctx.fillStyle = 'rgba(44, 62, 80, 0.8)';
+            ctx.fillRect(10, 10, 100, 60);
+            ctx.fillStyle = '#ecf0f1';
+            ctx.font = '20px Noto Sans Mono';
+            ctx.textAlign = 'left';
+            ctx.fillText(currentWeapon.emoji, 20, 35);
+            ctx.font = '12px Noto Sans Mono';
+            ctx.fillText(`DMG: ${currentWeapon.damage}`, 20, 50);
+            ctx.fillText(`ROF: ${currentWeapon.fireRate}`, 20, 65);
         }
 
-        function drawHealthBar() {
-            const barWidth = 200;
-            const barHeight = 20;
-            const x = (canvas.width - barWidth) / 2;
-            const y = canvas.height - barHeight - 10;
-
-            ctx.fillStyle = 'black';
-            ctx.fillRect(x, y, barWidth, barHeight);
-
-            const healthWidth = (bucky.health / 100) * barWidth;
-            if (buckyInvincible) {
-                ctx.fillStyle = 'blue';
-            } else if (healingEffect) {
-                ctx.fillStyle = 'green';
-            } else {
-                ctx.fillStyle = 'red';
-            }
-            ctx.fillRect(x, y, healthWidth, barHeight);
-
-            ctx.fillStyle = 'white';
-            ctx.font = '16px monospace';
-            ctx.fillText(`Health: ${'|'.repeat(Math.floor(bucky.health / 10))}`, x + 5, y + 15);
+        function updateHealthBar() {
+            const healthBlocks = document.querySelectorAll('.healthBlock');
+            const healthPercentage = bucky.health / 10;
+            
+            healthBlocks.forEach((block, index) => {
+                if (index < healthPercentage) {
+                    block.style.backgroundColor = buckyInvincible ? 'lightblue' : (healingEffect ? 'green' : '#e74c3c');
+                } else {
+                    block.style.backgroundColor = 'transparent';
+                }
+            });
         }
 
         function collision(obj1, obj2) {
@@ -385,7 +456,13 @@
         }
 
         const keys = {};
-        document.addEventListener('keydown', e => keys[e.code] = true);
+        document.addEventListener('keydown', e => {
+            keys[e.code] = true;
+            // Prevent default behavior for arrow keys
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
+                e.preventDefault();
+            }
+        });
         document.addEventListener('keyup', e => keys[e.code] = false);
 
         function spawnZombie() {
@@ -477,7 +554,7 @@
         function gameOver() {
             gameIsOver = true;
             document.getElementById('gameOver').style.display = 'block';
-            document.getElementById('survivalTime').textContent = getSurvivalTime();
+            document.getElementById('finalSurvivalTime').textContent = getSurvivalTime();
             document.getElementById('finalScore').textContent = score;
         }
 
@@ -495,7 +572,6 @@
             setTimeout(() => {
                 notification.style.display = 'none';
             }, 5000);
-            document.getElementById('weaponName').textContent = weapon.name;
         }
 
         function startGame() {
@@ -510,7 +586,6 @@
             score = 0;
             weaponBoxes.length = 0;
             currentWeapon = weapons[0];
-            document.getElementById('weaponName').textContent = currentWeapon.name;
 
             // Reset Bucky's position
             const buckySpawn = findClearSpawnPoint(40);
@@ -529,6 +604,19 @@
         }
 
         document.getElementById('restartButton').addEventListener('click', startGame);
+
+        function resizeCanvas() {
+            const gameContainer = document.getElementById('gameContainer');
+            const canvas = document.getElementById('gameCanvas');
+            const aspectRatio = canvas.width / canvas.height;
+            const newWidth = Math.min(600, gameContainer.offsetWidth);
+            const newHeight = newWidth / aspectRatio;
+            canvas.style.width = `${newWidth}px`;
+            canvas.style.height = `${newHeight}px`;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
         startGame();
     </script>
