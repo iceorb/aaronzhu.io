@@ -1,7 +1,78 @@
+/* PPNeueMontreal - Thin (200) */
+@font-face {
+  font-family: 'PPNeueMontreal';
+  src: url('../fonts/PPNeueMontreal-Thin.woff2') format('woff2'),
+       url('../fonts/PPNeueMontreal-Thin.woff') format('woff'),
+       url('../fonts/PPNeueMontreal-Thin.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+}
+
+/* PPNeueMontreal - Light (300) */
+@font-face {
+  font-family: 'PPNeueMontreal';
+  src: url('../fonts/PPNeueMontreal-Light.woff2') format('woff2'),
+       url('../fonts/PPNeueMontreal-Light.woff') format('woff'),
+       url('../fonts/PPNeueMontreal-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+/* PPNeueMontreal - Book (400) */
+@font-face {
+  font-family: 'PPNeueMontreal';
+  src: url('../fonts/PPNeueMontreal-Book.woff2') format('woff2'),
+       url('../fonts/PPNeueMontreal-Book.woff') format('woff'),
+       url('../fonts/PPNeueMontreal-Book.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* PPNeueMontreal - Regular (450) */
+@font-face {
+  font-family: 'PPNeueMontreal';
+  src: url('../fonts/PPNeueMontreal-Regular.woff2') format('woff2'),
+       url('../fonts/PPNeueMontreal-Regular.woff') format('woff'),
+       url('../fonts/PPNeueMontreal-Regular.ttf') format('truetype');
+  font-weight: 450;
+  font-style: normal;
+}
+
+/* PPNeueMontreal - Medium (530) */
+@font-face {
+  font-family: 'PPNeueMontreal';
+  src: url('../fonts/PPNeueMontreal-Medium.woff2') format('woff2'),
+       url('../fonts/PPNeueMontreal-Medium.woff') format('woff'),
+       url('../fonts/PPNeueMontreal-Medium.ttf') format('truetype');
+  font-weight: 530;
+  font-style: normal;
+}
+
+/* PPNeueMontreal - Semibold (700) */
+@font-face {
+  font-family: 'PPNeueMontreal';
+  src: url('../fonts/PPNeueMontreal-Semibold.woff2') format('woff2'),
+       url('../fonts/PPNeueMontreal-Semibold.woff') format('woff'),
+       url('../fonts/PPNeueMontreal-Semibold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* PPNeueMontreal - Bold (800) */
+@font-face {
+  font-family: 'PPNeueMontreal';
+  src: url('../fonts/PPNeueMontreal-Bold.woff2') format('woff2'),
+       url('../fonts/PPNeueMontreal-Bold.woff') format('woff'),
+       url('../fonts/PPNeueMontreal-Bold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+
 body {
   margin: 0;
-  font-family: 'Barlow', sans-serif;
-  font-size: 16px;
+  font-family: 'PPNeueMontreal', sans-serif;
+  font-size: 20px;
   line-height: 1.5;
 }
 
@@ -13,7 +84,6 @@ body {
 
 .image {
 	width: 200px;
-	margin: 0 auto;
 }
 
 .image img {
@@ -21,7 +91,7 @@ body {
 }
 
 .about {
-	text-align: center;
+	text-align: left;
 	padding-bottom: 2em;
 }
 
@@ -32,19 +102,33 @@ body {
 }
 
 .section {
-	max-width: 80%;
+	max-width: 100%;
 	margin: 0 auto;
 	padding-bottom: 1.5em;
 	background-color: var(--section-bg);
 }
 
+h1 {
+  font-size:72px;
+  font-weight:450;
+}
 h2 span {
 	border-bottom: 3px solid var(--border-color);
 	padding-bottom: 5px;
 }
 
+h2 {
+  font-size:36px;
+  font-weight:530;
+}
+h3 {
+  font-size:36px;
+  font-weight:450;
+}
 h4 {
+  font-size:32px;
 	margin-bottom: .5em;
+  font-weight:530;
 }
 
 .speaking h4 {
@@ -70,8 +154,8 @@ h4 {
 
 .date {
 	margin-top: 0;
-	font-size: 16px;
-	font-weight: 300;
+	font-size: 26px;
+	font-weight: 400;
 }
 
 .interesting {
@@ -122,7 +206,7 @@ footer {
 
 .stat p {
     font-size: 1.5em;
-    font-weight: bold;
+    font-weight: 530;
     color: #e74c3c;
 }
 
