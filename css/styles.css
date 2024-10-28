@@ -72,12 +72,12 @@
 body {
   margin: 0;
   font-family: 'PPNeueMontreal', sans-serif;
-  font-size: 20px;
+  font-size: 26px;
   line-height: 1.5;
 }
 
 .main {
-	max-width: 50em;
+	max-width: 38em;
 	margin: 0 auto;
 	padding: 2em;
 }
@@ -126,7 +126,7 @@ h3 {
   font-weight:450;
 }
 h4 {
-  font-size:32px;
+  font-size:36px;
 	margin-bottom: .5em;
   font-weight:530;
 }
@@ -191,7 +191,7 @@ footer {
 .stat {
     text-align: center;
     margin: 10px;
-    padding: 20px;
+    padding: 32px;
     background-color: #f0f0f0;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
