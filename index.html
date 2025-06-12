@@ -1,234 +1,438 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta charset="utf-8">
-		<title>Aaron Zhu</title>
-		<link rel="stylesheet" type="text/css" href="css/styles.css" />
-		<link rel="icon" type="image/x-icon" href="favicon.ico">
-		<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" 
-		rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Red+Hat+Mono:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
-		<style>
-			#darkModeToggle {
-				position: fixed;
-				top: 10px;
-				left: 10px;
-				z-index: 1000;
-				font-size: 1.5em;
-				background: none;
-				border: none;
-				cursor: pointer;
-				padding: 5px;
-			}
-		</style>
-	</head>
-	<body>
-		<button id="darkModeToggle" onclick="toggleDarkMode()">○</button>
-<script>
-    function toggleDarkMode() {
-        document.body.classList.toggle('dark-mode');
-        const isDarkMode = document.body.classList.contains('dark-mode');
-        localStorage.setItem('darkMode', isDarkMode);
-        
-        // Update the toggle button symbol based on dark mode state
-        const toggleButton = document.getElementById('darkModeToggle');
-        toggleButton.innerHTML = isDarkMode ? '○' : '○';
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aaron Zhu</title>
+    <style>
+    /* --- Color Scheme & CSS Variables --- */
+    :root {
+        --bg-color: #ffffff;
+        --text-color: #000000;
+        --secondary-text-color: #333;
+        --border-color: #eee;
+        --accent-color: #DC143C;
+        --selection-bg-color: #DC143C;
+        --selection-text-color: #ffffff;
+        --cursor-dot-bg: #ffffff; /* Base color for the blend mode dot */
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg-color: #121212;
+            --text-color: #ffffff;
+            --secondary-text-color: #a0a0a0;
+            --border-color: #333333;
+            --cursor-dot-bg: #ffffff; /* This remains white for the difference blend mode to work correctly */
+        }
+    }
+
+    /* --- Base Styles & Typography --- */
+    *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    html {
+        cursor: none;
+    }
+
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: 'Helvetica Neue', 'Arial', sans-serif;
+        font-feature-settings: 'kern' 1, 'liga' 1;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        line-height: 1.6;
+        transition: background-color 0.3s ease, color 0.3s ease;
     }
     
-    // Apply dark mode on page load if previously set
-    if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark-mode');
-        document.getElementById('darkModeToggle').innerHTML = '○';
-    } else {
-        document.getElementById('darkModeToggle').innerHTML = '○';
+    /* --- Custom Cursor --- */
+    .cursor-dot {
+        width: 12px;
+        height: 12px;
+        background-color: var(--cursor-dot-bg);
+        mix-blend-mode: difference;
+        border-radius: 50%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        z-index: 9999;
+        transition: transform 0.2s ease-out;
     }
-</script>
-		<div class="main">
-			<div class="section about">
+    
+    .cursor-ring {
+        width: 40px;
+        height: 40px;
+        border: 2px solid var(--accent-color);
+        border-radius: 50%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        transform: translate(-50%, -50%) scale(0);
+        pointer-events: none;
+        z-index: 9998;
+        transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+        opacity: 0;
+    }
 
-				<h1>Aaron Zhu ●■▲</h1>
-				<!-- <div class="image">
-						<img src="imgs/me2.jpg" />
-				</div> -->
-				<h3>CS, Math, and Econ ▹ UW–Madison
-				</h3>
-				<h3>I'm interested in using data and AI to drive mission-critical, real-world decisions in sustainability, healthcare, and business operations. </h3><h3>I also work with <a href="https://xiaocw11.github.io/index.html">Dr. Chaowei Xiao</a> on safe & trustworthy AI systems.
-				</h3>
-				 <h3>⎯</h3>
-			</div>
-				
-			<div class="section speaking">
-				<!-- <h2><span>experience</span></h2> -->
-				<div class="subsection">
-					<h4>TikTok</h4>
-					<p class="date">↳ Software Engineer Intern ○ Fall 2024</p>
-				</div>
-				<div class="subsection">
-					<h4>Safe Foundational Models Lab</h4>
-					<p class="date">↳ Undergraduate Research Intern ○ Summer & Fall 2024</p>
-				</div>
-				<div class="subsection">
-					<h4>Wisconsin Autonomous</h4>
-					<p class="date">↳ Software Engineer ● Spring 2024</p>
-				</div>
-				<div class="subsection">
-					<h4>Yonsei University ▹ Vision and Learning Lab</h4>
-					<p class="date">↳ Undergraduate Research Intern ● Fall 2023</p>
-				</div>
-				<div class="subsection">
-					<h4>University of Wisconsin–Madison</h4>
-					<p class="date">↳ Peer Mentor ● Fall 2022</p>
-				</div>
-				<h3>⎯</h3>
-			</div>
+    .cursor-ring.cursor-hover {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
 
-			<div class="section speaking">
-				<!-- <h2><span>projects</span></h2> -->
-				<div class="subsection">
-					<h4>MyHeart ♥</h4>
-					<p class="date">↳ MadHacks 2023</p>
-					<p>We built an app that uses machine learning to empower patients and physicians to make more concious decisions of their own health. Using <a href="https://www.nyu.edu/about/news-publications/news/2021/july/machine-learning-for-cardiovascular-disease-improves-when-social.html">research</a> by NYU—utilizing social determinants of health (SODH) and other risk factors to make cardiovascular risk predictions.</p>
-					<p class="date">✦ Epic Systems Healthcare Empowerment Award</p>
-				</div>
-				<div class="subsection">
-					<h4>NATIVE AI Sustainability Framework</a>  ∞</h4>
-					<p class="date">↳ Google x N+1 Institute AI Datacenter Sustainability Pitch Competition</p>
-					<p>We developed a framework for sustainable, community-centric datacenters aimed at generating local economic value and promoting circularity. Our analysis includes three case studies: Hokkaido, Japan; Madison, USA; and St. Ghislain, Belgium, each exemplifying unique approaches to community engagement and sustainable practices in datacenter operations.</p>
-				</div>
-				<div class="subsection">
-					<h4>Contraindication Alerts</a>  ▲</h4>
-					<p class="date">↳ Palantir for Hospitals</p>
-					<p>I am building a <a href="https://www.palantir.com/platforms/foundry/">Palantir Foundry</a> workflow that identifies potential drug contraindications by analyzing patient notes, extracting <a href="https://en.wikipedia.org/wiki/ICD-10">ICD-10</a> codes and medication details using NLP (BERT), and generating alerts for at-risk patients.</p>
-					<!-- <p class="date">languages: <i>python, sql</i><br>
-					tools: <i>palantir foundry, nlp, mysql, spark</i><br> -->
-				</div>
-				<div class="subsection">
-					<h4>InvisInject 𐍉</h4>
-					<p class="date">↳ SaFo Lab</p>
-					<p>InvisiInject is an AI research toolkit designed to strategically place prompt injections within specific areas of an image using an algorithm. By leveraging steganography, it embeds these injections seamlessly, making them invisible to the naked eye. The embedded images are then tested against vision-language models to assess model response and resilience to such hidden prompts.</p>
-				</div>
-				<div class="subsection">
-					<h4>CIFAR-100 Noisy Image Classifier ⦕</h4>
-					<p>At Yonsei University, I made a image classifier designed to handle noisy labels (e.g. a frog image erroneously labeled as a duck). I implemented a state-of-the-art method called <a href="https://arxiv.org/pdf/1804.06872">Co-teaching</a> with PyTorch that uses disagreement from <i>2 different models</i> to increase accuracy.</p>
+    .cursor-dot.cursor-hover {
+        transform: translate(-50%, -50%) scale(0);
+    }
+    
+    ::selection {
+        background: var(--selection-bg-color);
+        color: var(--selection-text-color);
+    }
+    ::-moz-selection { /* Firefox */
+        background: var(--selection-bg-color);
+        color: var(--selection-text-color);
+    }
 
-					<p class="date">languages: <i>python</i><br>
-					tools: <i>pytorch, pandas, jupyter notebooks</i><br>
-				</div>
-				<div class="subsection">
-					<h4>BadgerChat ⧉</h4>
-					<p>I created a dynamic real-time messaging web application with multiple chatrooms, user registration and authentication, post/delete functionality, responsive design for mobile devices, and accessibility labels.</p>
+    .serif {
+        font-family: 'Georgia', serif;
+    }
 
-					<p class="date">languages: <i>javascript, sql</i><br>
-					tools: <i>react, mysql</i><br>
-				</div>
-			</div>
-			<div class="section speaking">
-				<h2><span>interesting stuff</span></h2>
-				<p class="interesting">things I find particularly insightful</p>
-				<div class="subsection">
-					<h4><a href="https://digitaltinz.substack.com/p/no-original-thoughts-club">no original thoughts club</a></h4>
-					<p class="interesting">How algorithmic recommendations and ML have destroyed original music taste</p>
-				</div>
-				<div class="subsection">
-					<h4><a href="https://www.youtube.com/watch?v=lMW5v7wK7zo">Jen-Hsun Huang 2009 OSU Keynote Speech</a></h4>
-					<p class="interesting">"...instead of working for a living, think of it as your life's work."</p>
-				</div>
-				<div class="subsection">
-					<h4><a href="https://www.youtube.com/watch?v=ma1rD2OP85c">Parasite's Perfect Montage</a></h4>
-					<p class="interesting">An amazing breakdown of bong jong ho's Parasite</p>
-				</div>
-				<div class="subsection">
-					<h4><a href="http://dspace.vnbrims.org:13000/jspui/bitstream/123456789/2224/1/Daniel-Kahneman-Thinking-Fast-and-Slow-.pdf">Thinking, Fast and Slow</a></h4>
-					<p class="interesting">A classic book in behavorial economics</p>
-				</div>
-				<div class="subsection">
-					<h4><a href="https://homes.cs.washington.edu/~karlin/GameTheoryBook.pdf">Game Theory, Alive</a></h4>
-					<p class="interesting">my game theory textbook because it's cool</p>
-				</div>
-			</div>
-			<div class="section">
-				<h2><span>let's play a game</span></h2>
-				<div id="game">
-					<h4>Rock Paper Scissors</h3>
-					<p>Make your choice:</p>
-					<button onclick="play('rock')">🪨 Rock</button>
-					<button onclick="play('paper')">📄 Paper</button>
-					<button onclick="play('scissors')">✂️ Scissors</button>
-					<p id="result"></p>
-					<p id="final-result"></p>
-				</div>
-			</div>
-			<div>
-				<div class="section">
-					<h2><span>get in touch</span></h2>
-					<p>Send me an <a href="mailto:amzhu@wisc.edu">email</a>, add me on <a href="https://www.linkedin.com/in/aazhu/">LinkedIn</a>, or check out my code on <a href="https://github.com/iceorb">Github</a> and <a href="https://leetcode.com/u/iceorb/">LeetCode</a>.</p>
-				</div>
+    /* --- Layout --- */
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 5rem 2rem;
+    }
+    
+    section {
+        margin-bottom: 4rem;
+    }
 
-				<footer>
-					<p>●■▲</p>
-				</footer>
-			</div>
-		</div>
-	</body>
-	<script>
-		function play(userChoice) {
-			const choices = ['rock', 'paper', 'scissors'];
-			const computerChoice = choices[Math.floor(Math.random() * 3)];
-			let result;
+    /* --- Typographic Elements --- */
+    #clock, #time {
+        font-family: monospace;
+        font-size: 0.8rem;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--secondary-text-color);
+        transition: color 0.3s ease;
+    }
 
-			// Display initial message
-			document.getElementById('result').innerHTML = `You chose ${getEmoji(userChoice)}...`;
-			
-			// Add suspense with setTimeout
-			setTimeout(() => {
-				document.getElementById('result').innerHTML += ` I choose ${getEmoji(computerChoice)}...`;
-				
-				setTimeout(() => {
-					if (userChoice === computerChoice) {
-						result = "It's a tie! 🤝";
-					} else if (
-						(userChoice === 'rock' && computerChoice === 'scissors') ||
-						(userChoice === 'paper' && computerChoice === 'rock') ||
-						(userChoice === 'scissors' && computerChoice === 'paper')
-					) {
-						result = "You win! 🎉";
-					} else {
-						result = "I win! 🐧";
-					}
+    #clock {
+        margin-bottom: 0.25rem;
+    }
 
-					document.getElementById('final-result').innerHTML = result;
-				}, 1000);
-			}, 1000);
-		}
+    #time {
+        margin-bottom: 6rem;
+    }
+    
+    h1#dynamic-greeting {
+        font-size: 2.5rem;
+        font-weight: 500;
+        line-height: 1.2;
+        margin-bottom: 4rem;
+        min-height: 1.2em; /* Default min-height for desktop */
+        font-family: 'Georgia', 'Source Code Pro', monospace, serif;
+    }
 
-		function getEmoji(choice) {
-			switch(choice) {
-				case 'rock': return '🪨';
-				case 'paper': return '📄';
-				case 'scissors': return '✂️';
-			}
-		}
-		
-		function toggleDarkMode() {
-			document.body.classList.toggle('dark-mode');
-			const isDarkMode = document.body.classList.contains('dark-mode');
-			localStorage.setItem('darkMode', isDarkMode);
-		}
-		
-		// Apply dark mode on page load if previously set
-		if (localStorage.getItem('darkMode') === 'true') {
-			document.body.classList.add('dark-mode');
-		}
-		
-		// Add fade-in animation to sections on page load
-		document.addEventListener('DOMContentLoaded', function() {
-			const sections = document.querySelectorAll('.section');
-			sections.forEach((section, index) => {
-				setTimeout(() => {
-					section.classList.add('fade-in');
-				}, index * 200);
-			});
-		});
-	</script>
+    h2 {
+        font-size: 1.25rem;
+        font-weight: 400;
+        margin-bottom: 1.5rem;
+        line-height: 1.4;
+        font-family: 'Georgia', serif;
+    }
+    
+    p {
+        max-width: 65ch;
+        margin-bottom: 1.5rem;
+        font-size: 1rem;
+    }
+    
+    p strong {
+        font-weight: bold; 
+    }
+
+    /* --- Footer --- */
+    footer {
+        margin-top: 6rem;
+        border-top: 1px solid var(--border-color);
+        padding-top: 2rem;
+        transition: border-color 0.3s ease;
+    }
+    
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .footer-links {
+        list-style: none;
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+    }
+    
+    .footer-links a {
+        color: var(--text-color);
+        text-decoration: none;
+        cursor: none;
+        padding: 0.2em 0;
+        font-family: monospace;
+        font-size: 0.8rem;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: color 0.3s ease-in-out;
+    }
+
+    .footer-links a:hover {
+        color: var(--accent-color);
+        text-decoration: none;
+    }
+    
+    footer p {
+        font-family: monospace;
+        font-size: 0.8rem;
+        color: var(--secondary-text-color);
+        margin-bottom: 0;
+    }
+
+    /* --- Responsive Adjustments --- */
+    @media (max-width: 600px) {
+        h1#dynamic-greeting {
+            font-size: 2rem;
+            min-height: 2.4em; 
+        }
+        h2 {
+            font-size: 1.125rem;
+        }
+        .container {
+            padding: 3rem 1.5rem;
+        }
+        #time {
+            margin-bottom: 4rem;
+        }
+    }
+    
+    @media (pointer: coarse) {
+        html {
+            cursor: auto;
+        }
+        .cursor-dot, .cursor-ring {
+            display: none;
+        }
+        .footer-links a {
+            cursor: pointer;
+        }
+    }
+</style>
+</head>
+<body>
+    
+    <div class="container">
+
+        <header>
+            <p id="clock"></p>
+            <p id="time"></p>
+            <h1 id="dynamic-greeting" class="serif"></h1>
+        </header>
+        
+        <main>
+            <section id="about">
+                <h2 class="serif">About</h2>
+                <p>
+                    My work centers on data-driven and AI decision making in critical situations. This spans from using unstructured data to create safer communities on petabyte-scale systems TikTok—to detecting health conditions and contraindications based on patient notes and socioeconomic indicators.
+                </p>
+                <p>
+                    My research surrounds the technical foundations of what makes AI safer and more robust, and creating (and testing) safeguards against adversarial attacks and malformed data.
+                </p>
+                <p>
+                  I'm a University of Wisconsin Lorraine A. & W. Dwight Stone Scholarship Recipient for my work on healthcare economics. I'm also a 2x hackathon winner, both times for my use of AI in healthcare. And I'm currently training for a half marathon that I hope to complete after graduation. Alongside English and Mandarin, I can also speak (in varying capacities) French, Korean, and Japanese.
+                </p>
+            </section>
+            
+            <section id="experience">
+                <h2 class="serif">Experience</h2>
+                <p>
+                    <strong>Software Engineer Intern</strong><br>
+                    TikTok, 2024 - Present
+                </p>
+                <p>
+                    <strong>Research Intern</strong><br>
+                    Safe Foundational Models Lab, 2024 - Present
+                </p>
+                 <p>
+                    <strong>Controls Engineer</strong><br>
+                    Wisconsin Autonomous, 2024
+                </p>
+                <p>
+                    <strong>Research Intern</strong><br>
+                    Yonsei University AI V&L Lab, 2023
+                </p>
+            </section>
+
+            <section id="papers">
+                <h2 class="serif">Papers</h2>
+                <p>
+                     BackdoorGCG - (Greedy Coordinate Gradient) Prompt Injection against Falcon, LLaMa, (working)
+                </p>
+            </section>
+
+        </main>
+        
+        <footer>
+            <div class="footer-content">
+                <ul class="footer-links">
+                    <li><a href="mailto:example@email.com">Email</a></li>
+                    <li><a href="#" target="_blank" rel="noopener noreferrer">Photography</a></li>
+                    <li><a href="#" target="_blank" rel="noopener noreferrer">Writing</a></li>
+                </ul>
+                <p>© 2025 Aaron Zhu</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- Custom Cursor Logic ---
+            const cursorDot = document.createElement('div');
+            cursorDot.className = 'cursor-dot';
+            document.body.appendChild(cursorDot);
+
+            const cursorRing = document.createElement('div');
+            cursorRing.className = 'cursor-ring';
+            document.body.appendChild(cursorRing);
+
+            window.addEventListener('mousemove', (e) => {
+                cursorDot.style.left = `${e.clientX}px`;
+                cursorDot.style.top = `${e.clientY}px`;
+                cursorRing.style.left = `${e.clientX}px`;
+                cursorRing.style.top = `${e.clientY}px`;
+            });
+            
+            const links = document.querySelectorAll('a');
+            links.forEach(link => {
+                link.addEventListener('mouseenter', () => {
+                    cursorDot.classList.add('cursor-hover');
+                    cursorRing.classList.add('cursor-hover');
+                });
+                link.addEventListener('mouseleave', () => {
+                    cursorDot.classList.remove('cursor-hover');
+                    cursorRing.classList.remove('cursor-hover');
+                });
+            });
+
+            // --- Dynamic Clock & Time Logic ---
+            const clockElement = document.getElementById('clock');
+            const timeElement = document.getElementById('time');
+            const monthNames = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+
+            function updateClock() {
+                const now = new Date();
+                
+                const month = monthNames[now.getMonth()];
+                const day = now.getDate();
+                const year = now.getFullYear();
+                if (clockElement) {
+                    clockElement.textContent = `${month} ${day}, ${year}`;
+                }
+
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                if (timeElement) {
+                    timeElement.textContent = `${hours}:${minutes}:${seconds}`;
+                }
+            }
+            setInterval(updateClock, 1000);
+            updateClock();
+
+            // --- Text Scramble for Main Heading ---
+            class TextScramble {
+                constructor(el) {
+                    this.el = el;
+                    this.chars = '!<>-_\\/[]{}—=+*^?#________';
+                    this.update = this.update.bind(this);
+                }
+                setText(newText) {
+                    const oldText = this.el.innerText;
+                    const length = Math.max(oldText.length, newText.length);
+                    const promise = new Promise((resolve) => this.resolve = resolve);
+                    this.queue = [];
+                    for (let i = 0; i < length; i++) {
+                        const from = oldText[i] || '';
+                        const to = newText[i] || '';
+                        const start = Math.floor(Math.random() * 40);
+                        const end = start + Math.floor(Math.random() * 40);
+                        this.queue.push({ from, to, start, end });
+                    }
+                    cancelAnimationFrame(this.frameRequest);
+                    this.frame = 0;
+                    this.update();
+                    return promise;
+                }
+                update() {
+                    let output = '';
+                    let complete = 0;
+                    for (let i = 0, n = this.queue.length; i < n; i++) {
+                        let { from, to, start, end, char } = this.queue[i];
+                        if (this.frame >= end) {
+                            complete++;
+                            output += to;
+                        } else if (this.frame >= start) {
+                            if (!char || Math.random() < 0.28) {
+                                char = this.randomChar();
+                                this.queue[i].char = char;
+                            }
+                            output += `<span class="dud">${char}</span>`;
+                        } else {
+                            output += from;
+                        }
+                    }
+                    this.el.innerHTML = output;
+                    if (complete === this.queue.length) {
+                        this.resolve();
+                    } else {
+                        this.frameRequest = requestAnimationFrame(this.update);
+                        this.frame++;
+                    }
+                }
+                randomChar() {
+                    return this.chars[Math.floor(Math.random() * this.chars.length)];
+                }
+            }
+            
+            const greetings = [
+                "Hello, I'm Aaron Zhu",
+                "Salut, moi c’est Aaron",
+                "こんにちは、Aaron Zhuです",
+                "안녕하세요, Aaron Zhu 예요",
+                "你好，我是 Aaron Zhu"
+            ];
+            const greetingElement = document.getElementById('dynamic-greeting');
+            const fx = new TextScramble(greetingElement);
+            let greetingIndex = 0;
+            const nextGreeting = () => {
+                fx.setText(greetings[greetingIndex]).then(() => {
+                    setTimeout(nextGreeting, 3400);
+                });
+                greetingIndex = (greetingIndex + 1) % greetings.length;
+            };
+            nextGreeting();
+        });
+    </script>
+</body>
 </html>
