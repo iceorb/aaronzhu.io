@@ -9,364 +9,609 @@
     /* --- Color Scheme & CSS Variables --- */
     :root {
         --bg-color: #ffffff;
-        --text-color: #000000;
-        --secondary-text-color: #333;
-        --border-color: #eee;
+        --text-color: #111111;
+        --secondary-text-color: #555;
+        --border-color: #e5e5e5;
         --accent-color: #DC143C;
-        --selection-bg-color: #DC143C;
-        --selection-text-color: #ffffff;
-        --cursor-dot-bg: #ffffff; /* Base color for the blend mode dot */
+        --cursor-dot-bg: #ffffff;
+        
+        --sidebar-bg: rgba(255, 255, 255, 0.65);
+        --sidebar-border: rgba(255, 255, 255, 0.4);
+        --sidebar-shadow: -15px 0 40px rgba(0, 0, 0, 0.08);
+        
+        --nav-bg-mobile: rgba(255, 255, 255, 0.9);
+        
+        --sidebar-width: 480px;
     }
 
     @media (prefers-color-scheme: dark) {
         :root {
-            --bg-color: #121212;
-            --text-color: #ffffff;
-            --secondary-text-color: #a0a0a0;
-            --border-color: #333333;
-            --cursor-dot-bg: #ffffff; /* This remains white for the difference blend mode to work correctly */
+            --bg-color: #0a0a0a;
+            --text-color: #f0f0f0;
+            --secondary-text-color: #888;
+            --border-color: #333;
+            --cursor-dot-bg: #ffffff;
+            
+            --sidebar-bg: rgba(20, 20, 20, 0.65);
+            --sidebar-border: rgba(255, 255, 255, 0.1);
+            --sidebar-shadow: -15px 0 40px rgba(0, 0, 0, 0.5);
+            
+            --nav-bg-mobile: rgba(20, 20, 20, 0.9);
         }
     }
 
-    /* --- Base Styles & Typography --- */
-    *, *::before, *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
+    /* --- Base Styles --- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html {
-        cursor: none;
+    html, body {
+        height: 100%;
+        width: 100%;
+        overflow: hidden; /* Prevent body scroll, handle in container */
     }
 
     body {
         background-color: var(--bg-color);
         color: var(--text-color);
         font-family: 'Helvetica Neue', 'Arial', sans-serif;
-        font-feature-settings: 'kern' 1, 'liga' 1;
-        text-rendering: optimizeLegibility;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
         line-height: 1.6;
-        transition: background-color 0.3s ease, color 0.3s ease;
+        cursor: none;
     }
-    
-    /* --- Custom Cursor --- */
-    .cursor-dot {
-        width: 12px;
-        height: 12px;
-        background-color: var(--cursor-dot-bg);
-        mix-blend-mode: difference;
-        border-radius: 50%;
+
+    /* 1. Add "Tactile" Texture (Grain/Noise) */
+    body::before {
+        content: "";
         position: fixed;
         top: 0;
         left: 0;
-        transform: translate(-50%, -50%);
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
         pointer-events: none;
-        z-index: 9999;
-        transition: transform 0.2s ease-out;
+        z-index: 9000; /* Below cursor, above content */
+        opacity: 0.4;
+        mix-blend-mode: multiply;
     }
-    
-    .cursor-ring {
-        width: 40px;
-        height: 40px;
-        border: 2px solid var(--accent-color);
-        border-radius: 50%;
+
+    /* --- Fixed UI Bar (Clock + Nav) --- */
+    .fixed-ui {
         position: fixed;
         top: 0;
         left: 0;
-        transform: translate(-50%, -50%) scale(0);
-        pointer-events: none;
-        z-index: 9998;
-        transition: transform 0.2s ease-out, opacity 0.2s ease-out;
-        opacity: 0;
-    }
-
-    .cursor-ring.cursor-hover {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 1;
-    }
-
-    .cursor-dot.cursor-hover {
-        transform: translate(-50%, -50%) scale(0);
-    }
-    
-    ::selection {
-        background: var(--selection-bg-color);
-        color: var(--selection-text-color);
-    }
-    ::-moz-selection { /* Firefox */
-        background: var(--selection-bg-color);
-        color: var(--selection-text-color);
-    }
-
-    .serif {
-        font-family: 'Georgia', serif;
-    }
-
-    /* --- Layout --- */
-    .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 5rem 2rem;
-    }
-    
-    section {
-        margin-bottom: 4rem;
-    }
-
-    /* --- Typographic Elements --- */
-    #clock, #time {
-        font-family: monospace;
-        font-size: 0.8rem;
-        font-weight: 400;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--secondary-text-color);
-        transition: color 0.3s ease;
-    }
-
-    #clock {
-        margin-bottom: 0.25rem;
-    }
-
-    #time {
-        margin-bottom: 6rem;
-    }
-    
-    h1#dynamic-greeting {
-        font-size: 2.5rem;
-        font-weight: 500;
-        line-height: 1.2;
-        margin-bottom: 4rem;
-        min-height: 1.2em; /* Default min-height for desktop */
-        font-family: 'Georgia', 'Source Code Pro', monospace, serif;
-    }
-
-    h2.serif {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 1.5rem;
-        line-height: 1.4;
-        font-family: "georgiapro", sans-serif;
-    }
-    
-    p {
-        max-width: 65ch;
-        margin-bottom: 1.5rem;
-        font-size: 1rem;
-    }
-    
-    p strong {
-        font-weight: bold; 
-    }
-
-    /* --- Footer --- */
-    footer {
-        margin-top: 6rem;
-        border-top: 1px solid var(--border-color);
-        padding-top: 2rem;
-        transition: border-color 0.3s ease;
-    }
-    
-    .footer-content {
+        width: 100%;
+        padding: 2rem 3rem;
+        z-index: 100;
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 1rem;
-    }
-
-    .footer-links {
-        list-style: none;
-        display: flex;
-        gap: 1.5rem;
-        align-items: center;
-    }
-    
-    .footer-links a {
-        color: var(--text-color);
-        text-decoration: none;
-        cursor: none;
-        padding: 0.2em 0;
-        font-family: monospace;
-        font-size: 0.8rem;
-        font-weight: 400;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        transition: color 0.3s ease-in-out;
-    }
-
-    .footer-links a:hover {
-        color: var(--accent-color);
-        text-decoration: none;
-    }
-    
-    footer p {
-        font-family: monospace;
-        font-size: 0.8rem;
+        align-items: flex-start;
+        pointer-events: none;
         color: var(--secondary-text-color);
-        margin-bottom: 0;
+    }
+    
+    .fixed-ui > * {
+        pointer-events: auto;
     }
 
-    /* --- Responsive Adjustments --- */
-    @media (max-width: 600px) {
-        h1#dynamic-greeting {
-            font-size: 2rem;
-            min-height: 2.4em; 
-        }
-        h2 {
-            font-size: 1.125rem;
+    .meta-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+        font-family: monospace;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        /* 2. Refine Typography */
+        letter-spacing: 0.1em;
+        font-weight: 500;
+        color: var(--secondary-text-color);
+    }
+
+    /* --- Navigation Menu (Vertical Click Dropdown) --- */
+    .section-nav-container {
+        position: relative;
+        font-family: monospace;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        /* 2. Refine Typography */
+        letter-spacing: 0.1em;
+        font-weight: 500;
+        text-align: right;
+        z-index: 102;
+    }
+
+    .current-section {
+        cursor: none;
+        padding-bottom: 4px;
+        border-bottom: 1px solid transparent;
+        transition: color 0.3s, border-color 0.3s;
+        color: var(--secondary-text-color);
+        user-select: none;
+        position: relative;
+        z-index: 104;
+    }
+    
+    .current-section:hover, .section-nav-container.active .current-section {
+        border-bottom-color: var(--accent-color);
+        color: var(--text-color);
+    }
+
+    .nav-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        margin-top: 1rem;
+        
+        background: var(--bg-color);
+        border: 1px solid var(--border-color);
+        padding: 1rem;
+        
+        display: flex;
+        flex-direction: column; /* Vertical Layout */
+        gap: 0.8rem;
+        width: 200px;
+        
+        opacity: 0;
+        transform: translateY(-10px);
+        pointer-events: none;
+        
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        z-index: 103;
+    }
+
+    /* Active State (Click Triggered) */
+    .section-nav-container.active .nav-dropdown {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    .nav-item {
+        cursor: none;
+        transition: color 0.2s, transform 0.2s;
+        text-align: right;
+        color: var(--secondary-text-color);
+    }
+    
+    .nav-item:hover {
+        color: var(--accent-color);
+        transform: translateX(-5px); /* Subtle shift left on hover */
+    }
+
+    /* --- Navigation Arrows --- */
+    .nav-arrow {
+        position: fixed;
+        bottom: 3rem;
+        width: 50px;
+        height: 50px;
+        background: transparent;
+        border: 1px solid var(--border-color);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: none;
+        z-index: 101;
+        transition: all 0.3s ease;
+        font-size: 1.2rem;
+        color: var(--text-color);
+        opacity: 0;
+        pointer-events: none;
+        backdrop-filter: blur(5px);
+    }
+
+    .nav-arrow.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .nav-arrow:hover {
+        border-color: var(--accent-color);
+        color: var(--accent-color);
+        transform: rotate(90deg) scale(1.1);
+    }
+
+    .prev-arrow { right: 8rem; transform: rotate(90deg); }
+    .next-arrow { right: 3rem; transform: rotate(90deg); }
+
+    /* --- Vertical Scroll Container --- */
+    .container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        width: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+        
+        /* REVERTED: Back to strict mandatory snap */
+        scroll-snap-type: y mandatory; 
+        
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    
+    .container::-webkit-scrollbar { display: none; }
+
+    /* --- Full Screen Sections --- */
+    header, section, footer {
+        flex: 0 0 auto;
+        width: 100%;
+        min-height: 100vh;
+        height: auto;
+        padding: 8rem 25vw 8rem 25vw;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    section.long-content {
+        justify-content: flex-start;
+        padding-top: 10rem;
+    }
+
+    section { opacity: 0.3; transition: opacity 0.8s ease; }
+    section.visible { opacity: 1; }
+
+    /* --- Typography --- */
+    .serif { font-family: 'Georgia', serif; }
+    
+    h1#dynamic-greeting {
+        font-size: 3.4rem;
+        font-weight: 400;
+        /* 2. Refine Typography: Tighten large headers */
+        letter-spacing: -0.02em;
+        line-height: 1.0;
+        margin-bottom: 2rem;
+    }
+
+    h2.serif { font-size: 2rem; font-weight: 400; margin-bottom: 3rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); width: 100%; font-style: italic; }
+    p { max-width: 60ch; margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--secondary-text-color); }
+    strong { color: var(--text-color); font-weight: 600; }
+
+    /* --- Resume Grid --- */
+    .resume-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; width: 100%; }
+    .resume-item { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed var(--border-color); }
+    .resume-item:last-child { border-bottom: none; }
+    .resume-main { font-size: 1.2rem; color: var(--text-color); }
+    .resume-sub { font-size: 1rem; color: var(--secondary-text-color); }
+    
+    .resume-date { 
+        font-family: monospace; 
+        font-size: 0.9rem; 
+        color: var(--secondary-text-color); 
+        text-transform: uppercase;
+        /* 2. Refine Typography */
+        letter-spacing: 0.1em;
+        font-weight: 500;
+    }
+
+    /* --- Sidebar & Interactive --- */
+    .interactive-link { cursor: none; border-bottom: 1px solid var(--accent-color); font-style: italic; transition: all 0.3s ease; }
+    .interactive-link:hover { color: var(--accent-color); }
+
+    .overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.25); opacity: 0; pointer-events: none; transition: opacity 0.5s; z-index: 5000; }
+    .overlay.active { opacity: 1; pointer-events: auto; }
+
+    .reading-sidebar { position: fixed; top: 0; right: 0; width: var(--sidebar-width); height: 100vh; background-color: var(--sidebar-bg); border-left: 1px solid var(--sidebar-border); backdrop-filter: blur(25px); transform: translateX(100%); transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); z-index: 5001; padding: 4rem 3rem; overflow-y: auto; }
+    .reading-sidebar.active { transform: translateX(0); }
+
+    .close-btn { position: absolute; top: 2rem; right: 2rem; background: none; border: 1px solid var(--border-color); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: none; color: var(--text-color); transition: 0.3s; }
+    .close-btn:hover { border-color: var(--accent-color); color: var(--accent-color); transform: rotate(90deg); }
+
+    .year-group { margin-bottom: 3rem; }
+    .year-label { font-family: monospace; font-size: 1.2rem; border-bottom: 2px solid var(--accent-color); margin-bottom: 1.5rem; display: inline-block; }
+    .reading-item { margin-bottom: 1.25rem; display: grid; grid-template-columns: 3rem 1fr; gap: 0.5rem; }
+    .reading-link { text-decoration: none; color: var(--text-color); font-size: 1rem; cursor: none; transition: color 0.2s; }
+    .reading-link:hover { color: var(--accent-color); }
+    .reading-author { font-size: 0.85rem; color: var(--secondary-text-color); display: block; }
+    
+    .month-label { 
+        font-family: monospace; 
+        font-size: 0.75rem; 
+        color: var(--secondary-text-color); 
+        text-transform: uppercase; 
+        padding-top: 3px;
+        /* 2. Refine Typography */
+        letter-spacing: 0.1em;
+        font-weight: 500;
+    }
+
+    /* --- Custom Cursor --- */
+    .cursor-dot { width: 8px; height: 8px; background-color: var(--cursor-dot-bg); mix-blend-mode: difference; border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; }
+    
+    .cursor-ring { 
+        width: 40px; 
+        height: 40px; 
+        border: 1px solid var(--accent-color); 
+        border-radius: 50%; 
+        position: fixed; 
+        pointer-events: none; 
+        z-index: 9998; 
+        opacity: 0; 
+        transform: translate(-50%, -50%) scale(0.5); 
+        
+        /* 5. Interactive "breathing" for the Cursor */
+        transition: transform 0.2s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.2s;
+    }
+    
+    .cursor-ring.cursor-hover { transform: translate(-50%, -50%) scale(1.5); opacity: 1; border-width: 2px; }
+
+    /* --- Footer Links --- */
+    .footer-links a { display: block; color: var(--secondary-text-color); margin-bottom: 1rem; text-decoration: none; font-family: monospace; font-size: 1rem; cursor: none; transition: color 0.3s; }
+    .footer-links a:hover { color: var(--accent-color); }
+    
+    /* 7. Print Styles */
+    @media print {
+        .fixed-ui, .nav-arrow, .cursor-dot, .cursor-ring, .reading-sidebar, footer {
+            display: none !important;
         }
         .container {
-            padding: 3rem 1.5rem;
+            height: auto;
+            overflow: visible;
         }
-        #time {
-            margin-bottom: 4rem;
+        section {
+            opacity: 1 !important;
+            page-break-after: always;
+            padding: 2rem !important;
         }
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 850px) {
+        header, section, footer { padding: 6rem 2rem; }
+        .fixed-ui { display: none; } /* Hidden on mobile per request */
+        h1#dynamic-greeting { font-size: 2.5rem; }
+        .reading-sidebar { width: 100vw; }
+        body { overflow: auto; }
+        .nav-dropdown { display: none; } /* Ensure dropdown doesn't stick around */
+        
+        /* Mobile Nav Arrows: positioned at corners */
+        .nav-arrow { bottom: 1.5rem; width: 50px; height: 50px; background: rgba(255, 255, 255, 0.9); cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .prev-arrow { right: 4.5rem; }
+        .next-arrow { right: 1rem; }
     }
     
     @media (pointer: coarse) {
-        html {
-            cursor: auto;
-        }
-        .cursor-dot, .cursor-ring {
-            display: none;
-        }
-        .footer-links a {
-            cursor: pointer;
-        }
+        html, body { cursor: auto; }
+        .cursor-dot, .cursor-ring { display: none; }
+        .interactive-link, .close-btn, .reading-link, .footer-links a, .current-section, .nav-item, .nav-arrow { cursor: pointer; }
     }
-</style>
+    </style>
 </head>
 <body>
-    
-    <div class="container">
 
-        <header>
-            <p id="clock"></p>
-            <p id="time"></p>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Fixed UI: Clock + Section Navigator -->
+    <div class="fixed-ui">
+        <div class="meta-info">
+            <div id="clock">Loading...</div>
+            <div id="time">00:00:00</div>
+        </div>
+
+        <div class="section-nav-container" id="nav-container">
+            <!-- Added onclick handler to toggle active state -->
+            <div class="current-section" id="current-section-label">01 // HOME</div>
+            
+            <div class="nav-dropdown">
+                <!-- Vertical Dropdown Items -->
+                <div class="nav-item" data-target="home">01 // HOME</div>
+                <div class="nav-item" data-target="experience">02 // EXPERIENCE</div>
+                <div class="nav-item" data-target="education">03 // EDUCATION</div>
+                <div class="nav-item" data-target="awards">04 // AWARDS</div>
+                <div class="nav-item" data-target="footer">05 // CONTACT</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nav Arrows (Rotated in CSS to Point Up/Down) -->
+    <button class="nav-arrow prev-arrow" id="prev-btn" aria-label="Previous Section">←</button>
+    <button class="nav-arrow next-arrow" id="next-btn" aria-label="Next Section">→</button>
+
+    <!-- Sidebar -->
+    <aside class="reading-sidebar" id="reading-sidebar">
+        <button class="close-btn" id="close-sidebar">✕</button>
+        <h2 class="serif" style="margin-top: 2rem; border: none;">Library</h2>
+        
+        <div class="year-group">
+            <span class="year-label">2025</span>
+            <div class="reading-item">
+                <span class="month-label">Jan</span>
+                <div>
+                    <a href="#" class="reading-link">Deep Reinforcement Learning from Human Preferences</a>
+                    <span class="reading-author">Christiano et al.</span>
+                </div>
+            </div>
+            <div class="reading-item">
+                <span class="month-label">Jan</span>
+                <div>
+                    <a href="#" class="reading-link">Thinking, Fast and Slow</a>
+                    <span class="reading-author">Daniel Kahneman</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="year-group">
+            <span class="year-label">2024</span>
+            <div class="reading-item">
+                <span class="month-label">Nov</span>
+                <div>
+                    <a href="#" class="reading-link">The Idea Factory</a>
+                    <span class="reading-author">Jon Gertner</span>
+                </div>
+            </div>
+             <div class="reading-item">
+                <span class="month-label">Aug</span>
+                <div>
+                    <a href="#" class="reading-link">Constitutional AI</a>
+                    <span class="reading-author">Anthropic</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+    
+    <!-- Main Vertical Container -->
+    <div class="container" id="scroll-container">
+
+        <!-- 01: Home -->
+        <header id="home">
             <h1 id="dynamic-greeting" class="serif"></h1>
+            <div style="margin-top: 2rem;">
+                <p>I'm a researcher and engineer based in New York.</p>
+                <p>My recent interest has been in simulated environments, reinforcement learning, and synthetic data for model and <i>human</i> training. My goal is to help AI understand humans, and humans understand AI.</p>
+                <p>I keep a list of readings I found impactful <span id="open-reading-list" class="interactive-link">available here</span>.</p>
+                <p>Before this, I researched, studied, and worked in Paris, Seoul, Shanghai and SF. I also snowboard.</p>
+            </div>
         </header>
         
-        <main>
-            <section id="about">
-                <!-- <h2 class="serif">About</h2> -->
-                <p>I'm a researcher and engineer based in New York.</p>
-                <!-- <p>
-                    My work applies theory and uses it to drive critical decisions in key domains. From early disease detection, predicting crime, to autonomous vehicle intuition. My goal is to hopefully genuinely improve human lives with AI.
-                </p> -->
-                <p>My recent interest has been in simulated environments, reinforcement learning, and synthetic data for model and <i>human</i> training. My goal is to help humans make critical decisions and predict events before they happen.</p>
-                <!-- <p>
-                    Previously, I had the opportunity to work with Andy Fang (Cofounder), Brad Willard, at DoorDash, and Cicy Chen (Director of LLM Applications), Jing Sun at TikTok. 
-                    
-                    <p>
-                        My research was advised by Dr. Chaowei Xiao (JHU, NVIDIA) and Xiaogeng Liu (JHU, NVIDIA), where we investigated foundation model safety and robustness.
-                    </p> -->
-                </p>
-                <p>I maintain a list of readings I like, sorted by year/month, available here.</p>
-                <p>
-                    Before this, I researched, studied, and worked in Paris, Seoul, Shanghai and SF
-                </p>
+        <!-- 02: Experience (Long Content Example) -->
+        <section id="experience" class="long-content">
+            <h2 class="serif">Experience</h2>
+            <div class="resume-grid">
+                <div class="resume-item">
+                    <div>
+                        <div class="resume-main"><strong>DoorDash</strong></div>
+                        <div class="resume-sub">Machine Learning Engineer Intern</div>
+                    </div>
+                    <div class="resume-date">2025</div>
+                </div>
+                
+                <div class="resume-item">
+                    <div>
+                        <div class="resume-main"><strong>TikTok</strong></div>
+                        <div class="resume-sub">Software Engineer Intern</div>
+                    </div>
+                    <div class="resume-date">2024-2025</div>
+                </div>
 
-                <p>I also snowboard.</p>
-            </section>
-            
-            <section id="experience">
-                <h2 class="serif">Experience</h2>
-                <p>
-                    <strong>Machine Learning Engineer Intern</strong><br>
-
-                    DoorDash<br>
-                </p>
-                <p>
-                    <strong>Software Engineer Intern</strong><br>
-                    TikTok
-                </p>
-                <p>
-                    <strong>Undergraduate Researcher</strong><br>
-                    Safe Foundational Models Lab
-                </p>
-                 <p>
-                    <strong>Controls Engineer</strong><br>
-                    Wisconsin Autonomous
-                </p>
-                <p>
-                    <strong>Undergraduate Researcher</strong><br>
-                    Yonsei University Vision-Language Lab
-                </p>
-            </section>
-
-            <section id="awards">
-                <h2 class="serif">Education</h2>
-                <p>
-                    <strong>Master of Science in Engineering</strong><br>
-                    University of Pennsylvania, 2026
-                </p>
-                <p>
-                    <strong>Bachelor of Science</strong><br>
-                    University of Wisconsin-Madison, 2021-2025
-                </p>
-            </section>
-
-            <section id="awards">
-                <h2 class="serif">Awards + Competitions</h2>
-                <p>
-                    <strong>Lorraine A. & W. Dwight Stone Scholarship</strong><br>
-                    UW-Madison, Department of Economics
-                </p>
-                <p>
-                    <strong>Finalist</strong><br>
-                    GE Healthcare x N+1 Institute, 2025
-                </p>
-                <p>
-                    <strong>Participant</strong><br>
-                    Google x N+1 Institute Pitch Competition, 2024
-                </p>
-                 <p>
-                    <strong>Invitee</strong><br>
-                    Palantir for Hospitals, Build the Future 2024
-                </p>
-                <p>
-                    <strong>Epic Systems Healthcare Empowerment Award (1st)</strong><br>
-                    MadHacks, 2023
-                </p>
-            </section>
-
-            <section id="Test Scores">
-                <h2 class="serif">Test Scores</h2>
-                <p>
-                    <strong>36/36</strong><br>
-                    ACT
-                </p>
-                <p>
-                    <strong>1560/1600 (760 English, 800 Math)</strong><br>
-                    SAT
-                </p>
-                <p>
-                    <strong>600/600</strong><br>
-                    CodeSignal GCA
-                </p>
-            </section>
-
-            <section id="papers">
-                <h2 class="serif">Papers</h2>
-                <p>
-                     BackdoorGCG - (Greedy Coordinate Gradient) Prompt Injection against Falcon, LLaMa, (working)
-                </p>
-            </section>
-
-        </main>
-        
-        <footer>
-            <div class="footer-content">
-                <ul class="footer-links">
-                    <li><a href="#">Email</a></li>
-                    <li><a href="#" target="_blank" rel="noopener noreferrer">Photography</a></li>
-                    <li><a href="#" target="_blank" rel="noopener noreferrer">Writing</a></li>
-                </ul>
-                <p>© 2026 Aaron Zhu</p>
+                <div class="resume-item">
+                    <div>
+                        <div class="resume-main"><strong>Safe Foundational Models Lab</strong></div>
+                        <div class="resume-sub">Undergraduate Researcher</div>
+                    </div>
+                    <div class="resume-date">2023 - 2025</div>
+                </div>
+          
+                
+                <div class="resume-item">
+                    <div>
+                        <div class="resume-main"><strong>Yonsei University Vision-Language Lab</strong></div>
+                        <div class="resume-sub">Undergraduate Researcher</div>
+                    </div>
+                    <div class="resume-date">2023</div>
+                </div>
             </div>
+        </section>
+
+        <!-- 03: Education & Papers -->
+        <section id="education" class="long-content">
+            <h2 class="serif">Education</h2>
+            <div class="resume-grid" style="margin-bottom: 4rem;">
+                <div class="resume-item">
+                    <div>
+                        <div class="resume-main"><strong>University of Pennsylvania</strong></div>
+                        <div class="resume-sub">Master of Science in Engineering</div>
+                    </div>
+                    <div class="resume-date">2026</div>
+                </div>
+                
+                <div class="resume-item">
+                    <div>
+                        <div class="resume-main"><strong>University of Wisconsin-Madison</strong></div>
+                        <div class="resume-sub">Bachelor of Science</div>
+                    </div>
+                    <div class="resume-date">2021 - 2025</div>
+                </div>
+            </div>
+
+            <h2 class="serif">Papers</h2>
+            <div class="resume-grid">
+                <div class="resume-item">
+                    <div>
+                        <div class="resume-main"><strong>BackdoorGCG - (Greedy Coordinate Gradient) Prompt Injection against Falcon, LLaMa</strong></div>
+                        <div class="resume-sub">(working)</div>
+                    </div>
+                    <div class="resume-date">2024</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 04: Awards -->
+        <section id="awards">
+            <h2 class="serif">Awards & Scores</h2>
+            <div class="resume-grid" style="margin-bottom: 4rem;">
+                <div class="resume-item">
+                    <div>
+                        <div class="resume-main"><strong>Lorraine A. & W. Dwight Stone Scholarship</strong></div>
+                        <div class="resume-sub">UW-Madison, Dept. of Economics</div>
+                    </div>
+                    <div class="resume-date">2025</div>
+                </div>
+                <div class="resume-item">
+                    <div>
+                        <div class="resume-main"><strong>Finalist</strong></div>
+                        <div class="resume-sub">GE Healthcare x N+1 Institute</div>
+                    </div>
+                    <div class="resume-date">2025</div>
+                </div>
+                <div class="resume-item">
+                    <div>
+                        <div class="resume-main"><strong>Participant</strong></div>
+                        <div class="resume-sub">Google x N+1 Institute</div>
+                    </div>
+                    <div class="resume-date">2024</div>
+                </div>
+                <div class="resume-item">
+                    <div>
+                        <div class="resume-main"><strong>Invitee</strong></div>
+                        <div class="resume-sub">Palantir for Hospitals, Build the Future</div>
+                    </div>
+                    <div class="resume-date">2024</div>
+                </div>
+                <div class="resume-item">
+                    <div>
+                        <div class="resume-main"><strong>Epic Systems Healthcare Empowerment Award (1st)</strong></div>
+                        <div class="resume-sub">MadHacks</div>
+                    </div>
+                    <div class="resume-date">2023</div>
+                </div>
+            </div>
+
+            <h2 class="serif">Metrics</h2>
+             <div class="resume-grid">
+                <div class="resume-item">
+                     <div>
+                        <div class="resume-main"><strong>ACT</strong></div>
+                        <div class="resume-sub">36</div>
+                    </div>
+                    <div class="resume-date">-</div>
+                </div>
+                 <div class="resume-item">
+                     <div>
+                        <div class="resume-main"><strong>SAT</strong></div>
+                        <div class="resume-sub">760 English, 800 Math</div>
+                    </div>
+                    <div class="resume-date">-</div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 05: Footer (Contact) -->
+        <footer id="footer">
+            <div class="footer-links">
+                <a href="#">Email</a>
+                <!-- <a href="#">Photography</a> -->
+                <!-- <a href="#">Writing</a> -->
+                <!-- <a href="#">Twitter/X</a> -->
+                <a href="#">LinkedIn</a>
+            </div>
+            <p style="margin-top: 2rem; font-size: 0.8rem; border-top: 1px solid var(--border-color); padding-top: 1rem; width: 100%; max-width: 300px;">
+                © 2026 Aaron Zhu
+            </p>
         </footer>
 
     </div>
@@ -374,14 +619,131 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            // --- Custom Cursor Logic ---
-            const cursorDot = document.createElement('div');
-            cursorDot.className = 'cursor-dot';
-            document.body.appendChild(cursorDot);
+            // --- 1. VERTICAL SCROLL LOGIC ---
+            const scrollContainer = document.querySelector('.container');
+            const sections = document.querySelectorAll('.container > *');
+            const navLabel = document.getElementById('current-section-label');
+            const navItems = document.querySelectorAll('.nav-item');
+            const navContainer = document.getElementById('nav-container');
+            
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            const sectionIds = ['home', 'experience', 'education', 'awards', 'footer'];
+            let currentSectionIndex = 0;
 
-            const cursorRing = document.createElement('div');
-            cursorRing.className = 'cursor-ring';
-            document.body.appendChild(cursorRing);
+            const sectionMap = {
+                'home': '01 // HOME',
+                'experience': '02 // EXPERIENCE',
+                'education': '03 // EDUCATION',
+                'awards': '04 // AWARDS',
+                'footer': '05 // CONTACT'
+            };
+            
+            // Helper to update arrow state
+            const updateArrows = (index) => {
+                if(index <= 0) {
+                    prevBtn.classList.remove('active');
+                } else {
+                    prevBtn.classList.add('active');
+                }
+                if(index >= sectionIds.length - 1) {
+                    nextBtn.classList.remove('active');
+                } else {
+                    nextBtn.classList.add('active');
+                }
+            };
+
+            // Observer to update top label on scroll
+            const observerOptions = {
+                root: scrollContainer,
+                threshold: 0.2
+            };
+
+            const sectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        
+                        const id = entry.target.id;
+                        if(sectionMap[id]) {
+                            navLabel.textContent = sectionMap[id];
+                        }
+                        
+                        const newIndex = sectionIds.indexOf(id);
+                        if(newIndex !== -1) {
+                            currentSectionIndex = newIndex;
+                            updateArrows(currentSectionIndex);
+                        }
+
+                        // NEW LOGIC: Hide current section from dropdown
+                        navItems.forEach(item => {
+                            if (item.getAttribute('data-target') === id) {
+                                item.style.display = 'none';
+                            } else {
+                                item.style.display = 'block';
+                            }
+                        });
+                        
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(sec => sectionObserver.observe(sec));
+
+            // Arrow Click Handlers
+            prevBtn.addEventListener('click', () => {
+                if(currentSectionIndex > 0) {
+                    const prevId = sectionIds[currentSectionIndex - 1];
+                    document.getElementById(prevId).scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                if(currentSectionIndex < sectionIds.length - 1) {
+                    const nextId = sectionIds[currentSectionIndex + 1];
+                    document.getElementById(nextId).scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+
+            // --- 2. UPDATED NAVIGATION LOGIC (CLICK ONLY) ---
+            
+            // Toggle menu on label click
+            navLabel.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent document click from closing it immediately
+                navContainer.classList.toggle('active');
+            });
+
+            // Navigate on item click
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const targetId = item.getAttribute('data-target');
+                    const targetEl = document.getElementById(targetId);
+                    if (targetEl) {
+                        targetEl.scrollIntoView({ behavior: 'smooth' });
+                    }
+                    // Close menu after clicking
+                    navContainer.classList.remove('active');
+                });
+            });
+            
+            // Close dropdown when clicking anywhere else
+            document.addEventListener('click', (e) => {
+                if (!navContainer.contains(e.target)) {
+                    navContainer.classList.remove('active');
+                }
+            });
+
+            // --- 3. CUSTOM CURSOR ---
+            const cursorDot = document.querySelector('.cursor-dot') || document.createElement('div');
+            const cursorRing = document.querySelector('.cursor-ring') || document.createElement('div');
+            
+            if(!cursorDot.parentNode) {
+                cursorDot.className = 'cursor-dot';
+                document.body.appendChild(cursorDot);
+                cursorRing.className = 'cursor-ring';
+                document.body.appendChild(cursorRing);
+            }
 
             window.addEventListener('mousemove', (e) => {
                 cursorDot.style.left = `${e.clientX}px`;
@@ -389,49 +751,65 @@
                 cursorRing.style.left = `${e.clientX}px`;
                 cursorRing.style.top = `${e.clientY}px`;
             });
-            
-            const links = document.querySelectorAll('a');
-            links.forEach(link => {
-                link.addEventListener('mouseenter', () => {
-                    cursorDot.classList.add('cursor-hover');
-                    cursorRing.classList.add('cursor-hover');
-                });
-                link.addEventListener('mouseleave', () => {
-                    cursorDot.classList.remove('cursor-hover');
-                    cursorRing.classList.remove('cursor-hover');
-                });
-            });
 
-            // --- Dynamic Clock & Time Logic ---
-            const clockElement = document.getElementById('clock');
-            const timeElement = document.getElementById('time');
-            const monthNames = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+            const attachCursorEffects = () => {
+                const targets = document.querySelectorAll('a, button, .interactive-link, .nav-item, .current-section, .nav-arrow');
+                targets.forEach(el => {
+                    el.addEventListener('mouseenter', () => {
+                        cursorRing.classList.add('cursor-hover');
+                        cursorDot.style.opacity = '0';
+                    });
+                    el.addEventListener('mouseleave', () => {
+                        cursorRing.classList.remove('cursor-hover');
+                        cursorDot.style.opacity = '1';
+                    });
+                });
+            };
+            attachCursorEffects();
+
+            // --- 4. SIDEBAR LOGIC ---
+            const openTrigger = document.getElementById('open-reading-list');
+            const closeTrigger = document.getElementById('close-sidebar');
+            const sidebar = document.getElementById('reading-sidebar');
+            const overlay = document.getElementById('overlay');
+            const mainContent = document.getElementById('scroll-container');
+
+            function toggleSidebar() {
+                const isActive = sidebar.classList.contains('active');
+                if (!isActive) {
+                    sidebar.classList.add('active');
+                    overlay.classList.add('active');
+                    mainContent.style.filter = "blur(4px)";
+                } else {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                    mainContent.style.filter = "none";
+                }
+            }
+
+            if (openTrigger) openTrigger.addEventListener('click', toggleSidebar);
+            if (closeTrigger) closeTrigger.addEventListener('click', toggleSidebar);
+            if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+            // --- 5. CLOCK ---
+            const clockEl = document.getElementById('clock');
+            const timeEl = document.getElementById('time');
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
             function updateClock() {
                 const now = new Date();
-                
-                const month = monthNames[now.getMonth()];
-                const day = now.getDate();
-                const year = now.getFullYear();
-                if (clockElement) {
-                    clockElement.textContent = `${month} ${day}, ${year}`;
-                }
-
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                const seconds = String(now.getSeconds()).padStart(2, '0');
-                if (timeElement) {
-                    timeElement.textContent = `${hours}:${minutes}:${seconds}`;
-                }
+                if (clockEl) clockEl.textContent = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+                if (timeEl) timeEl.textContent = now.toLocaleTimeString('en-US', {hour12: false});
             }
             setInterval(updateClock, 1000);
             updateClock();
 
-            // --- Text Scramble for Main Heading ---
+            // --- 6. TEXT SCRAMBLE ---
             class TextScramble {
                 constructor(el) {
                     this.el = el;
-                    this.chars = '!<>-_\\/[]{}—=+*^?#________';
+                    /* REVERTED: Original chars */
+                    this.chars = '!<>-_\\/[]{}—=+*^?#________'; 
                     this.update = this.update.bind(this);
                 }
                 setText(newText) {
@@ -482,23 +860,15 @@
                 }
             }
             
-            const greetings = [
-                "Hello, I'm Aaron Zhu",
-                "Salut, moi c’est Aaron",
-                "こんにちは、Aaron Zhuです",
-                "안녕하세요, Aaron Zhu 예요",
-                "你好，我是 Aaron Zhu"
-            ];
-            const greetingElement = document.getElementById('dynamic-greeting');
-            const fx = new TextScramble(greetingElement);
-            let greetingIndex = 0;
-            const nextGreeting = () => {
-                fx.setText(greetings[greetingIndex]).then(() => {
-                    setTimeout(nextGreeting, 3400);
-                });
-                greetingIndex = (greetingIndex + 1) % greetings.length;
+            const greetings = ["Hello, I'm Aaron Zhu", "Salut, moi c’est Aaron", "こんにちは、Aaron Zhuです", "안녕하세요, Aaron Zhu 예요"];
+            const el = document.getElementById('dynamic-greeting');
+            const fx = new TextScramble(el);
+            let i = 0;
+            const next = () => {
+                fx.setText(greetings[i]).then(() => setTimeout(next, 3000));
+                i = (i + 1) % greetings.length;
             };
-            nextGreeting();
+            next();
         });
     </script>
 </body>
