@@ -5,6 +5,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://use.typekit.net/lqr5xrl.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -187,16 +190,28 @@
 
         .nav-item {
             cursor: none;
-            transition: color 0.2s, transform 0.2s;
+            transition: color 0.2s, transform 0.2s, background-size 0.3s ease;
             text-align: right;
             color: var(--secondary-text-color);
+
+            background-image: linear-gradient(var(--accent-color), var(--accent-color));
+            background-size: 0% 1px;
+            background-repeat: no-repeat;
+            background-position: right bottom;
+            /* Align right for nav items */
+            padding-bottom: 2px;
+            display: inline-block;
+            /* Needed for background-size */
         }
 
         .nav-item:hover {
             color: var(--accent-color);
             transform: translateX(-5px);
-            /* Subtle shift left on hover */
+            background-size: 100% 1px;
         }
+
+        /* Subtle shift left on hover */
+
 
         /* --- Navigation Arrows --- */
         .nav-arrow {
@@ -295,7 +310,7 @@
             width: 100%;
             height: 100vh;
             padding: 4rem 25vw;
-            background-color: #f5f0ed;
+            background-color: #f1efee;
             z-index: 0;
             display: flex;
             flex-direction: column;
@@ -325,12 +340,13 @@
 
         /* --- Typography --- */
         .serif {
-            font-family: 'Georgia', serif;
+            font-family: 'Source Serif 4', serif;
+            font-weight: 550;
         }
 
         h1#dynamic-greeting {
             font-size: 3.4rem;
-            font-weight: 400;
+            /* font-weight removed to inherit from .serif */
             /* 2. Refine Typography: Tighten large headers */
             letter-spacing: -0.02em;
             line-height: 1.0;
@@ -339,7 +355,7 @@
 
         h2.serif {
             font-size: 2rem;
-            font-weight: 400;
+            /* font-weight removed to inherit from .serif */
             margin-bottom: 3rem;
             padding-bottom: 1rem;
             border-bottom: 1px solid var(--border-color);
@@ -424,12 +440,19 @@
         /* --- Sidebar & Interactive --- */
         .interactive-link {
             cursor: none;
-            border-bottom: 1px solid var(--accent-color);
-            font-style: italic;
-            transition: all 0.3s ease;
+            /* border-bottom: 1px solid var(--accent-color); REMOVED old style */
+            text-decoration: none;
+            position: relative;
+            background-image: linear-gradient(var(--accent-color), var(--accent-color));
+            background-size: 0% 2px;
+            background-repeat: no-repeat;
+            background-position: left bottom;
+            transition: background-size 0.3s ease, color 0.3s ease;
+            padding-bottom: 2px;
         }
 
         .interactive-link:hover {
+            background-size: 100% 2px;
             color: var(--accent-color);
         }
 
@@ -550,9 +573,13 @@
             background-color: var(--cursor-dot-bg);
             mix-blend-mode: difference;
             border-radius: 50%;
-            position: fixed;
+            /* left/top controlled by transform in JS now */
+            top: 0;
+            left: 0;
+            /* transform: translate(-50%, -50%); MOVED TO JS/INLINE */
             pointer-events: none;
             z-index: 9999;
+            transition: opacity 0.4s ease, width 0.3s ease, height 0.3s ease, background-color 0.3s;
         }
 
         .cursor-ring {
@@ -560,11 +587,9 @@
             height: 40px;
             border: 1px solid var(--accent-color);
             border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9998;
-            opacity: 0;
-            transform: translate(-50%, -50%) scale(0.5);
+            top: 0;
+            left: 0;
+            /* transform handled in JS */
 
             /* 5. Interactive "breathing" for the Cursor */
             transition: transform 0.2s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.2s;
@@ -577,19 +602,32 @@
         }
 
         /* --- Footer Links --- */
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
         .footer-links a {
-            display: block;
+            display: inline-block;
+            /* Required for background-size to work on text width */
             color: var(--secondary-text-color);
             margin-bottom: 1rem;
             text-decoration: none;
             font-family: monospace;
             font-size: 1rem;
             cursor: none;
-            transition: color 0.3s;
+
+            background-image: linear-gradient(var(--accent-color), var(--accent-color));
+            background-size: 0% 1px;
+            background-repeat: no-repeat;
+            background-position: left bottom;
+            transition: background-size 0.3s ease, color 0.3s ease;
         }
 
         .footer-links a:hover {
             color: var(--accent-color);
+            background-size: 100% 1px;
         }
 
         /* 7. Print Styles */
@@ -690,10 +728,238 @@
             }
         }
     </style>
+    <style>
+        /* --- BRAND NEW PERSONALITY INJECTIONS --- */
+
+        /* 0. Custom Selection */
+        ::selection {
+            background-color: var(--accent-color);
+            color: #fff;
+        }
+
+        /* 1. Gradient Orb (Hero Background) */
+        .gradient-orb {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(220, 20, 60, 0.15) 0%, rgba(220, 20, 60, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            /* Behind content */
+            transform: translate(-50%, -50%);
+            transition: opacity 2s ease;
+            mix-blend-mode: color-burn;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .gradient-orb {
+                background: radial-gradient(circle, rgba(220, 20, 60, 0.12) 0%, rgba(220, 20, 60, 0) 70%);
+                mix-blend-mode: screen;
+            }
+        }
+
+        /* 2. Enhanced Magnetic Cursor Ring */
+        .cursor-ring {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--accent-color);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0;
+            transform: translate(-50%, -50%);
+            /* Removed CSS transition for top/left to allow JS lerp */
+            transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.4s ease,
+                opacity 0.4s ease,
+                background-color 0.6s ease;
+            /* Slower fade out for background */
+            will-change: transform, width, height;
+        }
+
+        .cursor-ring.active {
+            opacity: 1;
+        }
+
+        .cursor-ring.magnet {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(220, 20, 60, 0.05);
+            border-color: transparent;
+        }
+
+        /* 3. Refined Scroll Reveals */
+        section {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1), transform 1.0s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Staggered List Items */
+        .resume-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        section.visible .resume-item {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        section.visible .resume-item:nth-child(1) {
+            transition-delay: 0.1s;
+        }
+
+        section.visible .resume-item:nth-child(2) {
+            transition-delay: 0.2s;
+        }
+
+        section.visible .resume-item:nth-child(3) {
+            transition-delay: 0.3s;
+        }
+
+        section.visible .resume-item:nth-child(4) {
+            transition-delay: 0.4s;
+        }
+
+        section.visible .resume-item:nth-child(5) {
+            transition-delay: 0.5s;
+        }
+
+        /* 4. Spotlight Effect (Cinematic Hover) */
+        /* Resume List Spotlight */
+        .resume-grid:has(.resume-item:hover) .resume-item:not(:hover) {
+            opacity: 0.3;
+            filter: blur(2px);
+            transition: opacity 0.4s ease, filter 0.4s ease;
+        }
+
+        .resume-grid .resume-item {
+            transition: opacity 0.4s ease, filter 0.4s ease, transform 0.3s ease;
+        }
+
+        /* Sidebar Library Spotlight */
+        .reading-sidebar:has(.reading-item:hover) .reading-item:not(:hover) {
+            opacity: 0.3;
+            filter: blur(1px);
+            transition: opacity 0.4s ease, filter 0.4s ease;
+        }
+
+        .reading-sidebar:has(.year-group:hover) .year-group:not(:hover) {
+            opacity: 0.3;
+            transition: opacity 0.4s ease;
+        }
+
+        /* 5. Click Ripple Effect */
+        .click-ripple {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--accent-color);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9997;
+            animation: rippleAnim 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes rippleAnim {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.8;
+                border-width: 1px;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(4);
+                opacity: 0;
+                border-width: 0px;
+            }
+        }
+
+        /* 6. Footer Personality */
+        .footer-cta {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(3rem, 15vw, 10rem);
+            font-weight: 800;
+            line-height: 1;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--secondary-text-color);
+            opacity: 0.2;
+            margin-bottom: 2rem;
+            user-select: none;
+            transition: all 0.5s ease;
+            cursor: none;
+        }
+
+        .footer-cta:hover {
+            opacity: 0.8;
+            -webkit-text-stroke: 1px var(--accent-color);
+            transform: scale(1.02);
+        }
+
+        /* 7. Cinematic Preloader */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1);
+            will-change: transform;
+        }
+
+        .preloader.loaded {
+            transform: translateY(-100%);
+        }
+
+        .preloader-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.2rem;
+            color: var(--text-color);
+            letter-spacing: 0.1em;
+            overflow: hidden;
+        }
+
+        .preloader-text span {
+            display: inline-block;
+            transform: translateY(0);
+            transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+
+        .preloader.loaded .preloader-text span {
+            transform: translateY(-100px);
+            /* Fly up before curtain lifts */
+        }
+    </style>
 </head>
 
 <body>
+    <!-- Preloader -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-text">
+            <span>LOADING...</span>
+        </div>
+    </div>
 
+    <div class="gradient-orb"></div>
     <div class="overlay" id="overlay"></div>
 
     <!-- Fixed UI: Clock + Section Navigator -->
@@ -709,11 +975,11 @@
 
             <div class="nav-dropdown">
                 <!-- Vertical Dropdown Items -->
-                <div class="nav-item" data-target="home">01 // HOME</div>
-                <div class="nav-item" data-target="experience">02 // EXPERIENCE</div>
-                <div class="nav-item" data-target="education">03 // EDUCATION</div>
-                <div class="nav-item" data-target="awards">04 // AWARDS</div>
-                <div class="nav-item" data-target="footer-spacer">05 // CONTACT</div>
+                <div class="nav-item" data-target="home">HOME<sup>01</sup></div>
+                <div class="nav-item" data-target="experience">EXPERIENCE<sup>02</sup></div>
+                <div class="nav-item" data-target="education">EDUCATION<sup>03</sup></div>
+                <div class="nav-item" data-target="awards">AWARDS<sup>04</sup></div>
+                <div class="nav-item" data-target="footer-spacer">CONTACT<sup>05</sup></div>
             </div>
         </div>
     </div>
@@ -978,6 +1244,7 @@
 
     <!-- 05: Footer (Contact) - Outside container for reveal effect -->
     <footer id="footer">
+        <h2 class="footer-cta">SAY HELLO</h2>
         <div class="footer-links">
             <a href="#">Email</a>
             <!-- <a href="#">Photography</a> -->
@@ -1008,11 +1275,11 @@
             let currentSectionIndex = 0;
 
             const sectionMap = {
-                'home': '01 // HOME',
-                'experience': '02 // EXPERIENCE',
-                'education': '03 // EDUCATION',
-                'awards': '04 // AWARDS',
-                'footer-spacer': '05 // CONTACT'
+                'home': 'HOME<sup>01</sup>',
+                'experience': 'EXPERIENCE<sup>02</sup>',
+                'education': 'EDUCATION<sup>03</sup>',
+                'awards': 'AWARDS<sup>04</sup>',
+                'footer-spacer': 'CONTACT<sup>05</sup>'
             };
 
             // Helper to update arrow state
@@ -1042,7 +1309,7 @@
 
                         const id = entry.target.id;
                         if (sectionMap[id]) {
-                            navLabel.textContent = sectionMap[id];
+                            navLabel.innerHTML = sectionMap[id];
                         }
 
                         const newIndex = sectionIds.indexOf(id);
@@ -1112,9 +1379,10 @@
                 }
             });
 
-            // --- 3. CUSTOM CURSOR ---
+            // --- 3. MAGNETIC CURSOR & GRADIENT ORB ---
             const cursorDot = document.querySelector('.cursor-dot') || document.createElement('div');
             const cursorRing = document.querySelector('.cursor-ring') || document.createElement('div');
+            const orb = document.querySelector('.gradient-orb');
 
             if (!cursorDot.parentNode) {
                 cursorDot.className = 'cursor-dot';
@@ -1123,22 +1391,97 @@
                 document.body.appendChild(cursorRing);
             }
 
-            window.addEventListener('mousemove', (e) => {
-                cursorDot.style.left = `${e.clientX}px`;
-                cursorDot.style.top = `${e.clientY}px`;
-                cursorRing.style.left = `${e.clientX}px`;
-                cursorRing.style.top = `${e.clientY}px`;
+            // State
+            let mouseX = -100, mouseY = -100;
+            let ringX = -100, ringY = -100;
+            let orbX = -100, orbY = -100;
+            let isHovering = false;
+            let magnetX = 0, magnetY = 0;
+
+            // Config
+            const RING_LERP = 0.15;
+            const ORB_LERP = 0.03;
+
+            // --- CLICK RIPPLE ---
+            document.addEventListener('click', (e) => {
+                const ripple = document.createElement('div');
+                ripple.className = 'click-ripple';
+                ripple.style.left = `${e.clientX}px`;
+                ripple.style.top = `${e.clientY}px`;
+                document.body.appendChild(ripple);
+
+                // Cleanup
+                setTimeout(() => ripple.remove(), 600);
             });
 
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+
+                // Immediate dot update
+                cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`; // centered
+
+                // Show ring if moved
+                cursorRing.classList.add('active');
+            });
+
+            const lerp = (start, end, t) => {
+                return start * (1 - t) + end * t;
+            };
+
+            const animate = () => {
+                // Orb Logic (Floaty)
+                if (orb) {
+                    orbX = lerp(orbX, mouseX, ORB_LERP);
+                    orbY = lerp(orbY, mouseY, ORB_LERP);
+                    orb.style.transform = `translate(${orbX}px, ${orbY}px) translate(-50%, -50%)`;
+                }
+
+                // Cursor Ring Logic
+                let targetX = mouseX;
+                let targetY = mouseY;
+
+                if (isHovering) {
+                    // Magnetic pull
+                    targetX = lerp(mouseX, magnetX, 0.4);
+                    targetY = lerp(mouseY, magnetY, 0.4);
+                }
+
+                ringX = lerp(ringX, targetX, RING_LERP);
+                ringY = lerp(ringY, targetY, RING_LERP);
+
+                cursorRing.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
+
+                requestAnimationFrame(animate);
+            };
+            animate();
+
             const attachCursorEffects = () => {
-                const targets = document.querySelectorAll('a, button, .interactive-link, .nav-item, .current-section, .nav-arrow');
+                const targets = document.querySelectorAll('a, button, .interactive-link, .nav-item, .current-section, .nav-arrow, .footer-cta');
                 targets.forEach(el => {
                     el.addEventListener('mouseenter', () => {
-                        cursorRing.classList.add('cursor-hover');
+                        isHovering = true;
+                        cursorRing.classList.add('magnet');
                         cursorDot.style.opacity = '0';
+
+                        // Calculate center for magnet
+                        const rect = el.getBoundingClientRect();
+                        magnetX = rect.left + rect.width / 2;
+                        magnetY = rect.top + rect.height / 2;
                     });
+
+                    el.addEventListener('mousemove', (e) => {
+                        // Optional: Update magnet target slightly to follow mouse within the button? 
+                        // For now, keep it strictly magnetic to center or just sticky.
+                        // Let's re-calc center in case of scroll (though fixed elements won't move)
+                        const rect = el.getBoundingClientRect();
+                        magnetX = rect.left + rect.width / 2;
+                        magnetY = rect.top + rect.height / 2;
+                    });
+
                     el.addEventListener('mouseleave', () => {
-                        cursorRing.classList.remove('cursor-hover');
+                        isHovering = false;
+                        cursorRing.classList.remove('magnet');
                         cursorDot.style.opacity = '1';
                     });
                 });
@@ -1191,56 +1534,73 @@
             updateClock();
 
             // --- 6. TEXT SCRAMBLE ---
+            // --- 6. TEXT SCRAMBLE ---
             class TextScramble {
                 constructor(el) {
                     this.el = el;
-                    /* REVERTED: Original chars */
-                    this.chars = '!<>-_\\/[]{}—=+*^?#________';
+                    // Removed wide chars like '—' and '_' to reduce width variance
+                    this.chars = '!<>-_\\[]{}=+*^?#';
                     this.update = this.update.bind(this);
                 }
-                setText(newText) {
+
+                setText(newText, durationMultiplier = 1) {
                     const oldText = this.el.innerText;
                     const length = Math.max(oldText.length, newText.length);
                     const promise = new Promise((resolve) => this.resolve = resolve);
                     this.queue = [];
+
                     for (let i = 0; i < length; i++) {
                         const from = oldText[i] || '';
                         const to = newText[i] || '';
-                        const start = Math.floor(Math.random() * 40);
-                        const end = start + Math.floor(Math.random() * 40);
+
+                        // Extended duration for the "dots" phase
+                        const start = Math.floor(Math.random() * 40 * durationMultiplier) + 15; // Delay start slightly
+                        const end = start + Math.floor(Math.random() * 40 * durationMultiplier);
                         this.queue.push({ from, to, start, end });
                     }
+
                     cancelAnimationFrame(this.frameRequest);
                     this.frame = 0;
                     this.update();
                     return promise;
                 }
+
                 update() {
                     let output = '';
                     let complete = 0;
+
                     for (let i = 0, n = this.queue.length; i < n; i++) {
                         let { from, to, start, end, char } = this.queue[i];
+
                         if (this.frame >= end) {
+                            // Phase 3: Final Text
                             complete++;
                             output += to;
                         } else if (this.frame >= start) {
+                            // Phase 2: Scramble Chars
                             if (!char || Math.random() < 0.28) {
                                 char = this.randomChar();
                                 this.queue[i].char = char;
                             }
                             output += `<span class="dud">${char}</span>`;
                         } else {
+                            // Phase 1: Pre-scramble
+                            // User Request: "none of the animations need to start on ...."
+                            // We show the 'from' character (original text) until it starts scrambling.
                             output += from;
                         }
                     }
+
                     this.el.innerHTML = output;
+
                     if (complete === this.queue.length) {
                         this.resolve();
                     } else {
                         this.frameRequest = requestAnimationFrame(this.update);
-                        this.frame++;
+                        this.frame++; // Run at 60fps for smoother chaotic feel
                     }
                 }
+
                 randomChar() {
                     return this.chars[Math.floor(Math.random() * this.chars.length)];
                 }
@@ -1251,9 +1611,32 @@
             const fx = new TextScramble(el);
             let i = 0;
             const next = () => {
-                fx.setText(greetings[i]).then(() => setTimeout(next, 3000));
+                // 1. Lock Width to prevent jitter
+                // We must ensure the element has a width before we start messing with content.
+                // However, different greetings have different lengths, so we might want to just let it flow naturally OR
+                // lock it to the *current* width, scramble, then let it auto-resize for the new text?
+                // The user said: "make sure to calculate their width before so they dont like change the divs too much"
+
+                // Strategy: Lock width to current computed width. 
+                // Scramble to new text. 
+                // Problem: If new text is longer, it might wrap or overflow if locked to old width.
+                // Better Strategy: The "scramble" effect replaces chars. If we lock width to the *larger* of the two?
+                // Or simply lock it to the current width, and only unlock at the very end.
+
+                // Let's try locking to current offsetWidth.
+                const currentWidth = el.offsetWidth;
+                el.style.width = `${currentWidth}px`;
+                el.style.display = 'inline-block'; // Ensure width applies
+                el.style.whiteSpace = 'nowrap'; // Prevent wrapping changes during scramble
+
+                fx.setText(greetings[i]).then(() => {
+                    // Unlock after scramble
+                    el.style.width = 'auto';
+                    setTimeout(next, 4000); // Increased from 3000 to 4000
+                });
                 i = (i + 1) % greetings.length;
             };
+            // Initial Start
             next();
 
             // --- REDACTED TEXT SCRAMBLE ON HOVER ---
@@ -1277,6 +1660,66 @@
                     });
                 });
             });
+
+
+            // --- 6. PRELOADER & SCRAMBLE IN ---
+            const preloader = document.getElementById('preloader');
+            const preloaderTextSpan = document.querySelector('.preloader-text span');
+
+            window.addEventListener('load', () => {
+                // 1. Hang for a bit, then Scramble OUT
+                setTimeout(() => {
+                    if (preloaderTextSpan) {
+                        const fxLoader = new TextScramble(preloaderTextSpan);
+                        // Scramble to empty string, SLOWLY (2.5x duration)
+                        fxLoader.setText('', 2.5).then(() => {
+                            // 2. Lift Preloader after text is gone
+                            setTimeout(() => {
+                                preloader.classList.add('loaded');
+                            }, 650); // Increased from 500 to 650
+                        });
+                    } else {
+                        // Fallback if span not found
+                        preloader.classList.add('loaded');
+                    }
+                }, 800); // Hang for 0.8s before scrambling starts
+            });
+
+            // 2. Scramble On Scroll (IntersectionObserver)
+            // REMOVED GLOBAL SCRAMBLE per user request
+            /*
+            const scrambleOptions = {
+                threshold: 0.2,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const scrambleObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+
+                        // Prevent re-scrambling
+                        if (el.getAttribute('data-scrambled') === 'true') return;
+
+                        // Skip empty text
+                        if (el.textContent.trim() === '') return;
+
+                        const fx = new TextScramble(el);
+                        fx.setText(el.innerText);
+
+                        el.setAttribute('data-scrambled', 'true');
+                        scrambleObserver.unobserve(el);
+                    }
+                });
+            }, scrambleOptions);
+
+            // Target ALL text elements for maximum "jazz"
+            // Note: We use specific tags to avoid breaking layout containers or scripts
+            const targets = document.querySelectorAll('h1, h2, h3, p, a, li, span, strong, em, .nav-item, .footer-cta');
+            targets.forEach(el => scrambleObserver.observe(el));
+            */
+
+            // (Momentum Skew Removed per request)
         });
     </script>
 </body>
