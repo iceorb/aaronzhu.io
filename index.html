@@ -839,15 +839,27 @@
         }
 
         /* 4. Spotlight Effect (Cinematic Hover) */
-        /* Resume List Spotlight */
+        /* Group Level Spotlight (Dims irrelevant groups in the section) */
+        section:has(.resume-item:hover) .content-group:not(:has(.resume-item:hover)) {
+            opacity: 0.3;
+            filter: blur(2px);
+            transition: opacity 0.4s ease, filter 0.4s ease;
+        }
+
+        /* Item Level Spotlight (Dims irrelevant items in the ACTIVE group) */
         .resume-grid:has(.resume-item:hover) .resume-item:not(:hover) {
             opacity: 0.3;
             filter: blur(2px);
             transition: opacity 0.4s ease, filter 0.4s ease;
         }
 
+        /* Remove dashed line on focus */
+        .resume-item:hover {
+            border-bottom-color: transparent;
+        }
+
         .resume-grid .resume-item {
-            transition: opacity 0.4s ease, filter 0.4s ease, transform 0.3s ease;
+            transition: opacity 0.4s ease, filter 0.4s ease, transform 0.3s ease, border-bottom-color 0.3s;
         }
 
         /* Sidebar Library Spotlight */
@@ -855,11 +867,6 @@
             opacity: 0.3;
             filter: blur(1px);
             transition: opacity 0.4s ease, filter 0.4s ease;
-        }
-
-        .reading-sidebar:has(.year-group:hover) .year-group:not(:hover) {
-            opacity: 0.3;
-            transition: opacity 0.4s ease;
         }
 
         /* 5. Click Ripple Effect */
@@ -1106,134 +1113,144 @@
 
         <!-- 02: Experience (Long Content Example) -->
         <section id="experience" class="long-content">
-            <h2 class="serif">Experience</h2>
-            <div class="resume-grid">
-                <div class="resume-item">
-                    <div>
-                        <div class="resume-main"><strong>DoorDash</strong></div>
-                        <div class="resume-sub">Machine Learning Engineer Intern</div>
+            <div class="content-group">
+                <h2 class="serif">Experience</h2>
+                <div class="resume-grid">
+                    <div class="resume-item">
+                        <div>
+                            <div class="resume-main"><strong>DoorDash</strong></div>
+                            <div class="resume-sub">Machine Learning Engineer Intern</div>
+                        </div>
+                        <div class="resume-date">2025</div>
                     </div>
-                    <div class="resume-date">2025</div>
-                </div>
 
-                <div class="resume-item">
-                    <div>
-                        <div class="resume-main"><strong>TikTok</strong></div>
-                        <div class="resume-sub">Software Engineer Intern</div>
+                    <div class="resume-item">
+                        <div>
+                            <div class="resume-main"><strong>TikTok</strong></div>
+                            <div class="resume-sub">Software Engineer Intern</div>
+                        </div>
+                        <div class="resume-date">2024-2025</div>
                     </div>
-                    <div class="resume-date">2024-2025</div>
-                </div>
 
-                <div class="resume-item">
-                    <div>
-                        <div class="resume-main"><strong>Safe Foundational Models Lab</strong></div>
-                        <div class="resume-sub">Undergraduate Researcher</div>
+                    <div class="resume-item">
+                        <div>
+                            <div class="resume-main"><strong>Safe Foundational Models Lab</strong></div>
+                            <div class="resume-sub">Undergraduate Researcher</div>
+                        </div>
+                        <div class="resume-date">2023 - 2025</div>
                     </div>
-                    <div class="resume-date">2023 - 2025</div>
-                </div>
 
 
-                <div class="resume-item">
-                    <div>
-                        <div class="resume-main"><strong>Yonsei University Vision-Language Lab</strong></div>
-                        <div class="resume-sub">Undergraduate Researcher</div>
+                    <div class="resume-item">
+                        <div>
+                            <div class="resume-main"><strong>Yonsei University Vision-Language Lab</strong></div>
+                            <div class="resume-sub">Undergraduate Researcher</div>
+                        </div>
+                        <div class="resume-date">2023</div>
                     </div>
-                    <div class="resume-date">2023</div>
                 </div>
             </div>
         </section>
 
         <!-- 03: Education & Papers -->
         <section id="education" class="long-content">
-            <h2 class="serif">Education</h2>
-            <div class="resume-grid" style="margin-bottom: 4rem;">
-                <div class="resume-item">
-                    <div>
-                        <div class="resume-main"><strong>University of Pennsylvania</strong></div>
-                        <div class="resume-sub">Master of Science in Engineering</div>
+            <div class="content-group">
+                <h2 class="serif">Education</h2>
+                <div class="resume-grid" style="margin-bottom: 4rem;">
+                    <div class="resume-item">
+                        <div>
+                            <div class="resume-main"><strong>University of Pennsylvania</strong></div>
+                            <div class="resume-sub">Master of Science in Engineering</div>
+                        </div>
+                        <div class="resume-date">2026</div>
                     </div>
-                    <div class="resume-date">2026</div>
-                </div>
 
-                <div class="resume-item">
-                    <div>
-                        <div class="resume-main"><strong>University of Wisconsin-Madison</strong></div>
-                        <div class="resume-sub">Bachelor of Science</div>
+                    <div class="resume-item">
+                        <div>
+                            <div class="resume-main"><strong>University of Wisconsin-Madison</strong></div>
+                            <div class="resume-sub">Bachelor of Science</div>
+                        </div>
+                        <div class="resume-date">2021 - 2025</div>
                     </div>
-                    <div class="resume-date">2021 - 2025</div>
                 </div>
             </div>
 
-            <h2 class="serif">Papers</h2>
-            <div class="resume-grid">
-                <div class="resume-item">
-                    <div>
-                        <div class="resume-main"><strong>BackdoorGCG - (Greedy Coordinate Gradient) Prompt Injection
-                                against Falcon, LLaMa</strong></div>
-                        <div class="resume-sub">(working)</div>
+            <div class="content-group">
+                <h2 class="serif">Papers</h2>
+                <div class="resume-grid">
+                    <div class="resume-item">
+                        <div>
+                            <div class="resume-main"><strong>BackdoorGCG - (Greedy Coordinate Gradient) Prompt Injection
+                                    against Falcon, LLaMa</strong></div>
+                            <div class="resume-sub">(working)</div>
+                        </div>
+                        <div class="resume-date">2024</div>
                     </div>
-                    <div class="resume-date">2024</div>
                 </div>
             </div>
         </section>
 
         <!-- 04: Awards -->
         <section id="awards">
-            <h2 class="serif">Awards & Scores</h2>
-            <div class="resume-grid" style="margin-bottom: 4rem;">
-                <div class="resume-item">
-                    <div>
-                        <div class="resume-main"><strong>Lorraine A. & W. Dwight Stone Scholarship</strong></div>
-                        <div class="resume-sub">UW-Madison, Dept. of Economics</div>
-                    </div>
-                    <div class="resume-date">2025</div>
-                </div>
-                <div class="resume-item">
-                    <div>
-                        <div class="resume-main"><strong>Finalist</strong></div>
-                        <div class="resume-sub">GE Healthcare x N+1 Institute</div>
-                    </div>
-                    <div class="resume-date">2025</div>
-                </div>
-                <div class="resume-item">
-                    <div>
-                        <div class="resume-main"><strong>Participant</strong></div>
-                        <div class="resume-sub">Google x N+1 Institute</div>
-                    </div>
-                    <div class="resume-date">2024</div>
-                </div>
-                <div class="resume-item">
-                    <div>
-                        <div class="resume-main"><strong>Invitee</strong></div>
-                        <div class="resume-sub">Palantir for Hospitals, Build the Future</div>
-                    </div>
-                    <div class="resume-date">2024</div>
-                </div>
-                <div class="resume-item">
-                    <div>
-                        <div class="resume-main"><strong>Epic Systems Healthcare Empowerment Award (1st)</strong>
+            <div class="content-group">
+                <h2 class="serif">Awards & Scores</h2>
+                <div class="resume-grid" style="margin-bottom: 4rem;">
+                    <div class="resume-item">
+                        <div>
+                            <div class="resume-main"><strong>Lorraine A. & W. Dwight Stone Scholarship</strong></div>
+                            <div class="resume-sub">UW-Madison, Dept. of Economics</div>
                         </div>
-                        <div class="resume-sub">MadHacks</div>
+                        <div class="resume-date">2025</div>
                     </div>
-                    <div class="resume-date">2023</div>
+                    <div class="resume-item">
+                        <div>
+                            <div class="resume-main"><strong>Finalist</strong></div>
+                            <div class="resume-sub">GE Healthcare x N+1 Institute</div>
+                        </div>
+                        <div class="resume-date">2025</div>
+                    </div>
+                    <div class="resume-item">
+                        <div>
+                            <div class="resume-main"><strong>Participant</strong></div>
+                            <div class="resume-sub">Google x N+1 Institute</div>
+                        </div>
+                        <div class="resume-date">2024</div>
+                    </div>
+                    <div class="resume-item">
+                        <div>
+                            <div class="resume-main"><strong>Invitee</strong></div>
+                            <div class="resume-sub">Palantir for Hospitals, Build the Future</div>
+                        </div>
+                        <div class="resume-date">2024</div>
+                    </div>
+                    <div class="resume-item">
+                        <div>
+                            <div class="resume-main"><strong>Epic Systems Healthcare Empowerment Award (1st)</strong>
+                            </div>
+                            <div class="resume-sub">MadHacks</div>
+                        </div>
+                        <div class="resume-date">2023</div>
+                    </div>
                 </div>
             </div>
 
-            <h2 class="serif">Metrics</h2>
-            <div class="resume-grid">
-                <div class="resume-item">
-                    <div>
-                        <div class="resume-main"><strong>ACT</strong></div>
-                        <div class="resume-sub">36</div>
+            <div class="content-group">
+                <h2 class="serif">Metrics</h2>
+                <div class="resume-grid">
+                    <div class="resume-item">
+                        <div>
+                            <div class="resume-main"><strong>ACT</strong></div>
+                            <div class="resume-sub">36</div>
+                        </div>
+                        <div class="resume-date">-</div>
                     </div>
-                    <div class="resume-date">-</div>
-                </div>
-                <div class="resume-item">
-                    <div>
-                        <div class="resume-main"><strong>SAT</strong></div>
-                        <div class="resume-sub">760 English, 800 Math</div>
+                    <div class="resume-item">
+                        <div>
+                            <div class="resume-main"><strong>SAT</strong></div>
+                            <div class="resume-sub">760 English, 800 Math</div>
+                        </div>
+                        <div class="resume-date">-</div>
                     </div>
-                    <div class="resume-date">-</div>
                 </div>
             </div>
         </section>
