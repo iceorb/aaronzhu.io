@@ -1098,8 +1098,8 @@
         <header id="home">
             <h1 id="dynamic-greeting" class="serif">Hello, I'm Aaron Zhu</h1>
             <div style="margin-top: 2rem;">
-                <p>I'm a engineer and researcher based in NYC. I'm currently working on<span class="redacted">something
-                        secret.</span></p>
+                <p>I'm a engineer and researcher based in NYC. <!-- I'm currently working on<span class="redacted">something
+                        secret.</span> --></p>
                 <p>My recent interest has been in simulations and synthetic data for model and <i>human</i>
                     RL.
                 </p>
@@ -1725,10 +1725,9 @@
                         fx.setText(el.innerText);
 
                         el.setAttribute('data-scrambled', 'true');
-                        scrambleObserver.unobserve(el);
+                        scramble        bserve(el);
                     }
-                });
-            }, scrambleOptions);
+                            }, scrambleOptions);
 
             // Target ALL text elements for maximum "jazz"
             // Note: We use specific tags to avoid breaking layout containers or scripts
