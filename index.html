@@ -2,1741 +2,308 @@
 <html lang="en">
 
 <head>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://use.typekit.net/lqr5xrl.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aaron Zhu</title>
 
-    <style>
-        /* --- Color Scheme & CSS Variables --- */
-        :root {
-            --bg-color: #ffffff;
-            --text-color: #111111;
-            --secondary-text-color: #555;
-            --border-color: #e5e5e5;
-            --accent-color: #DC143C;
-            --cursor-dot-bg: #ffffff;
-
-            --sidebar-bg: rgba(255, 255, 255, 0.65);
-            --sidebar-border: rgba(255, 255, 255, 0.4);
-            --sidebar-shadow: -15px 0 40px rgba(0, 0, 0, 0.08);
-
-            --nav-bg-mobile: rgba(255, 255, 255, 0.9);
-
-            --sidebar-width: 480px;
-            --footer-height: 50vh;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg-color: #0a0a0a;
-                --text-color: #f0f0f0;
-                --secondary-text-color: #888;
-                --border-color: #333;
-                --cursor-dot-bg: #ffffff;
-
-                --sidebar-bg: rgba(20, 20, 20, 0.65);
-                --sidebar-border: rgba(255, 255, 255, 0.1);
-                --sidebar-shadow: -15px 0 40px rgba(0, 0, 0, 0.5);
-
-                --nav-bg-mobile: rgba(20, 20, 20, 0.9);
-            }
-        }
-
-        /* --- Base Styles --- */
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html {
-            height: 100%;
-        }
-
-        body {
-            min-height: 100%;
-            width: 100%;
-            overflow-x: hidden;
-            /* Body scrolls now for reveal footer effect */
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Outfit', 'Helvetica Neue', 'Arial', sans-serif;
-            font-weight: 400;
-            line-height: 1.6;
-            cursor: none;
-        }
-
-        /* 1. Add "Tactile" Texture (Grain/Noise) */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 9000;
-            /* Below cursor, above content */
-            opacity: 0.4;
-            mix-blend-mode: multiply;
-        }
-
-        /* --- Fixed UI Bar (Clock + Nav) --- */
-        .fixed-ui {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 2rem 3rem;
-            z-index: 100;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            pointer-events: none;
-            color: var(--secondary-text-color);
-        }
-
-        .fixed-ui>* {
-            pointer-events: auto;
-        }
-
-        .meta-info {
-            display: flex;
-            flex-direction: column;
-            gap: 0.2rem;
-            font-family: monospace;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            /* 2. Refine Typography */
-            letter-spacing: 0.1em;
-            font-weight: 500;
-            color: var(--secondary-text-color);
-        }
-
-        /* --- Navigation Menu (Vertical Click Dropdown) --- */
-        .section-nav-container {
-            position: relative;
-            font-family: monospace;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            /* 2. Refine Typography */
-            letter-spacing: 0.1em;
-            font-weight: 500;
-            text-align: right;
-            z-index: 102;
-        }
-
-        .current-section {
-            cursor: none;
-            padding-bottom: 4px;
-            border-bottom: 1px solid transparent;
-            transition: color 0.3s, border-color 0.3s;
-            color: var(--secondary-text-color);
-            user-select: none;
-            position: relative;
-            z-index: 104;
-        }
-
-        .current-section:hover,
-        .section-nav-container.active .current-section {
-            border-bottom-color: var(--accent-color);
-            color: var(--text-color);
-        }
-
-        .nav-dropdown {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            margin-top: 1rem;
-
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            padding: 1rem;
-
-            display: flex;
-            flex-direction: column;
-            /* Vertical Layout */
-            gap: 0.8rem;
-            width: 200px;
-
-            opacity: 0;
-            transform: translateY(-10px);
-            pointer-events: none;
-
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            z-index: 103;
-        }
-
-        /* Active State (Click Triggered) */
-        .section-nav-container.active .nav-dropdown {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
-
-        .nav-item {
-            cursor: none;
-            transition: color 0.2s, transform 0.2s, background-size 0.3s ease;
-            text-align: right;
-            color: var(--secondary-text-color);
-
-            background-image: linear-gradient(var(--accent-color), var(--accent-color));
-            background-size: 0% 1px;
-            background-repeat: no-repeat;
-            background-position: right bottom;
-            /* Align right for nav items */
-            padding-bottom: 2px;
-            display: inline-block;
-            /* Needed for background-size */
-        }
-
-        .nav-item:hover {
-            color: var(--accent-color);
-            transform: translateX(-5px);
-            background-size: 100% 1px;
-        }
-
-        /* Subtle shift left on hover */
-
-
-        /* --- Navigation Arrows --- */
-        .nav-arrow {
-            position: fixed;
-            bottom: 3rem;
-            width: 50px;
-            height: 50px;
-            background: transparent;
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: none;
-            z-index: 101;
-            transition: all 0.3s ease;
-            font-size: 1.2rem;
-            color: var(--text-color);
-            opacity: 0;
-            pointer-events: none;
-            backdrop-filter: blur(5px);
-        }
-
-        .nav-arrow.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .nav-arrow:hover {
-            border-color: var(--accent-color);
-            color: var(--accent-color);
-            transform: rotate(90deg) scale(1.1);
-        }
-
-        .prev-arrow {
-            right: 8rem;
-            transform: rotate(90deg);
-        }
-
-        .next-arrow {
-            right: 3rem;
-            transform: rotate(90deg);
-        }
-
-        /* --- Vertical Scroll Container --- */
-        .container {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            scroll-behavior: smooth;
-
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-
-            background-color: var(--bg-color);
-            position: relative;
-            z-index: 1;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-        }
-
-        .footer-spacer {
-            min-height: 100vh;
-            background: transparent;
-            pointer-events: none;
-        }
-
-        .container::-webkit-scrollbar {
-            display: none;
-        }
-
-
-
-        header,
-        section {
-            flex: 0 0 auto;
-            width: 100%;
-            min-height: 100vh;
-            height: auto;
-            padding: 8rem 25vw 8rem 25vw;
-            border-right: none;
-            border-bottom: 1px solid var(--border-color);
-            /* scroll-snap-align: start; REMOVED */
-            /* scroll-snap-stop: always; REMOVED */
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            background-color: var(--bg-color);
-            z-index: 1;
-        }
-
-        footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            padding: 4rem 25vw;
-            background-color: #f1efee;
-            z-index: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            footer {
-                background-color: #1b1919;
-            }
-        }
-
-        section.long-content {
-            justify-content: flex-start;
-            padding-top: 10rem;
-        }
-
-        section {
-            opacity: 0.3;
-            transition: opacity 0.8s ease;
-        }
-
-        section.visible {
-            opacity: 1;
-        }
-
-        /* --- Typography --- */
-        .serif {
-            font-family: 'Source Serif 4', serif;
-            font-weight: 550;
-        }
-
-        h1#dynamic-greeting {
-            font-size: 3.4rem;
-            /* font-weight removed to inherit from .serif */
-            /* 2. Refine Typography: Tighten large headers */
-            letter-spacing: -0.02em;
-            line-height: 1.0;
-            margin-bottom: 2rem;
-        }
-
-        h2.serif {
-            font-size: 2rem;
-            /* font-weight removed to inherit from .serif */
-            margin-bottom: 3rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            width: 100%;
-            font-style: italic;
-        }
-
-        p {
-            max-width: 60ch;
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
-            color: var(--secondary-text-color);
-            font-family: 'Outfit', sans-serif;
-            font-weight: 400;
-        }
-
-        strong {
-            color: var(--text-color);
-            font-weight: 600;
-        }
-
-        .redacted {
-            background-color: var(--secondary-text-color);
-            color: transparent;
-            padding: 0 0.3em;
-            user-select: none;
-            cursor: none;
-            display: inline-block;
-            white-space: nowrap;
-        }
-
-        .redacted.revealed {
-            background-color: transparent;
-            color: var(--secondary-text-color);
-        }
-
-        .redacted .dud {
-            color: var(--secondary-text-color);
-        }
-
-        /* --- Resume Grid --- */
-        .resume-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            width: 100%;
-        }
-
-        .resume-item {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            align-items: baseline;
-            gap: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px dashed var(--border-color);
-        }
-
-        .resume-item:last-child {
-            border-bottom: none;
-        }
-
-        .resume-main {
-            font-size: 1.2rem;
-            color: var(--text-color);
-        }
-
-        .resume-sub {
-            font-size: 1rem;
-            color: var(--secondary-text-color);
-        }
-
-        .resume-date {
-            font-family: monospace;
-            font-size: 0.9rem;
-            color: var(--secondary-text-color);
-            text-transform: uppercase;
-            /* 2. Refine Typography */
-            letter-spacing: 0.1em;
-            font-weight: 500;
-        }
-
-        /* --- Sidebar & Interactive --- */
-        .interactive-link {
-            cursor: none;
-            /* border-bottom: 1px solid var(--accent-color); REMOVED old style */
-            text-decoration: none;
-            position: relative;
-            background-image: linear-gradient(var(--accent-color), var(--accent-color));
-            background-size: 0% 2px;
-            background-repeat: no-repeat;
-            background-position: left bottom;
-            transition: background-size 0.3s ease, color 0.3s ease;
-            padding-bottom: 2px;
-        }
-
-        .interactive-link:hover {
-            background-size: 100% 2px;
-            color: var(--accent-color);
-        }
-
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.25);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s;
-            z-index: 5000;
-        }
-
-        .overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .reading-sidebar {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: var(--sidebar-width);
-            height: 100vh;
-            background-color: var(--sidebar-bg);
-            border-left: 1px solid var(--sidebar-border);
-            backdrop-filter: blur(25px);
-            transform: translateX(100%);
-            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-            z-index: 5001;
-            padding: 4rem 3rem;
-            overflow-y: auto;
-        }
-
-        .reading-sidebar.active {
-            transform: translateX(0);
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 2rem;
-            right: 2rem;
-            background: none;
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            cursor: none;
-            color: var(--text-color);
-            transition: 0.3s;
-        }
-
-        .close-btn:hover {
-            border-color: var(--accent-color);
-            color: var(--accent-color);
-            transform: rotate(90deg);
-        }
-
-        .year-group {
-            margin-bottom: 3rem;
-        }
-
-        .year-label {
-            font-family: monospace;
-            font-size: 1.2rem;
-            border-bottom: 2px solid var(--accent-color);
-            margin-bottom: 1.5rem;
-            display: inline-block;
-        }
-
-        .reading-item {
-            margin-bottom: 1.25rem;
-            display: grid;
-            grid-template-columns: 3rem 1fr;
-            gap: 0.5rem;
-        }
-
-        .reading-link {
-            text-decoration: none;
-            color: var(--text-color);
-            font-size: 1rem;
-            cursor: none;
-            transition: color 0.2s;
-        }
-
-        .reading-link:hover {
-            color: var(--accent-color);
-        }
-
-        .reading-author {
-            font-size: 0.85rem;
-            color: var(--secondary-text-color);
-            display: block;
-        }
-
-        .month-label {
-            font-family: monospace;
-            font-size: 0.75rem;
-            color: var(--secondary-text-color);
-            text-transform: uppercase;
-            padding-top: 3px;
-            /* 2. Refine Typography */
-            letter-spacing: 0.1em;
-            font-weight: 500;
-        }
-
-        /* --- Custom Cursor --- */
-        .cursor-dot {
-            width: 8px;
-            height: 8px;
-            background-color: var(--cursor-dot-bg);
-            mix-blend-mode: difference;
-            border-radius: 50%;
-            /* left/top controlled by transform in JS now */
-            top: 0;
-            left: 0;
-            /* transform: translate(-50%, -50%); MOVED TO JS/INLINE */
-            pointer-events: none;
-            z-index: 9999;
-            transition: opacity 0.4s ease, width 0.3s ease, height 0.3s ease, background-color 0.3s;
-        }
-
-        .cursor-ring {
-            width: 40px;
-            height: 40px;
-            border: 1px solid var(--accent-color);
-            border-radius: 50%;
-            top: 0;
-            left: 0;
-            /* transform handled in JS */
-
-            /* 5. Interactive "breathing" for the Cursor */
-            transition: transform 0.2s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.2s;
-        }
-
-        .cursor-ring.cursor-hover {
-            transform: translate(-50%, -50%) scale(1.5);
-            opacity: 1;
-            border-width: 2px;
-        }
-
-        /* --- Footer Links --- */
-        .footer-links {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .footer-links a {
-            display: inline-block;
-            /* Required for background-size to work on text width */
-            color: var(--secondary-text-color);
-            margin-bottom: 1rem;
-            text-decoration: none;
-            font-family: monospace;
-            font-size: 1rem;
-            cursor: none;
-
-            background-image: linear-gradient(var(--accent-color), var(--accent-color));
-            background-size: 0% 1px;
-            background-repeat: no-repeat;
-            background-position: left bottom;
-            transition: background-size 0.3s ease, color 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: var(--accent-color);
-            background-size: 100% 1px;
-        }
-
-        /* 7. Print Styles */
-        @media print {
-
-            .fixed-ui,
-            .nav-arrow,
-            .cursor-dot,
-            .cursor-ring,
-            .reading-sidebar,
-            footer {
-                display: none !important;
-            }
-
-            .container {
-                height: auto;
-                overflow: visible;
-            }
-
-            section {
-                opacity: 1 !important;
-                page-break-after: always;
-                padding: 2rem !important;
-            }
-        }
-
-        /* --- Responsive --- */
-        @media (max-width: 850px) {
-
-            header,
-            section,
-            footer {
-                padding: 6rem 2rem;
-            }
-
-            .fixed-ui {
-                display: none;
-            }
-
-            /* Hidden on mobile per request */
-            h1#dynamic-greeting {
-                font-size: 2.5rem;
-            }
-
-            .reading-sidebar {
-                width: 100vw;
-            }
-
-            body {
-                overflow: auto;
-            }
-
-            .nav-dropdown {
-                display: none;
-            }
-
-            /* Ensure dropdown doesn't stick around */
-
-            /* Mobile Nav Arrows: positioned at corners */
-            .nav-arrow {
-                bottom: 1.5rem;
-                width: 50px;
-                height: 50px;
-                background: rgba(255, 255, 255, 0.9);
-                cursor: pointer;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            }
-
-            .prev-arrow {
-                right: 4.5rem;
-            }
-
-            .next-arrow {
-                right: 1rem;
-            }
-        }
-
-        @media (pointer: coarse) {
-
-            html,
-            body {
-                cursor: auto;
-            }
-
-            .cursor-dot,
-            .cursor-ring {
-                display: none;
-            }
-
-            .interactive-link,
-            .close-btn,
-            .reading-link,
-            .footer-links a,
-            .current-section,
-            .nav-item,
-            .nav-arrow {
-                cursor: pointer;
-            }
-        }
-    </style>
-    <style>
-        /* --- BRAND NEW PERSONALITY INJECTIONS --- */
-
-        /* 0. Custom Selection */
-        ::selection {
-            background-color: var(--accent-color);
-            color: #fff;
-        }
-
-        /* 1. Gradient Orb (Hero Background) */
-        .gradient-orb {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 800px;
-            height: 800px;
-            background: radial-gradient(circle, rgba(220, 20, 60, 0.15) 0%, rgba(220, 20, 60, 0) 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 0;
-            /* Behind content */
-            transform: translate(-50%, -50%);
-            transition: opacity 2s ease;
-            mix-blend-mode: color-burn;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            .gradient-orb {
-                background: radial-gradient(circle, rgba(220, 20, 60, 0.12) 0%, rgba(220, 20, 60, 0) 70%);
-                mix-blend-mode: screen;
-            }
-        }
-
-        /* 2. Enhanced Magnetic Cursor Ring */
-        .cursor-ring {
-            width: 40px;
-            height: 40px;
-            border: 1px solid var(--accent-color);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9998;
-            opacity: 0;
-            transform: translate(-50%, -50%);
-            /* Removed CSS transition for top/left to allow JS lerp */
-            transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.4s ease,
-                opacity 0.4s ease,
-                background-color 0.6s ease;
-            /* Slower fade out for background */
-            will-change: transform, width, height;
-        }
-
-        .cursor-ring.active {
-            opacity: 1;
-        }
-
-        .cursor-ring.magnet {
-            width: 60px;
-            height: 60px;
-            background-color: rgba(220, 20, 60, 0.05);
-            border-color: transparent;
-        }
-
-        /* 3. Refined Scroll Reveals */
-        section {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1), transform 1.0s cubic-bezier(0.16, 1, 0.3, 1);
-            will-change: opacity, transform;
-        }
-
-        section.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Staggered List Items */
-        .resume-item {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-
-        section.visible .resume-item {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        section.visible .resume-item:nth-child(1) {
-            transition-delay: 0.1s;
-        }
-
-        section.visible .resume-item:nth-child(2) {
-            transition-delay: 0.2s;
-        }
-
-        section.visible .resume-item:nth-child(3) {
-            transition-delay: 0.3s;
-        }
-
-        section.visible .resume-item:nth-child(4) {
-            transition-delay: 0.4s;
-        }
-
-        section.visible .resume-item:nth-child(5) {
-            transition-delay: 0.5s;
-        }
-
-        /* 4. Spotlight Effect (Cinematic Hover) */
-        /* Group Level Spotlight (Dims irrelevant groups in the section) */
-        section:has(.resume-item:hover) .content-group:not(:has(.resume-item:hover)) {
-            opacity: 0.3;
-            filter: blur(2px);
-            transition: opacity 0.4s ease, filter 0.4s ease;
-        }
-
-        /* Item Level Spotlight (Dims irrelevant items in the ACTIVE group) */
-        .resume-grid:has(.resume-item:hover) .resume-item:not(:hover) {
-            opacity: 0.3;
-            filter: blur(2px);
-            transition: opacity 0.4s ease, filter 0.4s ease;
-        }
-
-        /* Remove dashed line on focus */
-        .resume-item:hover {
-            border-bottom-color: transparent;
-        }
-
-        .resume-grid .resume-item {
-            transition: opacity 0.4s ease, filter 0.4s ease, transform 0.3s ease, border-bottom-color 0.3s;
-        }
-
-        /* Sidebar Library Spotlight */
-        .reading-sidebar:has(.reading-item:hover) .reading-item:not(:hover) {
-            opacity: 0.3;
-            filter: blur(1px);
-            transition: opacity 0.4s ease, filter 0.4s ease;
-        }
-
-        /* 5. Click Ripple Effect */
-        .click-ripple {
-            position: fixed;
-            width: 20px;
-            height: 20px;
-            border: 1px solid var(--accent-color);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9997;
-            animation: rippleAnim 0.6s ease-out forwards;
-            opacity: 0;
-        }
-
-        @keyframes rippleAnim {
-            0% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 0.8;
-                border-width: 1px;
-            }
-
-            100% {
-                transform: translate(-50%, -50%) scale(4);
-                opacity: 0;
-                border-width: 0px;
-            }
-        }
-
-        /* 6. Footer Personality */
-        .footer-cta {
-            font-family: 'Outfit', sans-serif;
-            font-size: clamp(3rem, 15vw, 10rem);
-            font-weight: 800;
-            line-height: 1;
-            color: transparent;
-            -webkit-text-stroke: 1px var(--secondary-text-color);
-            opacity: 0.2;
-            margin-bottom: 2rem;
-            user-select: none;
-            transition: all 0.5s ease;
-            cursor: none;
-        }
-
-        .footer-cta:hover {
-            opacity: 0.8;
-            -webkit-text-stroke: 1px var(--accent-color);
-            transform: scale(1.02);
-        }
-
-        /* 7. Cinematic Preloader */
-        .preloader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--bg-color);
-            z-index: 10000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1);
-            will-change: transform;
-        }
-
-        .preloader.loaded {
-            transform: translateY(-100%);
-        }
-
-        .preloader-text {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.2rem;
-            color: var(--text-color);
-            letter-spacing: 0.1em;
-            overflow: hidden;
-        }
-
-        .preloader-text span {
-            display: inline-block;
-            transform: translateY(0);
-            transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
-        }
-
-        .preloader.loaded .preloader-text span {
-            transform: translateY(-100px);
-            /* Fly up before curtain lifts */
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-    <!-- Preloader -->
-    <div class="preloader" id="preloader">
-        <div class="preloader-text">
-            <span>LOADING...</span>
-        </div>
+
+    <div class="noise"></div>
+    <div class="orb" id="orb"></div>
+    <!-- cursor-dot removed -->
+    <div class="cursor-circle" id="c-circle"></div>
+
+    <div class="hud">
+        <div id="time">00:00</div>
+        <div id="theme-btn" class="glass-pill magnet" role="button" style="cursor: pointer; pointer-events: auto;">MODE:
+            DEFAULT</div>
     </div>
 
-    <div class="gradient-orb"></div>
-    <div class="overlay" id="overlay"></div>
-
-    <!-- Fixed UI: Clock + Section Navigator -->
-    <div class="fixed-ui">
-        <div class="meta-info">
-            <div id="clock">Loading...</div>
-            <div id="time">00:00:00</div>
-        </div>
-
-        <div class="section-nav-container" id="nav-container">
-            <!-- Added onclick handler to toggle active state -->
-            <div class="current-section" id="current-section-label">01 // HOME</div>
-
-            <div class="nav-dropdown">
-                <!-- Vertical Dropdown Items -->
-                <div class="nav-item" data-target="home">HOME<sup>01</sup></div>
-                <div class="nav-item" data-target="experience">EXPERIENCE<sup>02</sup></div>
-                <div class="nav-item" data-target="education">EDUCATION<sup>03</sup></div>
-                <div class="nav-item" data-target="awards">AWARDS<sup>04</sup></div>
-                <div class="nav-item" data-target="footer-spacer">CONTACT<sup>05</sup></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Nav Arrows (Rotated in CSS to Point Up/Down) -->
-    <button class="nav-arrow prev-arrow" id="prev-btn" aria-label="Previous Section">←</button>
-    <button class="nav-arrow next-arrow" id="next-btn" aria-label="Next Section">→</button>
+    <div class="layout">
 
 
-    <!-- Sidebar -->
-    <aside class="reading-sidebar" id="reading-sidebar">
-        <button class="close-btn" id="close-sidebar">✕</button>
-        <h2 class="serif" style="margin-top: 2rem; border: none;">Library</h2>
 
-        <div class="year-group">
-            <span class="year-label">AI & Alignment</span>
-            <div class="reading-item">
-                <span class="month-label">—</span>
-                <div>
-                    <a href="https://www.anthropic.com/research/agentic-misalignment" class="reading-link">Agentic
-                        Misalignment: How LLMs could be insider threats</a>
-                    <span class="reading-author">Lynch et al.</span>
-                </div>
-            </div>
-            <div class="reading-item">
-                <span class="month-label">—</span>
-                <div>
-                    <a href="https://blog.tilderesearch.com/blog/sparse-attn" class="reading-link">Sparsity is
-                        Cool</a>
-                    <span class="reading-author">Dhruv Pai et al.</span>
-                </div>
-            </div>
-            <div class="reading-item">
-                <span class="month-label">—</span>
-                <div>
-                    <a href="#" class="reading-link">Deep Reinforcement Learning from Human Preferences</a>
-                    <span class="reading-author">Christiano et al.</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="year-group">
-            <span class="year-label">On Living</span>
-            <div class="reading-item">
-                <span class="month-label">—</span>
-                <div>
-                    <a href="https://theplaygroundofideas.substack.com/p/do-it-or-do-not-you-will-regret-both"
-                        class="reading-link">do it, or do not; you will regret both</a>
-                    <span class="reading-author">Kehinde</span>
-                </div>
-            </div>
-            <div class="reading-item">
-                <span class="month-label">—</span>
-                <div>
-                    <a href="https://www.youtube.com/watch?v=nxpITF8fswE" class="reading-link">We Are Here On Earth
-                        To
-                        Fart Around</a>
-                    <span class="reading-author">Kurt Vonnegut</span>
-                </div>
-            </div>
-            <div class="reading-item">
-                <span class="month-label">—</span>
-                <div>
-                    <a href="https://en.wikipedia.org/wiki/Profession_(novella)" class="reading-link">Profession</a>
-                    <span class="reading-author">Isaac Asimov</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="year-group">
-            <span class="year-label">Society & Economics</span>
-            <div class="reading-item">
-                <span class="month-label">—</span>
-                <div>
-                    <a href="https://www.goodreads.com/book/show/219561103-inheritocracy"
-                        class="reading-link">Inheritocracy</a>
-                    <span class="reading-author">Eliza Filby</span>
-                </div>
-            </div>
-            <div class="reading-item">
-                <span class="month-label">—</span>
-                <div>
-                    <a href="https://digitaltinz.substack.com/p/no-original-thoughts-club" class="reading-link">no
-                        original thoughts club</a>
-                    <span class="reading-author">Tina Zhang</span>
-                </div>
-            </div>
-            <div class="reading-item">
-                <span class="month-label">—</span>
-                <div>
-                    <a href="#" class="reading-link">Thinking, Fast and Slow</a>
-                    <span class="reading-author">Daniel Kahneman</span>
-                </div>
-            </div>
-            <div class="reading-item">
-                <span class="month-label">—</span>
-                <div>
-                    <a href="#" class="reading-link">The Idea Factory</a>
-                    <span class="reading-author">Jon Gertner</span>
-                </div>
-            </div>
-        </div>
-    </aside>
-
-    <!-- Main Vertical Container -->
-    <div class="container" id="scroll-container">
-
-        <!-- 01: Home -->
-        <header id="home">
-            <h1 id="dynamic-greeting" class="serif">Hello, I'm Aaron Zhu</h1>
-            <div style="margin-top: 2rem;">
-                <p>I'm a engineer and researcher based in NYC. <!-- I'm currently working on<span class="redacted">something
-                        secret.</span> --></p>
-                <p>My recent interest has been in simulations and synthetic data for model and <i>human</i>
-                    RL.
+        <main>
+            <section id="home" class="visible"
+                style="min-height: calc(100vh - 10rem); display: flex; flex-direction: column; justify-content: center; position: relative;">
+                <h1 class="serif">
+                    <span class="scramble">hi, i'm aaron.</span>
+                </h1>
+                <p>
+                    I'm an engineer and researcher currently based in NYC.
                 </p>
-                <p>Outside of work, I try to travel, read, write, snowboard, and play tennis as much as possible. Some
-                    readings I find impactful are available <span id="open-reading-list" class="interactive-link">
-                        here</span>. And besides English
-                    and Mandarin, I speak French, Korean and Japanese at
-                    varying levels of proficiency.</p>
-            </div>
-        </header>
-
-        <!-- 02: Experience (Long Content Example) -->
-        <section id="experience" class="long-content">
-            <div class="content-group">
-                <h2 class="serif">Experience</h2>
-                <div class="resume-grid">
-                    <div class="resume-item">
-                        <div>
-                            <div class="resume-main"><strong>DoorDash</strong></div>
-                            <div class="resume-sub">Machine Learning Engineer Intern</div>
-                        </div>
-                        <div class="resume-date">2025</div>
-                    </div>
-
-                    <div class="resume-item">
-                        <div>
-                            <div class="resume-main"><strong>TikTok</strong></div>
-                            <div class="resume-sub">Software Engineer Intern</div>
-                        </div>
-                        <div class="resume-date">2024-2025</div>
-                    </div>
-
-                    <div class="resume-item">
-                        <div>
-                            <div class="resume-main"><strong>Safe Foundational Models Lab</strong></div>
-                            <div class="resume-sub">Undergraduate Researcher</div>
-                        </div>
-                        <div class="resume-date">2023 - 2025</div>
-                    </div>
-
-
-                    <div class="resume-item">
-                        <div>
-                            <div class="resume-main"><strong>Yonsei University Vision-Language Lab</strong></div>
-                            <div class="resume-sub">Undergraduate Researcher</div>
-                        </div>
-                        <div class="resume-date">2023</div>
+                <p>
+                    My recent interest has been in simulations and synthetic data for model and human RL.
+                </p>
+                <p>
+                    Outside of work, I try to travel, read, write, snowboard, and play tennis as much as possible.
+                </p>
+                <p style="font-size: 0.95rem; margin-top: 2rem;" class="mono">
+                    <a href="reading.html" class="magnet">READING LIST</a> / <a href="acknowledgements.html"
+                        class="magnet">ACKNOWLEDGEMENTS</a> / <span class="dropdown">
+                        <span class="dropdown-trigger magnet">GAMES ▾</span>
+                        <span class="dropdown-menu">
+                            <a href="game.html">Agent Evolution</a>
+                            <a href="bucky.html">Bucky's Last Stand</a>
+                        </span>
+                    </span>
+                </p>
+                <div id="scroll-hint"
+                    style="position: absolute; bottom: 2rem; left: 0; opacity: 0; transition: opacity 1s ease;">
+                    <div style="animation: bounce 2s infinite;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 5v14M19 12l-7 7-7-7" />
+                        </svg>
                     </div>
                 </div>
-            </div>
-        </section>
+                <style>
+                    @keyframes bounce {
 
-        <!-- 03: Education & Papers -->
-        <section id="education" class="long-content">
-            <div class="content-group">
+                        0%,
+                        100% {
+                            transform: translateY(0);
+                            opacity: 0.3;
+                        }
+
+                        50% {
+                            transform: translateY(5px);
+                            opacity: 0.7;
+                        }
+                    }
+                </style>
+            </section>
+
+            <section id="exp">
+                <h2 class="serif">Selected Work</h2>
+                <div class="resume-list">
+                    <div class="resume-item magnet-area">
+                        <div>
+                            <span class="role">Machine Learning Engineer Intern</span>
+                            <span class="company">DoorDash</span>
+                        </div>
+                        <span class="date">2025</span>
+                    </div>
+                    <div class="resume-item magnet-area">
+                        <div>
+                            <span class="role">Software Engineer Intern</span>
+                            <span class="company">TikTok</span>
+                        </div>
+                        <span class="date">2024 — 2025</span>
+                    </div>
+                    <div class="resume-item magnet-area">
+                        <div>
+                            <span class="role">Undergraduate Researcher</span>
+                            <span class="company">Safe Foundational Models Lab</span>
+                        </div>
+                        <span class="date">2023 — 2025</span>
+                    </div>
+                    <div class="resume-item magnet-area">
+                        <div>
+                            <span class="role">Undergraduate Researcher</span>
+                            <span class="company">Yonsei University Vision-Language Lab</span>
+                        </div>
+                        <span class="date">2023</span>
+                    </div>
+                </div>
+            </section>
+
+            <section id="edu">
                 <h2 class="serif">Education</h2>
-                <div class="resume-grid" style="margin-bottom: 4rem;">
-                    <div class="resume-item">
+                <div class="resume-list">
+                    <div class="resume-item magnet-area">
                         <div>
-                            <div class="resume-main"><strong>University of Pennsylvania</strong></div>
-                            <div class="resume-sub">Master of Science in Engineering</div>
+                            <span class="role">M.S. Engineering (AI + Data Science)</span>
+                            <span class="company">University of Pennsylvania</span>
                         </div>
-                        <div class="resume-date">2026</div>
+                        <span class="date">2026</span>
                     </div>
-
-                    <div class="resume-item">
+                    <div class="resume-item magnet-area">
                         <div>
-                            <div class="resume-main"><strong>University of Wisconsin-Madison</strong></div>
-                            <div class="resume-sub">Bachelor of Science</div>
+                            <span class="role">B.S. Computer Science, Math, Econ</span>
+                            <span class="company">University of Wisconsin-Madison</span>
                         </div>
-                        <div class="resume-date">2021 - 2025</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="content-group">
-                <h2 class="serif">Papers</h2>
-                <div class="resume-grid">
-                    <div class="resume-item">
-                        <div>
-                            <div class="resume-main"><strong>BackdoorGCG - (Greedy Coordinate Gradient) Prompt Injection
-                                    against Falcon, LLaMa</strong></div>
-                            <div class="resume-sub">(working)</div>
-                        </div>
-                        <div class="resume-date">2024</div>
+                        <span class="date">2021 — 2025</span>
                     </div>
                 </div>
-            </div>
-        </section>
 
-        <!-- 04: Awards -->
-        <section id="awards">
-            <div class="content-group">
-                <h2 class="serif">Awards & Scores</h2>
-                <div class="resume-grid" style="margin-bottom: 4rem;">
-                    <div class="resume-item">
+                <h2 class="serif" style="margin-top: 4rem;">Papers</h2>
+                <div class="resume-list">
+                    <div class="resume-item magnet-area">
                         <div>
-                            <div class="resume-main"><strong>Lorraine A. & W. Dwight Stone Scholarship</strong></div>
-                            <div class="resume-sub">UW-Madison, Dept. of Economics</div>
+                            <span class="role">BackdoorGCG: Prompt Injection against Falcon, LLaMa</span>
+                            <span class="company">Greedy Coordinate Gradient optimization</span>
                         </div>
-                        <div class="resume-date">2025</div>
-                    </div>
-                    <div class="resume-item">
-                        <div>
-                            <div class="resume-main"><strong>Finalist</strong></div>
-                            <div class="resume-sub">GE Healthcare x N+1 Institute</div>
-                        </div>
-                        <div class="resume-date">2025</div>
-                    </div>
-                    <div class="resume-item">
-                        <div>
-                            <div class="resume-main"><strong>Participant</strong></div>
-                            <div class="resume-sub">Google x N+1 Institute</div>
-                        </div>
-                        <div class="resume-date">2024</div>
-                    </div>
-                    <div class="resume-item">
-                        <div>
-                            <div class="resume-main"><strong>Invitee</strong></div>
-                            <div class="resume-sub">Palantir for Hospitals, Build the Future</div>
-                        </div>
-                        <div class="resume-date">2024</div>
-                    </div>
-                    <div class="resume-item">
-                        <div>
-                            <div class="resume-main"><strong>Epic Systems Healthcare Empowerment Award (1st)</strong>
-                            </div>
-                            <div class="resume-sub">MadHacks</div>
-                        </div>
-                        <div class="resume-date">2023</div>
+                        <span class="date">2024</span>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="content-group">
-                <h2 class="serif">Metrics</h2>
-                <div class="resume-grid">
-                    <div class="resume-item">
-                        <div>
-                            <div class="resume-main"><strong>ACT</strong></div>
-                            <div class="resume-sub">36</div>
-                        </div>
-                        <div class="resume-date">-</div>
+            <section id="awards">
+                <h2 class="serif">Recognition</h2>
+                <div class="resume-list">
+                    <div class="resume-item magnet-area">
+                        <div><span class="role">Lorraine A. & W. Dwight Stone Scholarship</span></div>
+                        <span class="date">2025</span>
                     </div>
-                    <div class="resume-item">
-                        <div>
-                            <div class="resume-main"><strong>SAT</strong></div>
-                            <div class="resume-sub">760 English, 800 Math</div>
-                        </div>
-                        <div class="resume-date">-</div>
+                    <div class="resume-item magnet-area">
+                        <div><span class="role">Finalist — GE Healthcare x N+1 Institute</span></div>
+                        <span class="date">2025</span>
+                    </div>
+                    <div class="resume-item magnet-area">
+                        <div><span class="role">1st Place — Healthcare Empowerment (MadHacks)</span></div>
+                        <span class="date">2023</span>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+
+            <footer style="margin-top: 10rem; padding-bottom: 4rem;">
+                <div style="display: flex; gap: 2rem; margin-bottom: 2rem;" class="mono">
+                    <a href="mailto:amzhu@upenn.edu" class="magnet">EMAIL</a>
+                    <a href="#" class="magnet">LINKEDIN</a>
+                </div>
+                <p class="mono" style="color: var(--tertiary);">© 2026 Aaron Zhu</p>
+            </footer>
+
+        </main>
     </div>
 
-    <!-- Transparent spacer for footer reveal -->
-    <div class="footer-spacer" id="footer-spacer"></div>
-
-    <!-- 05: Footer (Contact) - Outside container for reveal effect -->
-    <footer id="footer">
-        <h2 class="footer-cta">SAY HELLO</h2>
-        <div class="footer-links">
-            <a href="#">Email</a>
-            <!-- <a href="#">Photography</a> -->
-            <!-- <a href="#">Writing</a> -->
-            <!-- <a href="#">Twitter/X</a> -->
-            <a href="#">LinkedIn</a>
-        </div>
-        <p
-            style="margin-top: 2rem; font-size: 0.8rem; border-top: 1px solid var(--border-color); padding-top: 1rem; width: 100%; max-width: 300px;">
-            © 2026 Aaron Zhu
-        </p>
-    </footer>
-
+    <script src="common.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        // --- 1. MOUSE PHYSICS & ORB ---
+        // (Handled by common.js)
 
-            // --- 1. VERTICAL SCROLL LOGIC ---
-            const scrollContainer = document.querySelector('.container');
-            const sections = document.querySelectorAll('.container > *');
-            const navLabel = document.getElementById('current-section-label');
-            const navItems = document.querySelectorAll('.nav-item');
-            const navContainer = document.getElementById('nav-container');
+        // --- 2. THEME SWITCHER LOGIC ---
+        // (Handled by common.js)
 
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
+        // --- 3. SCROLL PROGRESS (Specific to this page) ---
+        const progressEl = document.getElementById('progress');
+        window.addEventListener('scroll', () => {
+            // Update Progress
+            const scrolled = window.scrollY;
+            const max = document.body.scrollHeight - window.innerHeight;
+            const percentage = Math.round((scrolled / max) * 100);
+            if (progressEl) progressEl.innerText = percentage;
+        });
 
-            const sectionIds = ['home', 'experience', 'education', 'awards', 'footer-spacer'];
-            let currentSectionIndex = 0;
+        // --- 4. TIME ---
+        // (Handled by common.js)
 
-            const sectionMap = {
-                'home': 'HOME<sup>01</sup>',
-                'experience': 'EXPERIENCE<sup>02</sup>',
-                'education': 'EDUCATION<sup>03</sup>',
-                'awards': 'AWARDS<sup>04</sup>',
-                'footer-spacer': 'CONTACT<sup>05</sup>'
-            };
-
-            // Helper to update arrow state
-            const updateArrows = (index) => {
-                if (index <= 0) {
-                    prevBtn.classList.remove('active');
-                } else {
-                    prevBtn.classList.add('active');
-                }
-                if (index >= sectionIds.length - 1) {
-                    nextBtn.classList.remove('active');
-                } else {
-                    nextBtn.classList.add('active');
-                }
-            };
-
-            // Observer to update top label on scroll
-            const observerOptions = {
-                root: null,
-                threshold: 0.2
-            };
-
-            const sectionObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-
-                        const id = entry.target.id;
-                        if (sectionMap[id]) {
-                            navLabel.innerHTML = sectionMap[id];
-                        }
-
-                        const newIndex = sectionIds.indexOf(id);
-                        if (newIndex !== -1) {
-                            currentSectionIndex = newIndex;
-                            updateArrows(currentSectionIndex);
-                        }
-
-                        // NEW LOGIC: Hide current section from dropdown
-                        navItems.forEach(item => {
-                            if (item.getAttribute('data-target') === id) {
-                                item.style.display = 'none';
-                            } else {
-                                item.style.display = 'block';
-                            }
-                        });
-
-                    }
-                });
-            }, observerOptions);
-
-            sections.forEach(sec => sectionObserver.observe(sec));
-            // Also observe footer-spacer
-            const footerSpacer = document.getElementById('footer-spacer');
-            if (footerSpacer) sectionObserver.observe(footerSpacer);
-
-            // Arrow Click Handlers
-            prevBtn.addEventListener('click', () => {
-                if (currentSectionIndex > 0) {
-                    const prevId = sectionIds[currentSectionIndex - 1];
-                    document.getElementById(prevId).scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-
-            nextBtn.addEventListener('click', () => {
-                if (currentSectionIndex < sectionIds.length - 1) {
-                    const nextId = sectionIds[currentSectionIndex + 1];
-                    document.getElementById(nextId).scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-
-            // --- 2. UPDATED NAVIGATION LOGIC (CLICK ONLY) ---
-
-            // Toggle menu on label click
-            navLabel.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent document click from closing it immediately
-                navContainer.classList.toggle('active');
-            });
-
-            // Navigate on item click
-            navItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    const targetId = item.getAttribute('data-target');
-                    const targetEl = document.getElementById(targetId);
-                    if (targetEl) {
-                        targetEl.scrollIntoView({ behavior: 'smooth' });
-                    }
-                    // Close menu after clicking
-                    navContainer.classList.remove('active');
-                });
-            });
-
-            // Close dropdown when clicking anywhere else
-            document.addEventListener('click', (e) => {
-                if (!navContainer.contains(e.target)) {
-                    navContainer.classList.remove('active');
-                }
-            });
-
-            // --- 3. MAGNETIC CURSOR & GRADIENT ORB ---
-            const cursorDot = document.querySelector('.cursor-dot') || document.createElement('div');
-            const cursorRing = document.querySelector('.cursor-ring') || document.createElement('div');
-            const orb = document.querySelector('.gradient-orb');
-
-            if (!cursorDot.parentNode) {
-                cursorDot.className = 'cursor-dot';
-                document.body.appendChild(cursorDot);
-                cursorRing.className = 'cursor-ring';
-                document.body.appendChild(cursorRing);
+        // --- 5. TEXT SCRAMBLE (Synced from index.html) ---
+        class TextScramble {
+            constructor(el) {
+                this.el = el;
+                // Removed wide chars like '—' and '_' to reduce width variance
+                this.chars = '!<>-_\\[]{}=+*^?#';
+                this.update = this.update.bind(this);
             }
 
-            // State
-            let mouseX = -100, mouseY = -100;
-            let ringX = -100, ringY = -100;
-            let orbX = -100, orbY = -100;
-            let isHovering = false;
-            let magnetX = 0, magnetY = 0;
+            setText(newText, durationMultiplier = 1) {
+                const oldText = this.el.innerText;
+                const length = Math.max(oldText.length, newText.length);
+                const promise = new Promise((resolve) => this.resolve = resolve);
+                this.queue = [];
 
-            // Config
-            const RING_LERP = 0.15;
-            const ORB_LERP = 0.03;
+                for (let i = 0; i < length; i++) {
+                    const from = oldText[i] || '';
+                    const to = newText[i] || '';
 
-            // --- CLICK RIPPLE ---
-            document.addEventListener('click', (e) => {
-                const ripple = document.createElement('div');
-                ripple.className = 'click-ripple';
-                ripple.style.left = `${e.clientX}px`;
-                ripple.style.top = `${e.clientY}px`;
-                document.body.appendChild(ripple);
-
-                // Cleanup
-                setTimeout(() => ripple.remove(), 600);
-            });
-
-            window.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-
-                // Immediate dot update
-                cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`; // centered
-
-                // Show ring if moved
-                cursorRing.classList.add('active');
-            });
-
-            const lerp = (start, end, t) => {
-                return start * (1 - t) + end * t;
-            };
-
-            const animate = () => {
-                // Orb Logic (Floaty)
-                if (orb) {
-                    orbX = lerp(orbX, mouseX, ORB_LERP);
-                    orbY = lerp(orbY, mouseY, ORB_LERP);
-                    orb.style.transform = `translate(${orbX}px, ${orbY}px) translate(-50%, -50%)`;
+                    // Extended duration for the "dots" phase
+                    const start = Math.floor(Math.random() * 40 * durationMultiplier) + 15; // Delay start slightly
+                    const end = start + Math.floor(Math.random() * 40 * durationMultiplier);
+                    this.queue.push({ from, to, start, end });
                 }
 
-                // Cursor Ring Logic
-                let targetX = mouseX;
-                let targetY = mouseY;
-
-                if (isHovering) {
-                    // Magnetic pull
-                    targetX = lerp(mouseX, magnetX, 0.4);
-                    targetY = lerp(mouseY, magnetY, 0.4);
-                }
-
-                ringX = lerp(ringX, targetX, RING_LERP);
-                ringY = lerp(ringY, targetY, RING_LERP);
-
-                cursorRing.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
-
-                requestAnimationFrame(animate);
-            };
-            animate();
-
-            const attachCursorEffects = () => {
-                const targets = document.querySelectorAll('a, button, .interactive-link, .nav-item, .current-section, .nav-arrow, .footer-cta');
-                targets.forEach(el => {
-                    el.addEventListener('mouseenter', () => {
-                        isHovering = true;
-                        cursorRing.classList.add('magnet');
-                        cursorDot.style.opacity = '0';
-
-                        // Calculate center for magnet
-                        const rect = el.getBoundingClientRect();
-                        magnetX = rect.left + rect.width / 2;
-                        magnetY = rect.top + rect.height / 2;
-                    });
-
-                    el.addEventListener('mousemove', (e) => {
-                        // Optional: Update magnet target slightly to follow mouse within the button? 
-                        // For now, keep it strictly magnetic to center or just sticky.
-                        // Let's re-calc center in case of scroll (though fixed elements won't move)
-                        const rect = el.getBoundingClientRect();
-                        magnetX = rect.left + rect.width / 2;
-                        magnetY = rect.top + rect.height / 2;
-                    });
-
-                    el.addEventListener('mouseleave', () => {
-                        isHovering = false;
-                        cursorRing.classList.remove('magnet');
-                        cursorDot.style.opacity = '1';
-                    });
-                });
-            };
-            attachCursorEffects();
-
-            // --- 4. SIDEBAR LOGIC ---
-            const openTrigger = document.getElementById('open-reading-list');
-            const closeTrigger = document.getElementById('close-sidebar');
-            const sidebar = document.getElementById('reading-sidebar');
-            const overlay = document.getElementById('overlay');
-            const mainContent = document.getElementById('scroll-container');
-
-            function toggleSidebar() {
-                const isActive = sidebar.classList.contains('active');
-                const fixedUI = document.querySelector('.fixed-ui');
-                const footer = document.getElementById('footer');
-
-                if (!isActive) {
-                    sidebar.classList.add('active');
-                    overlay.classList.add('active');
-                    mainContent.style.filter = "blur(4px)";
-                    if (fixedUI) fixedUI.style.filter = "blur(4px)";
-                    if (footer) footer.style.filter = "blur(4px)";
-                } else {
-                    sidebar.classList.remove('active');
-                    overlay.classList.remove('active');
-                    mainContent.style.filter = "none";
-                    if (fixedUI) fixedUI.style.filter = "none";
-                    if (footer) footer.style.filter = "none";
-                }
+                cancelAnimationFrame(this.frameRequest);
+                this.frame = 0;
+                this.update();
+                return promise;
             }
 
-            if (openTrigger) openTrigger.addEventListener('click', toggleSidebar);
-            if (closeTrigger) closeTrigger.addEventListener('click', toggleSidebar);
-            if (overlay) overlay.addEventListener('click', toggleSidebar);
+            update() {
+                let output = '';
+                let complete = 0;
 
+                for (let i = 0, n = this.queue.length; i < n; i++) {
+                    let { from, to, start, end, char } = this.queue[i];
 
-            // --- 5. CLOCK ---
-            const clockEl = document.getElementById('clock');
-            const timeEl = document.getElementById('time');
-            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-            function updateClock() {
-                const now = new Date();
-                if (clockEl) clockEl.textContent = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
-                if (timeEl) timeEl.textContent = now.toLocaleTimeString('en-US', { hour12: false });
-            }
-            setInterval(updateClock, 1000);
-            updateClock();
-
-            // --- 6. TEXT SCRAMBLE ---
-            // --- 6. TEXT SCRAMBLE ---
-            class TextScramble {
-                constructor(el) {
-                    this.el = el;
-                    // Removed wide chars like '—' and '_' to reduce width variance
-                    this.chars = '!<>-_\\[]{}=+*^?#';
-                    this.update = this.update.bind(this);
-                }
-
-                setText(newText, durationMultiplier = 1) {
-                    const oldText = this.el.innerText;
-                    const length = Math.max(oldText.length, newText.length);
-                    const promise = new Promise((resolve) => this.resolve = resolve);
-                    this.queue = [];
-
-                    for (let i = 0; i < length; i++) {
-                        const from = oldText[i] || '';
-                        const to = newText[i] || '';
-
-                        // Extended duration for the "dots" phase
-                        const start = Math.floor(Math.random() * 40 * durationMultiplier) + 15; // Delay start slightly
-                        const end = start + Math.floor(Math.random() * 40 * durationMultiplier);
-                        this.queue.push({ from, to, start, end });
-                    }
-
-                    cancelAnimationFrame(this.frameRequest);
-                    this.frame = 0;
-                    this.update();
-                    return promise;
-                }
-
-                update() {
-                    let output = '';
-                    let complete = 0;
-
-                    for (let i = 0, n = this.queue.length; i < n; i++) {
-                        let { from, to, start, end, char } = this.queue[i];
-
-                        if (this.frame >= end) {
-                            // Phase 3: Final Text
-                            complete++;
-                            output += to;
-                        } else if (this.frame >= start) {
-                            // Phase 2: Scramble Chars
-                            if (!char || Math.random() < 0.28) {
-                                char = this.randomChar();
-                                this.queue[i].char = char;
-                            }
-                            output += `<span class="dud">${char}</span>`;
-                        } else {
-                            // Phase 1: Pre-scramble
-                            // User Request: "none of the animations need to start on ...."
-                            // We show the 'from' character (original text) until it starts scrambling.
-                            output += from;
+                    if (this.frame >= end) {
+                        // Phase 3: Final Text
+                        complete++;
+                        output += to;
+                    } else if (this.frame >= start) {
+                        // Phase 2: Scramble Chars
+                        if (!char || Math.random() < 0.28) {
+                            char = this.randomChar();
+                            this.queue[i].char = char;
                         }
-                    }
-
-                    this.el.innerHTML = output;
-
-                    if (complete === this.queue.length) {
-                        this.resolve();
+                        output += `<span class="dud">${char}</span>`;
                     } else {
-                        this.frameRequest = requestAnimationFrame(this.update);
-                        this.frame++; // Run at 60fps for smoother chaotic feel
+                        // Phase 1: Pre-scramble
+                        output += from;
                     }
                 }
 
-                randomChar() {
-                    return this.chars[Math.floor(Math.random() * this.chars.length)];
+                this.el.innerHTML = output;
+
+                if (complete === this.queue.length) {
+                    this.resolve();
+                } else {
+                    this.frameRequest = requestAnimationFrame(this.update);
+                    this.frame++; // Run at 60fps for smoother chaotic feel
                 }
             }
 
-            const greetings = ["Hello, I'm Aaron Zhu", "Salut, moi c’est Aaron", "こんにちは、Aaron Zhuです", "안녕하세요, Aaron Zhu 예요"];
-            const el = document.getElementById('dynamic-greeting');
-            const fx = new TextScramble(el);
+            randomChar() {
+                return this.chars[Math.floor(Math.random() * this.chars.length)];
+            }
+        }
+
+        const greetings = ["hi, i'm aaron.", "salut, moi c'est aaron.", "aaronです。", "aaron입니다.", "我是aaron。"];
+        const title = document.querySelector('.scramble');
+
+        if (title) {
+            const fx = new TextScramble(title);
             let i = 0;
             const next = () => {
-                // 1. Lock Width to prevent jitter
-                // We must ensure the element has a width before we start messing with content.
-                // However, different greetings have different lengths, so we might want to just let it flow naturally OR
-                // lock it to the *current* width, scramble, then let it auto-resize for the new text?
-                // The user said: "make sure to calculate their width before so they dont like change the divs too much"
-
-                // Strategy: Lock width to current computed width. 
-                // Scramble to new text. 
-                // Problem: If new text is longer, it might wrap or overflow if locked to old width.
-                // Better Strategy: The "scramble" effect replaces chars. If we lock width to the *larger* of the two?
-                // Or simply lock it to the current width, and only unlock at the very end.
-
-                // Let's try locking to current offsetWidth.
-                const currentWidth = el.offsetWidth;
-                el.style.width = `${currentWidth}px`;
-                el.style.display = 'inline-block'; // Ensure width applies
-                el.style.whiteSpace = 'nowrap'; // Prevent wrapping changes during scramble
+                // Lock width to current computed width preventing layout shift
+                const currentWidth = title.offsetWidth;
+                title.style.width = `${currentWidth}px`;
+                title.style.display = 'inline-block';
+                title.style.whiteSpace = 'nowrap';
 
                 fx.setText(greetings[i]).then(() => {
                     // Unlock after scramble
-                    el.style.width = 'auto';
-                    setTimeout(next, 4000); // Increased from 3000 to 4000
+                    title.style.width = 'auto';
+                    setTimeout(next, 4000);
                 });
                 i = (i + 1) % greetings.length;
             };
-            // Initial Start
-            next();
 
-            // --- REDACTED TEXT SCRAMBLE ON HOVER ---
-            document.fonts.ready.then(() => {
-                document.querySelectorAll('.redacted').forEach(redactedEl => {
-                    const originalText = redactedEl.textContent;
-                    const redactedFx = new TextScramble(redactedEl);
-                    let isRevealed = false;
+            // Initial delay before starting the loop
+            setTimeout(next, 500);
+        }
 
-                    // Lock width to prevent layout shift
-                    const width = redactedEl.offsetWidth;
-                    redactedEl.style.width = width + 'px';
+        // --- 6. SCROLL HINT TIMING ---
+        setTimeout(() => {
+            const hint = document.getElementById('scroll-hint');
+            if (hint) hint.style.opacity = '1';
+        }, 5000);
 
-                    redactedEl.addEventListener('mouseenter', () => {
-                        if (!isRevealed) {
-                            redactedEl.classList.add('revealed');
-                            redactedFx.setText(originalText).then(() => {
-                                isRevealed = true;
-                            });
-                        }
-                    });
-                });
-            });
+        setTimeout(() => {
+            const hint = document.getElementById('scroll-hint');
+            if (hint) hint.style.opacity = '0';
+        }, 15000);
 
-
-            // --- 6. PRELOADER & SCRAMBLE IN ---
-            const preloader = document.getElementById('preloader');
-            const preloaderTextSpan = document.querySelector('.preloader-text span');
-
-            window.addEventListener('load', () => {
-                // 1. Hang for a bit, then Scramble OUT
-                setTimeout(() => {
-                    if (preloaderTextSpan) {
-                        const fxLoader = new TextScramble(preloaderTextSpan);
-                        // Scramble to empty string, SLOWLY (2.5x duration)
-                        fxLoader.setText('', 2.5).then(() => {
-                            // 2. Lift Preloader after text is gone
-                            setTimeout(() => {
-                                preloader.classList.add('loaded');
-                            }, 650); // Increased from 500 to 650
-                        });
-                    } else {
-                        // Fallback if span not found
-                        preloader.classList.add('loaded');
-                    }
-                }, 800); // Hang for 0.8s before scrambling starts
-            });
-
-            // 2. Scramble On Scroll (IntersectionObserver)
-            // REMOVED GLOBAL SCRAMBLE per user request
-            /*
-            const scrambleOptions = {
-                threshold: 0.2,
-                rootMargin: "0px 0px -50px 0px"
-            };
-
-            const scrambleObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const el = entry.target;
-
-                        // Prevent re-scrambling
-                        if (el.getAttribute('data-scrambled') === 'true') return;
-
-                        // Skip empty text
-                        if (el.textContent.trim() === '') return;
-
-                        const fx = new TextScramble(el);
-                        fx.setText(el.innerText);
-
-                        el.setAttribute('data-scrambled', 'true');
-                        scramble        bserve(el);
-                    }
-                            }, scrambleOptions);
-
-            // Target ALL text elements for maximum "jazz"
-            // Note: We use specific tags to avoid breaking layout containers or scripts
-            const targets = document.querySelectorAll('h1, h2, h3, p, a, li, span, strong, em, .nav-item, .footer-cta');
-            targets.forEach(el => scrambleObserver.observe(el));
-            */
-
-            // (Momentum Skew Removed per request)
-        });
     </script>
 </body>
 

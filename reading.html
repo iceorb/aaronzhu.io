@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading List — Aaron Zhu</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="subpage">
+
+    <div class="noise"></div>
+    <div class="orb" id="orb"></div>
+    <div class="cursor-circle" id="c-circle"></div>
+
+    <nav class="glass-nav">
+        <a href="index.html" class="glass-pill magnet">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+            Back
+        </a>
+        <div id="theme-btn" class="glass-pill magnet" role="button" style="cursor: pointer;">MODE: DEFAULT</div>
+    </nav>
+
+    <div class="layout">
+        <header>
+            <h1 class="serif">ideas that stuck.</h1>
+            <p>
+                Things I've read or watched that changed how I think about AI, economics, and life.
+            </p>
+        </header>
+
+        <section class="ack-wall">
+
+            <!-- AI & Alignment -->
+            <div>
+                <span class="group-title">AI & Alignment</span>
+                <div class="items-grid">
+                    <a href="https://www.anthropic.com/research/agentic-misalignment" class="wall-item magnet">
+                        <span class="wall-name">Agentic Misalignment</span>
+                        <span class="wall-title">Lynch et al.</span>
+                    </a>
+
+                    <a href="https://blog.tilderesearch.com/blog/sparse-attn" class="wall-item magnet">
+                        <span class="wall-name">Sparsity is Cool</span>
+                        <span class="wall-title">Dhruv Pai et al.</span>
+                    </a>
+
+                    <a href="#" class="wall-item magnet">
+                        <span class="wall-name">DRL from Human Preferences</span>
+                        <span class="wall-title">Christiano et al.</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- On Living -->
+            <div>
+                <span class="group-title">On Living</span>
+                <div class="items-grid">
+                    <a href="https://theplaygroundofideas.substack.com/p/do-it-or-do-not-you-will-regret-both"
+                        class="wall-item magnet">
+                        <span class="wall-name">do it, or do not; you will regret both</span>
+                        <span class="wall-title">Kehinde</span>
+                    </a>
+
+                    <a href="https://www.youtube.com/watch?v=nxpITF8fswE" class="wall-item magnet">
+                        <span class="wall-name">We Are Here On Earth To Fart Around</span>
+                        <span class="wall-title">Kurt Vonnegut</span>
+                    </a>
+
+                    <a href="https://en.wikipedia.org/wiki/Profession_(novella)" class="wall-item magnet">
+                        <span class="wall-name">Profession</span>
+                        <span class="wall-title">Isaac Asimov</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Society & Economics -->
+            <div>
+                <span class="group-title">Society & Economics</span>
+                <div class="items-grid">
+                    <a href="https://www.goodreads.com/book/show/219561103-inheritocracy" class="wall-item magnet">
+                        <span class="wall-name">Inheritocracy</span>
+                        <span class="wall-title">Eliza Filby</span>
+                    </a>
+
+                    <a href="https://digitaltinz.substack.com/p/no-original-thoughts-club" class="wall-item magnet">
+                        <span class="wall-name">no original thoughts club</span>
+                        <span class="wall-title">Tina Zhang</span>
+                    </a>
+
+                    <a href="#" class="wall-item magnet">
+                        <span class="wall-name">Thinking, Fast and Slow</span>
+                        <span class="wall-title">Daniel Kahneman</span>
+                    </a>
+
+                    <a href="#" class="wall-item magnet">
+                        <span class="wall-name">The Idea Factory</span>
+                        <span class="wall-title">Jon Gertner</span>
+                    </a>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    <script src="common.js"></script>
+</body>
+
+</html>

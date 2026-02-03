@@ -1,0 +1,767 @@
+/* --- CORE VARS (DEFAULT THEME: PAPER) --- */
+:root {
+    /* Logic: Clean, Swiss, Paper */
+    --bg-color: #fdfbf9;
+    --text-color: #1a1a1a;
+    --secondary: #666;
+    --tertiary: #a1a1a1;
+    --accent: #eb3b3b;
+    --line: rgba(0, 0, 0, 0.08);
+    --font-main: 'Outfit', sans-serif;
+    --font-serif: 'Source Serif 4', serif;
+    --font-mono: monospace;
+
+    --hud-bg: rgba(255, 255, 255, 0.4);
+    --hud-border: 1px solid rgba(255, 255, 255, 0.3);
+    --hud-radius: 50px;
+    --cursor-display: block;
+    --native-cursor: none;
+
+    --orb-opacity: 1;
+    --noise-opacity: 0.035;
+
+    --easing: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #080808;
+        --text-color: #ededed;
+        --secondary: #888;
+        --tertiary: #444;
+        --line: rgba(255, 255, 255, 0.1);
+
+        --hud-bg: rgba(20, 20, 20, 0.4);
+        --hud-border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+}
+
+/* --- THEME: 1995 (Windows 95 / Brutalist) --- */
+[data-theme="1995"] {
+    --bg-color: #008080;
+    /* Classic Teal */
+    --text-color: #000000;
+    --secondary: #444;
+    --tertiary: #000080;
+    /* Navy Blue links */
+    --accent: #ff0000;
+    --line: #888;
+    --font-main: 'Times New Roman', Times, serif;
+    /* Raw HTML feel */
+    --font-serif: 'Times New Roman', Times, serif;
+    --font-mono: 'Courier New', Courier, monospace;
+
+    --hud-bg: #c0c0c0;
+    --hud-border: 2px outset #fff;
+    /* Bevel look */
+    --hud-radius: 0px;
+    --cursor-display: none;
+    /* Hide custom cursor */
+    --native-cursor: auto;
+    /* Show default pointer */
+
+    --orb-opacity: 0;
+    --noise-opacity: 0.1;
+    /* Heavy static */
+}
+
+/* --- THEME: TERMINAL (Hacker / Matrix) --- */
+[data-theme="terminal"] {
+    --bg-color: #0d0d0d;
+    --text-color: #33ff00;
+    --secondary: #25b300;
+    --tertiary: #1a8000;
+    --accent: #fff;
+    --line: #33ff00;
+    --font-main: 'VT323', monospace;
+    --font-serif: 'VT323', monospace;
+    --font-mono: 'VT323', monospace;
+
+    --hud-bg: #000;
+    --hud-border: 1px solid #33ff00;
+    --hud-radius: 0px;
+    --cursor-display: block;
+    --native-cursor: none;
+
+    --orb-opacity: 0;
+    --noise-opacity: 0.05;
+}
+
+/* --- BASE --- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    cursor: var(--native-cursor);
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100vh;
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-main);
+    overflow-x: hidden;
+    font-size: 16px;
+    transition: background 0.3s, color 0.3s;
+    /* Smooth transition */
+}
+
+/* --- PAGE TRANSITIONS --- */
+.layout {
+    opacity: 0;
+    animation: fadeIn 0.4s ease forwards;
+}
+
+body.fade-out .layout {
+    animation: fadeOut 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+/* Fade the left pill (time/back) on page load */
+#time,
+.glass-nav>a:first-child {
+    opacity: 0;
+    animation: fadeIn 0.4s ease forwards;
+}
+
+body.fade-out #time,
+body.fade-out .glass-nav>a:first-child {
+    animation: fadeOut 0.3s ease forwards;
+}
+
+/* 1995 SPECIFIC OVERRIDES */
+[data-theme="1995"] .layout {
+    background: #c0c0c0;
+    border: 2px outset #fff;
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.5);
+    margin-top: 6rem;
+    max-width: 800px;
+    padding: 2rem;
+}
+
+[data-theme="1995"] h1 {
+    text-transform: uppercase;
+    letter-spacing: -2px;
+}
+
+[data-theme="1995"] .resume-item,
+[data-theme="1995"] .wall-item,
+[data-theme="1995"] .glass-nav a {
+    /* Generalized for interactive items */
+    border-bottom: 1px dotted #000;
+}
+
+[data-theme="1995"] .resume-item:hover,
+[data-theme="1995"] .wall-item:hover,
+[data-theme="1995"] .glass-nav a:hover {
+    background: #000080;
+    color: white;
+    opacity: 1;
+    transform: none;
+    filter: none;
+}
+
+[data-theme="1995"] .resume-item:hover *,
+[data-theme="1995"] .wall-item:hover *,
+[data-theme="1995"] .glass-nav a:hover * {
+    color: white;
+}
+
+[data-theme="1995"] a {
+    text-decoration: underline;
+    color: blue;
+}
+
+[data-theme="1995"] .glass-pill {
+    background: #c0c0c0;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-radius: 0;
+    box-shadow: none;
+    border: 2px solid;
+    border-color: #fff #808080 #808080 #fff;
+    /* Highlight top/left, Shadow bottom/right */
+    color: #000;
+}
+
+[data-theme="1995"] .glass-pill:active {
+    border-color: #808080 #fff #fff #808080;
+    /* Inset effect */
+    transform: translateY(1px);
+}
+
+[data-theme="1995"] .glass-pill:hover {
+    background: #c0c0c0;
+    transform: none;
+    color: #000;
+}
+
+[data-theme="1995"] .subpage .layout {
+    margin-top: 8rem;
+}
+
+[data-theme="1995"] .hud,
+[data-theme="1995"] .glass-nav {
+    max-width: 800px;
+    padding: 0;
+}
+
+/* TERMINAL SPECIFIC OVERRIDES */
+[data-theme="terminal"] .layout {
+    border-left: 1px solid var(--text-color);
+    padding-left: 3rem;
+}
+
+[data-theme="terminal"] h1::before {
+    content: "> ";
+}
+
+[data-theme="terminal"] h1 {
+    font-size: clamp(2rem, 4vw, 4rem);
+}
+
+[data-theme="terminal"] .cursor-circle {
+    border-radius: 0;
+    background: var(--text-color);
+    width: 10px !important;
+    height: 20px !important;
+    border: none;
+    mix-blend-mode: normal;
+}
+
+::selection {
+    background: var(--accent);
+    color: white;
+}
+
+/* --- GRAIN OVERLAY --- */
+.noise {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9000;
+    opacity: var(--noise-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* --- AMBIENT ORB (The "Soul") --- */
+.orb {
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(235, 59, 59, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    mix-blend-mode: multiply;
+    filter: blur(40px);
+    transition: transform 0.8s cubic-bezier(0.1, 0.9, 0.2, 1);
+    opacity: var(--orb-opacity);
+}
+
+@media (prefers-color-scheme: dark) {
+    .orb {
+        mix-blend-mode: screen;
+        opacity: 0.5;
+    }
+}
+
+/* --- TYPOGRAPHY --- */
+.serif {
+    font-family: var(--font-serif);
+}
+
+.mono {
+    font-family: var(--font-mono);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+}
+
+.dud {
+    color: var(--tertiary);
+}
+
+h1 {
+    font-size: clamp(3rem, 6vw, 6rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    font-weight: 500;
+    margin-bottom: 2rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--secondary);
+    margin-bottom: 2rem;
+}
+
+p {
+    max-width: 55ch;
+    line-height: 1.6;
+    color: var(--secondary);
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+}
+
+a {
+    color: var(--text-color);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0);
+    transition: color 0.3s;
+}
+
+/* --- LAYOUT --- */
+.layout {
+    padding: 5rem 2rem 8rem 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+
+/* --- SUBPAGE ADJUSTMENTS --- */
+.subpage .layout {
+    padding-top: 10rem;
+    /* More breathing room from nav */
+}
+
+.subpage h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    /* Smaller than main page */
+    margin-bottom: 1rem;
+}
+
+.subpage header {
+    margin-bottom: 4rem;
+}
+
+.subpage header p {
+    margin-bottom: 0;
+}
+
+@media (max-width: 900px) {
+    .layout {
+        padding: 6rem 1.5rem;
+    }
+
+    .subpage .layout {
+        padding-top: 8rem;
+    }
+}
+
+/* --- FIXED HUD (TEST.HTML) --- */
+.hud {
+    position: fixed;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 900px;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    z-index: 100;
+    pointer-events: none;
+    color: var(--text-color);
+}
+
+.hud>div {
+    pointer-events: auto;
+    background: var(--hud-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 0.5rem 1rem;
+    border-radius: var(--hud-radius);
+    border: var(--hud-border);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+    font-weight: 500;
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+}
+
+/* Theme Selector Specifics */
+#theme-btn {
+    cursor: pointer;
+    user-select: none;
+    min-width: 120px;
+    text-align: right;
+    transition: transform 0.1s;
+}
+
+#theme-btn:active {
+    transform: scale(0.95);
+}
+
+/* --- GLASS NAV (ACK/READING) --- */
+.glass-nav {
+    position: fixed;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 900px;
+    padding: 0 1rem;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    /* To space out Back and Theme btn */
+    pointer-events: none;
+}
+
+.glass-nav a,
+.glass-nav div {
+    pointer-events: auto;
+}
+
+.glass-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--hud-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 0.5rem 1rem;
+    border-radius: var(--hud-radius);
+    border: var(--hud-border);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+    font-weight: 500;
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+    color: var(--text-color);
+    cursor: var(--native-cursor);
+    /* Let magnet handle usually, but theme needs native if 1995 */
+    transition: all 0.3s ease;
+}
+
+.glass-pill:hover {
+    background: rgba(255, 255, 255, 0.6);
+    transform: translateY(-2px);
+}
+
+@media (prefers-color-scheme: dark) {
+    .glass-pill:hover {
+        background: rgba(40, 40, 40, 0.6);
+    }
+}
+
+/* --- COMPONENT: RESUME LIST --- */
+.resume-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.resume-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--line);
+    transition: opacity 0.4s ease, transform 0.4s var(--easing);
+    will-change: opacity, transform;
+}
+
+.resume-item:first-child {
+    border-top: 1px solid var(--line);
+}
+
+.role {
+    font-weight: 500;
+    font-size: 1.2rem;
+    display: block;
+    margin-bottom: 0.2rem;
+}
+
+.company {
+    color: var(--secondary);
+    font-size: 1rem;
+}
+
+.date {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--tertiary);
+}
+
+/* SPOTLIGHT EFFECT */
+.resume-list:hover .resume-item {
+    opacity: 0.3;
+    filter: blur(1.5px);
+}
+
+.resume-list .resume-item:hover {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(10px);
+}
+
+/* --- ACK WALL & READING GRID --- */
+.ack-wall {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem 4rem;
+    align-items: baseline;
+    justify-content: flex-start;
+}
+
+/* For reading list which is grouped */
+.ack-wall.grouped {
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.group-title {
+    font-family: var(--font-main);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--secondary);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+    display: block;
+}
+
+.items-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 3rem;
+    align-items: baseline;
+}
+
+.ack-wall:hover .wall-item:not(:hover),
+.items-grid:hover .wall-item:not(:hover) {
+    opacity: 0.3;
+    filter: blur(1px);
+}
+
+.wall-item {
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    position: relative;
+}
+
+.wall-name {
+    display: block;
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(1.2rem, 3vw, 2rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+}
+
+.wall-title {
+    display: block;
+    font-family: var(--font-main);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--secondary);
+    margin-top: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.wall-item:hover .wall-name {
+    color: var(--accent);
+}
+
+.wall-item:hover .wall-title {
+    color: var(--text-color);
+}
+
+@media (max-width: 768px) {
+    .ack-wall {
+        gap: 2rem;
+    }
+
+    .wall-name {
+        font-size: 2.2rem;
+    }
+}
+
+/* --- INTERACTIVE CURSOR --- */
+.cursor-circle {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    display: var(--cursor-display);
+}
+
+.cursor-circle {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--tertiary);
+    transition: width 0.3s var(--easing), height 0.3s var(--easing), background 0.3s;
+}
+
+/* Magnetic State */
+body.hovering .cursor-circle {
+    width: 60px;
+    height: 60px;
+    background: rgba(235, 59, 59, 0.05);
+    border-color: transparent;
+}
+
+/* --- ANIMATIONS --- */
+section {
+    margin-bottom: 6rem;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1s ease, transform 1s var(--easing);
+}
+
+section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@keyframes revealUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- FOOTER --- */
+.big-link {
+    font-size: clamp(3rem, 10vw, 8rem);
+    font-weight: 300;
+    line-height: 1;
+    display: block;
+    margin-bottom: 2rem;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--text-color);
+    transition: all 0.5s var(--easing);
+}
+
+.big-link:hover {
+    color: var(--text-color);
+    -webkit-text-stroke: 0;
+    transform: skewX(-10deg) translateX(20px);
+}
+
+/* --- DROPDOWN MENU --- */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-trigger {
+    cursor: pointer;
+    user-select: none;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0.5rem;
+    background: var(--hud-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 0.5rem 0;
+    min-width: 160px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    z-index: 1000;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    text-transform: none;
+    letter-spacing: 0.02em;
+    color: var(--text-color);
+    transition: background 0.2s, color 0.2s;
+    border-bottom: none;
+}
+
+.dropdown-menu a:hover {
+    background: var(--accent);
+    color: white;
+}
+
+@media (prefers-color-scheme: dark) {
+    .dropdown-menu {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* Dropdown theme overrides */
+[data-theme="1995"] .dropdown-menu {
+    background: #c0c0c0;
+    backdrop-filter: none;
+    border-radius: 0;
+    border: 2px outset #fff;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="1995"] .dropdown-menu a {
+    text-decoration: none;
+    color: #000;
+}
+
+[data-theme="1995"] .dropdown-menu a:hover {
+    background: #000080;
+    color: white;
+}
+
+[data-theme="terminal"] .dropdown-menu {
+    background: #000;
+    border-radius: 0;
+    border: 1px solid var(--text-color);
+}
+
+[data-theme="terminal"] .dropdown-menu a:hover {
+    background: var(--text-color);
+    color: #000;
+}
