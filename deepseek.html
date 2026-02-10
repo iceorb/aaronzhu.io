@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSeek & American Innovation — Aaron Zhu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'Martina Plantijn';
+            src: url('fonts/TestMartinaPlantijn-Regular-BF663c36d1ec6d5.otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Martina Plantijn';
+            src: url('fonts/TestMartinaPlantijn-Italic-BF663c36d1ed0f9.otf') format('opentype');
+            font-weight: 400;
+            font-style: italic;
+        }
+
+        @font-face {
+            font-family: 'Martina Plantijn';
+            src: url('fonts/TestMartinaPlantijn-Medium-BF663c36d1e5bed.otf') format('opentype');
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        :root {
+            --font-main: 'Outfit', sans-serif;
+            --font-serif: 'Martina Plantijn', serif;
+            --font-mono: monospace;
+            --color-text: #1a1a1a;
+            --color-muted: #6b6b6b;
+            --color-link: #4A90E2;
+            --color-bg: #fff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-serif);
+            font-weight: 400;
+            color: var(--color-text);
+            background: var(--color-bg);
+            line-height: 1.7;
+            font-size: 18px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Post Specific Layout */
+        .post-container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 80px 24px 120px;
+        }
+
+        header {
+            margin-bottom: 80px;
+            text-align: center;
+        }
+
+        /* Reusing standard header styles */
+        .header-line {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 56px;
+        }
+
+        .header-line h1 {
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .header-line a {
+            font-family: var(--font-main);
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--color-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .header-line a:hover {
+            color: var(--color-text);
+        }
+
+        .header-line h1 a {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .header-line .dot {
+            color: #bbb;
+            font-size: 14px;
+            user-select: none;
+            margin: 0 4px;
+        }
+
+        /* Article Typography */
+        .post-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .post-title {
+            font-family: var(--font-serif);
+            font-size: 42px;
+            line-height: 1.1;
+            font-weight: 400;
+            margin-bottom: 16px;
+            letter-spacing: -0.01em;
+        }
+
+        .post-subtitle {
+            font-family: var(--font-serif);
+            font-size: 22px;
+            line-height: 1.4;
+            color: var(--color-muted);
+            font-weight: 400;
+            font-style: italic;
+            margin-bottom: 32px;
+        }
+
+        .post-meta {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--color-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .post-content {
+            font-size: 20px;
+            line-height: 1.6;
+        }
+
+        .post-content p {
+            margin-bottom: 24px;
+        }
+
+        .post-content h3 {
+            font-family: var(--font-main);
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 40px;
+            margin-bottom: 16px;
+            letter-spacing: -0.01em;
+        }
+
+        .post-content ol {
+            list-style-type: decimal;
+            margin-left: 20px;
+            margin-bottom: 24px;
+            font-family: var(--font-main);
+            font-weight: 600;
+        }
+
+        .post-content ol h3 {
+            display: inline;
+            font-size: 18px;
+        }
+
+        .post-content ol li {
+            margin-bottom: 24px;
+            padding-left: 8px;
+        }
+
+        .post-content ol p {
+            font-family: var(--font-serif);
+            font-weight: 400;
+            margin-top: 8px;
+            margin-bottom: 0;
+            font-size: 20px;
+        }
+
+        .disclaimer {
+            font-style: italic;
+            color: var(--color-muted);
+            font-size: 16px;
+            margin-bottom: 32px;
+            display: block;
+        }
+
+        footer {
+            margin-top: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        footer a {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--color-muted);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            transition: color 0.2s;
+        }
+
+        footer a:hover {
+            color: var(--color-text);
+        }
+
+        footer .sep {
+            color: #ccc;
+            font-size: 13px;
+            user-select: none;
+        }
+
+        @media (max-width: 620px) {
+            .post-title {
+                font-size: 32px;
+            }
+
+            .post-content {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="post-container">
+        <header>
+            <div class="header-line">
+                <h1><a href="index.html">Aaron Zhu</a></h1>
+                <span class="dot">·</span>
+                <a href="works.html">Works</a>
+                <span class="dot">·</span>
+                <a href="reading.html">Reading</a>
+                <span class="dot">·</span>
+                <a href="acknowledgements.html">Acknowledgements</a>
+            </div>
+        </header>
+
+        <article>
+            <div class="post-header">
+                <h1 class="post-title">DeepSeek & American Innovation</h1>
+                <div class="post-meta">
+                    <span>Feb 10, 2026</span>
+                    <span>·</span>
+                    <span>5 min read</span>
+                </div>
+            </div>
+
+            <div class="post-content">
+                <span class="disclaimer">*The following does not represent any political leanings within American
+                    politics or Chinese vs. American politics, and merely states observations and experiences
+                    had.*</span>
+
+                <p>
+                    With the release of DeepSeek R1 and renewed calls to ban TikTok and ByteDance in the U.S., it’s
+                    clear that geopolitical tensions are not just shaping but actively weaponizing the global technology
+                    landscape. DeepSeek didn't just match American capabilities; they did it with a fraction of the
+                    compute and budget. This exposes the uncomfortable truth: American tech has become bloated,
+                    inefficient, and expensive. We are throwing billions at problems that leaner, hungrier competitors
+                    are solving with millions.
+                </p>
+
+                <p>
+                    It’s easy to frame this as a straightforward political rivalry—one that conveniently serves those in
+                    power. DeepSeek, an emerging AI threat. ByteDance, a national security risk. Chinese AI vs. American
+                    AI.
+                </p>
+
+                <p>
+                    But as I witness this happen from the US and China, I feel that the reality is far more unsettling:
+                    <strong>America isn’t being outmaneuvered by foreign adversaries—it’s sabotaging itself.</strong>
+                </p>
+
+                <ol>
+                    <li>
+                        <h3>America is consolidating.</h3>
+                        <p>Decades of consolidations, mergers, and acquisitions have hollowed out both traditional tech
+                            and defense. When was the last time Apple shipped a groundbreaking product? How has Boeing
+                            consistently failed time and again to create reliable aircraft? Why are only five major
+                            defense companies left in the U.S? We let this happen—driven by greed, complacency, and an
+                            aversion to risk.</p>
+                    </li>
+                    <li>
+                        <h3>The real drivers of innovation aren’t American.</h3>
+                        <p>They’re outsiders, visa holders, immigrants—those drawn to the U.S. by its research
+                            institutions and economic opportunities. But that doesn’t mean American-born talent is at
+                            the forefront. We need not just engineers, but talent in every job from all countries in the
+                            world. The scapegoat narrative to remove immigrants at almost every socioeconomic rung seems
+                            an ill-fated political distraction.</p>
+                    </li>
+                    <li>
+                        <h3>American “Protectionism” (Greed)</h3>
+                        <p>The push to ban TikTok is less about national security and more about market allocation. When
+                            politicians act as kingmakers—deciding which apps stay and which go, benefiting domestic
+                            donors like Oracle—they aren't protecting the American public; they are insulating American
+                            companies from the very competition that forces them to innovate.</p>
+                        <p><strong>Social Immobility:</strong> America has only been around less than 300 years. As
+                            society continues to evolve, castes harden, not helped by any self-serving politician. Those
+                            who attend the Ivy League go on to land prestigious jobs and maintain a good network, those
+                            who don’t are worse off. These cycles repeat, repeat, and harden.</p>
+                    </li>
+                </ol>
+
+                <p>
+                    Economic stagnation, social immobility, and the hoarding of wealth are exactly what turned Europe
+                    into a museum for the world—preserving the past rather than building the future. Once the global
+                    leader in science, industry, and exploration, Europe now has little to show in the way of
+                    groundbreaking innovation. It maintains prestige, but not progress. Europe never ran out of talent,
+                    it ran out of nerve.
+                </p>
+
+                <p>
+                    I don't just see this as a detached observer; I see it as the child of people who risked everything
+                    for the promise of the American edge. My parents came here a year before the Tiananmen Square
+                    protests— to seek refuge and opportunity. I grew up believing in the American Dream—the idea that
+                    innovation, hard work, and merit can propel anyone forward. But belief alone doesn’t build the
+                    future. People have to come and do the work, and see themselves to be rewarded. That belief needs to
+                    be based on reality.
+                </p>
+
+                <p>
+                    The Cold War didn’t just provide an enemy. It provided a mirror. A mirror which we were able to look
+                    ourselves in the eye and ask if we were good enough. Today, we’re smashing the mirror instead of
+                    engaging in competition. We don’t need the paranoia of Warhawks and anti-immigrant sentiment. We
+                    just need the hunger of the underdog— the same hunger that brought my parents here, and the only
+                    thing that keeps American dynamism alive.
+                </p>
+            </div>
+        </article>
+
+        <footer>
+            <a href="index.html">Home</a>
+            <span class="sep">/</span>
+            <a href="#">Email</a>
+            <span class="sep">/</span>
+            <a href="#">LinkedIn</a>
+        </footer>
+    </div>
+</body>
+
+</html>
