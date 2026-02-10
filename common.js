@@ -47,36 +47,42 @@ function initMagnets() {
 initMagnets();
 
 // --- 3. THEME SWITCHER LOGIC ---
-const themeBtn = document.getElementById('theme-btn');
-const themes = ['default', '1995', 'terminal'];
+const themeDropdown = document.getElementById('theme-dropdown');
+const themeLabel = document.getElementById('theme-label');
+const themeMenu = document.getElementById('theme-menu');
+const themes = {
+    'default': 'DESIGNER',
+    'terminal': 'HACKER',
+    'acid': '???',
+    'minimal': 'RESEARCHER'
+};
 
 // Try to load saved theme
 const savedTheme = localStorage.getItem('theme') || 'default';
-let currentThemeIndex = themes.indexOf(savedTheme);
-if (currentThemeIndex === -1) currentThemeIndex = 0;
+const initialTheme = themes[savedTheme] ? savedTheme : 'default';
 
 // Apply initial theme
-document.body.setAttribute('data-theme', themes[currentThemeIndex]);
-if (themeBtn) {
-    const label = themes[currentThemeIndex] === '1995' ? 'WIN 95' : themes[currentThemeIndex].toUpperCase();
-    themeBtn.innerText = `MODE: ${label}`;
+document.body.setAttribute('data-theme', initialTheme);
+if (themeLabel) {
+    themeLabel.innerText = `MODE: ${themes[initialTheme]}`;
 }
 
-if (themeBtn) {
-    themeBtn.addEventListener('click', () => {
-        currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-        const newTheme = themes[currentThemeIndex];
-
+// Handle dropdown menu clicks
+if (themeMenu) {
+    themeMenu.addEventListener('click', (e) => {
+        const option = e.target.closest('[data-theme-option]');
+        if (!option) return;
+        
+        const newTheme = option.getAttribute('data-theme-option');
+        
         // Apply to body
         document.body.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
-
-        // Update Text
-        const label = newTheme === '1995' ? 'WIN 95' : newTheme.toUpperCase();
-        themeBtn.innerText = `MODE: ${label}`;
-
-        // Trigger text scramble if present (optional cool effect)
-        // We can check if TextScramble class is defined globally or just ignore
+        
+        // Update label
+        if (themeLabel) {
+            themeLabel.innerText = `MODE: ${themes[newTheme]}`;
+        }
     });
 }
 

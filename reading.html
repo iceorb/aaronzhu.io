@@ -4,117 +4,311 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reading List — Aaron Zhu</title>
+    <title>Reading — Aaron Zhu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'Martina Plantijn';
+            src: url('fonts/TestMartinaPlantijn-Regular-BF663c36d1ec6d5.otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+        }
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&display=swap"
-        rel="stylesheet">
+        @font-face {
+            font-family: 'Martina Plantijn';
+            src: url('fonts/TestMartinaPlantijn-Italic-BF663c36d1ed0f9.otf') format('opentype');
+            font-weight: 400;
+            font-style: italic;
+        }
 
-    <link rel="stylesheet" href="styles.css">
+        @font-face {
+            font-family: 'Martina Plantijn';
+            src: url('fonts/TestMartinaPlantijn-Medium-BF663c36d1e5bed.otf') format('opentype');
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        :root {
+            --font-main: 'Outfit', sans-serif;
+            --font-serif: 'Martina Plantijn', serif;
+            --font-mono: monospace;
+            --color-text: #333;
+            --color-muted: #6b6b6b;
+            --color-link: #2a5bd7;
+            --color-bg: #fff;
+            --accent: #002FA7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-serif);
+            font-weight: 400;
+            color: var(--color-text);
+            background: var(--color-bg);
+            line-height: 1.7;
+            font-size: 18px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 32px 120px;
+        }
+
+        header {
+            margin-bottom: 56px;
+        }
+
+        .header-line {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .header-line h1 {
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .header-line a {
+            font-family: var(--font-main);
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--color-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .header-line a.active {
+            color: var(--color-text);
+        }
+
+        .header-line a:hover {
+            color: var(--color-text);
+        }
+
+        .header-line h1 a {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .header-line .dot {
+            color: #bbb;
+            font-size: 14px;
+            user-select: none;
+            margin: 0 4px;
+        }
+
+        .reading-section {
+            margin-bottom: 48px;
+        }
+
+        .category-title {
+            font-family: var(--font-main);
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-muted);
+            margin-bottom: 24px;
+            display: block;
+        }
+
+        .reading-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .reading-list li {
+            margin-bottom: 12px;
+            line-height: 1.55;
+        }
+
+        .reading-list a {
+            color: var(--color-text);
+            text-decoration: none;
+            border-bottom: 1px solid #ddd;
+            transition: border-color 0.2s;
+        }
+
+        .reading-list a:hover {
+            border-bottom-color: var(--color-text);
+        }
+
+        .reading-list .author {
+            color: var(--color-muted);
+            font-style: italic;
+            margin-left: 4px;
+        }
+
+        .ascii-stats {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            line-height: 1.4;
+            color: var(--color-muted);
+            white-space: pre;
+            overflow-x: auto;
+            margin-top: 12px;
+            border: 1px dashed #ccc;
+            padding: 24px;
+            background: #fafafa;
+        }
+
+        .ascii-stats {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            line-height: 1.4;
+            color: var(--color-muted);
+            white-space: pre;
+            overflow-x: auto;
+            margin-top: 12px;
+            border: 1px dashed #ccc;
+            padding: 24px;
+            background: #fafafa;
+        }
+
+        .ascii-stats::-webkit-scrollbar {
+            display: none;
+        }
+
+        footer {
+            margin-top: 64px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        footer a {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--color-muted);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            transition: color 0.2s;
+        }
+
+        footer a:hover {
+            color: var(--color-text);
+        }
+
+        footer .sep {
+            color: #ccc;
+            font-size: 13px;
+            user-select: none;
+        }
+
+        @media (max-width: 620px) {
+            .container {
+                padding: 48px 20px 80px;
+            }
+
+            body {
+                font-size: 16px;
+            }
+        }
+    </style>
 </head>
 
-<body class="subpage">
-
-    <div class="noise"></div>
-    <div class="orb" id="orb"></div>
-    <div class="cursor-circle" id="c-circle"></div>
-
-    <nav class="glass-nav">
-        <a href="index.html" class="glass-pill magnet">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-            Back
-        </a>
-        <div id="theme-btn" class="glass-pill magnet" role="button" style="cursor: pointer;">MODE: DEFAULT</div>
-    </nav>
-
-    <div class="layout">
+<body>
+    <div class="container">
         <header>
-            <h1 class="serif">ideas that stuck.</h1>
-            <p>
-                Things I've read or watched that changed how I think about AI, economics, and life.
-            </p>
+            <div class="header-line">
+                <h1><a href="index.html">Aaron Zhu</a></h1>
+                <span class="dot">·</span>
+                <a href="#">Projects</a>
+                <span class="dot">·</span>
+                <a href="reading.html" class="active">Reading</a>
+                <span class="dot">·</span>
+                <a href="acknowledgements.html">Acknowledgements</a>
+            </div>
         </header>
 
-        <section class="ack-wall">
-
-            <!-- AI & Alignment -->
-            <div>
-                <span class="group-title">AI & Alignment</span>
-                <div class="items-grid">
-                    <a href="https://www.anthropic.com/research/agentic-misalignment" class="wall-item magnet">
-                        <span class="wall-name">Agentic Misalignment</span>
-                        <span class="wall-title">Lynch et al.</span>
-                    </a>
-
-                    <a href="https://blog.tilderesearch.com/blog/sparse-attn" class="wall-item magnet">
-                        <span class="wall-name">Sparsity is Cool</span>
-                        <span class="wall-title">Dhruv Pai et al.</span>
-                    </a>
-
-                    <a href="#" class="wall-item magnet">
-                        <span class="wall-name">DRL from Human Preferences</span>
-                        <span class="wall-title">Christiano et al.</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- On Living -->
-            <div>
-                <span class="group-title">On Living</span>
-                <div class="items-grid">
-                    <a href="https://theplaygroundofideas.substack.com/p/do-it-or-do-not-you-will-regret-both"
-                        class="wall-item magnet">
-                        <span class="wall-name">do it, or do not; you will regret both</span>
-                        <span class="wall-title">Kehinde</span>
-                    </a>
-
-                    <a href="https://www.youtube.com/watch?v=nxpITF8fswE" class="wall-item magnet">
-                        <span class="wall-name">We Are Here On Earth To Fart Around</span>
-                        <span class="wall-title">Kurt Vonnegut</span>
-                    </a>
-
-                    <a href="https://en.wikipedia.org/wiki/Profession_(novella)" class="wall-item magnet">
-                        <span class="wall-name">Profession</span>
-                        <span class="wall-title">Isaac Asimov</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Society & Economics -->
-            <div>
-                <span class="group-title">Society & Economics</span>
-                <div class="items-grid">
-                    <a href="https://www.goodreads.com/book/show/219561103-inheritocracy" class="wall-item magnet">
-                        <span class="wall-name">Inheritocracy</span>
-                        <span class="wall-title">Eliza Filby</span>
-                    </a>
-
-                    <a href="https://digitaltinz.substack.com/p/no-original-thoughts-club" class="wall-item magnet">
-                        <span class="wall-name">no original thoughts club</span>
-                        <span class="wall-title">Tina Zhang</span>
-                    </a>
-
-                    <a href="#" class="wall-item magnet">
-                        <span class="wall-name">Thinking, Fast and Slow</span>
-                        <span class="wall-title">Daniel Kahneman</span>
-                    </a>
-
-                    <a href="#" class="wall-item magnet">
-                        <span class="wall-name">The Idea Factory</span>
-                        <span class="wall-title">Jon Gertner</span>
-                    </a>
-                </div>
-            </div>
-
+        <section class="reading-section">
+            <span class="category-title">AI & Alignment</span>
+            <ul class="reading-list">
+                <li>
+                    <a href="https://www.anthropic.com/research/agentic-misalignment">Agentic Misalignment</a><span
+                        class="author"> — Lynch et al.</span>
+                </li>
+                <li>
+                    <a href="https://blog.tilderesearch.com/blog/sparse-attn">Sparsity is Cool</a><span class="author">
+                        — Dhruv Pai et al.</span>
+                </li>
+                <li>
+                    <a href="#">DRL from Human Preferences</a><span class="author"> — Christiano et al.</span>
+                </li>
+            </ul>
         </section>
-    </div>
 
-    <script src="common.js"></script>
+        <section class="reading-section">
+            <span class="category-title">On Living</span>
+            <ul class="reading-list">
+                <li>
+                    <a href="https://theplaygroundofideas.substack.com/p/do-it-or-do-not-you-will-regret-both">do it, or
+                        do not; you will regret both</a><span class="author"> — Kehinde</span>
+                </li>
+                <li>
+                    <a href="https://www.youtube.com/watch?v=nxpITF8fswE">We Are Here On Earth To Fart Around</a><span
+                        class="author"> — Kurt Vonnegut</span>
+                </li>
+                <li>
+                    <a href="https://en.wikipedia.org/wiki/Profession_(novella)">Profession</a><span class="author"> —
+                        Isaac Asimov</span>
+                </li>
+            </ul>
+        </section>
+
+        <section class="reading-section">
+            <span class="category-title">Society & Economics</span>
+            <ul class="reading-list">
+                <li>
+                    <a href="https://www.goodreads.com/book/show/219561103-inheritocracy">Inheritocracy</a><span
+                        class="author"> — Eliza Filby</span>
+                </li>
+                <li>
+                    <a href="https://digitaltinz.substack.com/p/no-original-thoughts-club">no original thoughts
+                        club</a><span class="author"> — Tina Zhang</span>
+                </li>
+                <li>
+                    <a href="#">Thinking, Fast and Slow</a><span class="author"> — Daniel Kahneman</span>
+                </li>
+                <li>
+                    <a href="#">The Idea Factory</a><span class="author"> — Jon Gertner</span>
+                </li>
+            </ul>
+        </section>
+
+        <section class="reading-section">
+            <span class="category-title">2026 Log (Offline)</span>
+            <div class="ascii-stats">Unable to connect to Goodreads API. Displaying cached local data...
+
+                |
+                4 |
+                3 | [x]
+                2 | [x] [x]
+                1 | [x] [x] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
+                +--------------------------------------------------
+                Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
+
+                STATUS: DISCONNECTED :(</div>
+        </section>
+
+        <footer>
+            <a href="#">Email</a>
+            <span class="sep">/</span>
+            <a href="#">Linkedin</a>
+        </footer>
+    </div>
 </body>
 
 </html>

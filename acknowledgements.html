@@ -5,115 +5,278 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acknowledgements — Aaron Zhu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'Martina Plantijn';
+            src: url('fonts/TestMartinaPlantijn-Regular-BF663c36d1ec6d5.otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+        }
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&display=swap"
-        rel="stylesheet">
+        @font-face {
+            font-family: 'Martina Plantijn';
+            src: url('fonts/TestMartinaPlantijn-Italic-BF663c36d1ed0f9.otf') format('opentype');
+            font-weight: 400;
+            font-style: italic;
+        }
 
-    <link rel="stylesheet" href="styles.css">
+        @font-face {
+            font-family: 'Martina Plantijn';
+            src: url('fonts/TestMartinaPlantijn-Medium-BF663c36d1e5bed.otf') format('opentype');
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        :root {
+            --font-main: 'Outfit', sans-serif;
+            --font-serif: 'Martina Plantijn', serif;
+            --font-mono: monospace;
+            --color-text: #1a1a1a;
+            --color-muted: #6b6b6b;
+            --color-link: #2a5bd7;
+            --color-bg: #fff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-serif);
+            font-weight: 400;
+            color: var(--color-text);
+            background: var(--color-bg);
+            line-height: 1.7;
+            font-size: 18px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 32px 120px;
+        }
+
+        header {
+            margin-bottom: 56px;
+        }
+
+        .header-line {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .header-line h1 {
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .header-line a {
+            font-family: var(--font-main);
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--color-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .header-line a.active {
+            color: var(--color-text);
+        }
+
+        .header-line a:hover {
+            color: var(--color-text);
+        }
+
+        .header-line h1 a {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        a {
+            color: #4A90E2;
+            text-decoration: none;
+        }
+
+        a:hover {
+            opacity: 0.7;
+            color: #4A90E2;
+        }
+
+        .header-line .dot {
+            color: #bbb;
+            font-size: 14px;
+            user-select: none;
+            margin: 0 4px;
+        }
+
+
+
+        .colophon {
+            font-family: var(--font-serif);
+            font-size: 18px;
+            line-height: 1.55;
+            color: var(--color-text);
+        }
+
+        .highlight {
+            background: #ebebeb;
+            padding: 1px 5px;
+        }
+
+        .colophon .name {
+            font-family: var(--font-main);
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .colophon .affil {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 15px;
+            color: var(--color-muted);
+        }
+
+        .colophon .sep {
+            color: #ccc;
+            margin: 0 6px;
+            user-select: none;
+        }
+
+        .timeline {
+            margin-top: 48px;
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--font-serif);
+            font-size: 16px;
+        }
+
+        .timeline td {
+            padding: 8px 0;
+            vertical-align: top;
+            border-bottom: 1px solid #eee;
+        }
+
+        .timeline .date {
+            font-family: var(--font-mono);
+            color: var(--color-muted);
+            width: 140px;
+            font-size: 13px;
+            padding-top: 4px;
+        }
+
+        .timeline .role {
+            display: block;
+            color: var(--color-muted);
+            font-style: italic;
+            font-size: 15px;
+        }
+
+        .timeline strong {
+            font-weight: 500;
+            display: block;
+        }
+
+        footer {
+            margin-top: 64px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        footer a {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--color-muted);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            transition: color 0.2s;
+        }
+
+        footer a:hover {
+            color: var(--color-text);
+        }
+
+        footer .sep {
+            color: #ccc;
+            font-size: 13px;
+            user-select: none;
+        }
+
+        @media (max-width: 620px) {
+            .container {
+                padding: 48px 20px 80px;
+            }
+
+            body {
+                font-size: 16px;
+            }
+
+            .page-title {
+                font-size: 26px;
+            }
+
+            .colophon {
+                font-size: 16px;
+            }
+        }
+    </style>
 </head>
 
-<body class="subpage">
-
-    <div class="noise"></div>
-    <div class="orb" id="orb"></div>
-    <div class="cursor-circle" id="c-circle"></div>
-
-    <nav class="glass-nav">
-        <a href="index.html" class="glass-pill magnet">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-            Back
-        </a>
-        <div id="theme-btn" class="glass-pill magnet" role="button" style="cursor: pointer;">MODE: DEFAULT</div>
-    </nav>
-
-    <div class="layout">
+<body>
+    <div class="container">
         <header>
-            <h1 class="serif">people who helped me.</h1>
-            <p>
-                Mentors, managers, and teachers I've had the privilege of working with directly.
-            </p>
+            <div class="header-line">
+                <h1><a href="index.html">Aaron Zhu</a></h1>
+                <span class="dot">·</span>
+                <a href="#">Projects</a>
+                <span class="dot">·</span>
+                <a href="reading.html">Reading</a>
+                <span class="dot">·</span>
+                <a href="acknowledgements.html" class="active">Acknowledgements</a>
+            </div>
         </header>
 
-        <section class="ack-wall items-grid">
-            <div class="wall-item magnet">
-                <span class="wall-name">Andy Fang</span>
-                <span class="wall-title">Co-founder, DoorDash</span>
-            </div>
 
-            <div class="wall-item magnet">
-                <span class="wall-name">Peter Ahnn</span>
-                <span class="wall-title">Engineering Leader, DoorDash</span>
-            </div>
 
-            <div class="wall-item magnet">
-                <span class="wall-name">Brad Willard</span>
-                <span class="wall-title">Engineering Leader, DoorDash</span>
-            </div>
+        <p class="colophon">
+            I've had the privilege of working with <a href="https://en.wikipedia.org/wiki/Andy_Fang">Andy Fang</a>,
+            Peter Ahnn, and
+            Brad Willard at DoorDash. At TikTok, I worked closely with
+            Cicy Chen,
+            Jing Sun, and Max Kuang.
+            <br><br>
+            In academia, I'm grateful for the guidance of <a
+                href="https://en.wikipedia.org/wiki/Remzi_Arpaci-Dusseau">Remzi Arpaci-Dusseau</a> and
+            Christopher
+            McKelvey at UW-Madison, as well as Dr. Chaowei Xiao and
+            Xiaogeng
+            Liu at JHU.
+            <br><br>
+            Finally, I wouldn't be here without the early support of my teachers: Mrs. Etterman, Mr. Strey, Mrs.
+            Fairbanks, Mr. Peters, and Mr. Terry.
+        </p>
 
-            <div class="wall-item magnet">
-                <span class="wall-name">Cicy Chen</span>
-                <span class="wall-title">Director, TikTok</span>
-            </div>
 
-            <div class="wall-item magnet">
-                <span class="wall-name">Jing Sun</span>
-                <span class="wall-title">Engineer, TikTok</span>
-            </div>
 
-            <div class="wall-item magnet">
-                <span class="wall-name">Max Kuang</span>
-                <span class="wall-title">Engineer, TikTok</span>
-            </div>
+        <p class="colophon" style="margin-top: 48px; font-size: 16px; color: var(--color-muted);">
+            There are many others I've met along the way who have shaped my thinking and career. If you're reading this,
+            thank you for being a part of my journey.
+        </p>
 
-            <div class="wall-item magnet">
-                <span class="wall-name">Remzi Arpaci-Dusseau</span>
-                <span class="wall-title">Director of CDIS, UW Madison</span>
-            </div>
-
-            <div class="wall-item magnet">
-                <span class="wall-name">Christopher McKelvey</span>
-                <span class="wall-title">Lecturer, UW Madison</span>
-            </div>
-
-            <div class="wall-item magnet">
-                <span class="wall-name">Chaowei Xiao</span>
-                <span class="wall-title">PI, JHU</span>
-            </div>
-
-            <div class="wall-item magnet">
-                <span class="wall-name">Xiaogeng Liu</span>
-                <span class="wall-title">PhD Student, JHU</span>
-            </div>
-
-            <div class="wall-item magnet">
-                <span class="wall-name">Mrs. Etterman</span>
-                <span class="wall-title">Chemistry Teacher</span>
-            </div>
-
-            <div class="wall-item magnet">
-                <span class="wall-name">Mr. Strey</span>
-                <span class="wall-title">Science Teacher</span>
-            </div>
-
-            <div class="wall-item magnet">
-                <span class="wall-name">Mrs. Fairbanks</span>
-                <span class="wall-title">Primary Education</span>
-            </div>
-
-            <div class="wall-item magnet">
-                <span class="wall-name">Mr. Peters</span>
-                <span class="wall-title">History Teacher</span>
-            </div>
-        </section>
+        <footer>
+            <a href="#">Email</a>
+            <span class="sep">/</span>
+            <a href="#">LinkedIn</a>
+        </footer>
     </div>
-
-    <script src="common.js"></script>
 </body>
 
 </html>

@@ -36,35 +36,6 @@
     }
 }
 
-/* --- THEME: 1995 (Windows 95 / Brutalist) --- */
-[data-theme="1995"] {
-    --bg-color: #008080;
-    /* Classic Teal */
-    --text-color: #000000;
-    --secondary: #444;
-    --tertiary: #000080;
-    /* Navy Blue links */
-    --accent: #ff0000;
-    --line: #888;
-    --font-main: 'Times New Roman', Times, serif;
-    /* Raw HTML feel */
-    --font-serif: 'Times New Roman', Times, serif;
-    --font-mono: 'Courier New', Courier, monospace;
-
-    --hud-bg: #c0c0c0;
-    --hud-border: 2px outset #fff;
-    /* Bevel look */
-    --hud-radius: 0px;
-    --cursor-display: none;
-    /* Hide custom cursor */
-    --native-cursor: auto;
-    /* Show default pointer */
-
-    --orb-opacity: 0;
-    --noise-opacity: 0.1;
-    /* Heavy static */
-}
-
 /* --- THEME: TERMINAL (Hacker / Matrix) --- */
 [data-theme="terminal"] {
     --bg-color: #0d0d0d;
@@ -86,6 +57,94 @@
     --orb-opacity: 0;
     --noise-opacity: 0.05;
 }
+
+/* =========================================
+   THEME: ACID (The "Crazy" Mode)
+   ========================================= */
+
+/* Acid Variables */
+[data-theme="acid"] {
+    --bg-color: #ffff00;
+    --text-color: #0000ff;
+    --secondary: #000;
+    --tertiary: #000;
+    --accent: #ff00ff;
+    --line: #000;
+    --font-main: 'VT323', monospace;
+    --font-serif: 'VT323', monospace;
+    --font-mono: 'VT323', monospace;
+    
+    --hud-bg: #fff;
+    --hud-border: 4px solid #000;
+    --hud-radius: 0px;
+    
+    --cursor-display: block;
+    --native-cursor: none;
+    
+    --orb-opacity: 0;
+    --noise-opacity: 0.2;
+}
+
+/* Acid Overrides & Behavior */
+[data-theme="acid"] body { animation: acid-trip 2s infinite linear; }
+[data-theme="acid"] .layout { transform: skewX(-3deg); border: 10px solid black; background: white; box-shadow: 20px 20px 0px #000; padding: 4rem; margin-top: 8rem; }
+[data-theme="acid"] h1 { font-size: 10rem; text-transform: uppercase; line-height: 0.8; animation: shake 0.3s infinite; color: #000; text-shadow: 4px 4px 0px #ff00ff; }
+[data-theme="acid"] p { font-size: 1.5rem; color: #000; font-weight: bold; text-transform: uppercase; }
+[data-theme="acid"] .resume-item { border-bottom: 5px solid black; transform: rotate(-1deg); padding: 2rem 0; }
+[data-theme="acid"] .resume-item:hover { transform: scale(1.1) rotate(2deg); background: #000; color: #fff; z-index: 100; position: relative; box-shadow: 10px 10px 0px #ff00ff; }
+[data-theme="acid"] .resume-item:hover * { color: #fff; }
+[data-theme="acid"] .cursor-circle { background: #000; width: 80px; height: 80px; mix-blend-mode: difference; border-radius: 0; animation: spin 1s infinite linear; border: 4px solid #fff; }
+[data-theme="acid"] .hud { mix-blend-mode: hard-light; }
+[data-theme="acid"] .hud > div { background: #fff; color: #000; font-weight: 900; font-size: 1.2rem; transform: skewX(-10deg); box-shadow: 5px 5px 0px #000; }
+
+/* Acid Animations */
+@keyframes acid-trip {
+    0% { background-color: #ff0000; } 15% { background-color: #ffff00; } 30% { background-color: #00ff00; } 45% { background-color: #00ffff; } 60% { background-color: #0000ff; } 75% { background-color: #ff00ff; } 100% { background-color: #ff0000; }
+}
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(3px, 2px) rotate(0deg); } 40% { transform: translate(1px, -1px) rotate(1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 60% { transform: translate(-3px, 1px) rotate(0deg); } 70% { transform: translate(3px, 1px) rotate(-1deg); } 80% { transform: translate(-1px, -1px) rotate(1deg); } 90% { transform: translate(1px, 2px) rotate(0deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+@keyframes spin { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+
+/* =========================================
+   THEME: MINIMAL (Clean Research Mode)
+   ========================================= */
+
+/* Minimal Variables */
+[data-theme="minimal"] {
+    --bg-color: #ffffff;
+    --text-color: #111111;
+    --secondary: #444444;
+    --tertiary: #666666;
+    --accent: #002FA7; /* Electric Blue */
+    --line: #e0e0e0;
+    --font-main: 'Source Serif 4', Georgia, serif;
+    --font-serif: 'Source Serif 4', Georgia, serif;
+    --font-mono: 'Courier New', Courier, monospace;
+
+    --hud-bg: #ffffff;
+    --hud-border: 1px solid #e0e0e0;
+    --hud-radius: 4px;
+
+    --cursor-display: none;
+    --native-cursor: auto;
+
+    --orb-opacity: 0;
+    --noise-opacity: 0;
+}
+
+/* Minimal Overrides & Behavior */
+[data-theme="minimal"] .layout { max-width: 720px; margin: 0 auto; padding-top: 8rem; }
+[data-theme="minimal"] h1 { font-size: 2.8rem; font-weight: 700; letter-spacing: 0; margin-bottom: 2rem; color: #000; }
+[data-theme="minimal"] h2 { font-size: 1.1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #000; border-bottom: 2px solid #000; padding-bottom: 0.5rem; font-style: normal; margin-top: 4rem; }
+[data-theme="minimal"] a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; border-bottom: none; }
+[data-theme="minimal"] a:hover { color: #000; }
+[data-theme="minimal"] .resume-item { border-bottom: 1px solid #eee; padding: 1.2rem 0; }
+[data-theme="minimal"] .resume-item:hover { opacity: 1; transform: none; filter: none; background: transparent; }
+[data-theme="minimal"] .resume-item:hover .role { color: var(--accent); }
+[data-theme="minimal"] .hud { font-family: var(--font-serif); max-width: 720px; }
+[data-theme="minimal"] .hud > div:not(.dropdown),
+[data-theme="minimal"] .hud .dropdown-trigger { box-shadow: none; font-weight: 400; font-size: 0.9rem; }
 
 /* --- BASE --- */
 *,
@@ -154,83 +213,6 @@ body.fade-out .layout {
 body.fade-out #time,
 body.fade-out .glass-nav>a:first-child {
     animation: fadeOut 0.3s ease forwards;
-}
-
-/* 1995 SPECIFIC OVERRIDES */
-[data-theme="1995"] .layout {
-    background: #c0c0c0;
-    border: 2px outset #fff;
-    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.5);
-    margin-top: 6rem;
-    max-width: 800px;
-    padding: 2rem;
-}
-
-[data-theme="1995"] h1 {
-    text-transform: uppercase;
-    letter-spacing: -2px;
-}
-
-[data-theme="1995"] .resume-item,
-[data-theme="1995"] .wall-item,
-[data-theme="1995"] .glass-nav a {
-    /* Generalized for interactive items */
-    border-bottom: 1px dotted #000;
-}
-
-[data-theme="1995"] .resume-item:hover,
-[data-theme="1995"] .wall-item:hover,
-[data-theme="1995"] .glass-nav a:hover {
-    background: #000080;
-    color: white;
-    opacity: 1;
-    transform: none;
-    filter: none;
-}
-
-[data-theme="1995"] .resume-item:hover *,
-[data-theme="1995"] .wall-item:hover *,
-[data-theme="1995"] .glass-nav a:hover * {
-    color: white;
-}
-
-[data-theme="1995"] a {
-    text-decoration: underline;
-    color: blue;
-}
-
-[data-theme="1995"] .glass-pill {
-    background: #c0c0c0;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    border-radius: 0;
-    box-shadow: none;
-    border: 2px solid;
-    border-color: #fff #808080 #808080 #fff;
-    /* Highlight top/left, Shadow bottom/right */
-    color: #000;
-}
-
-[data-theme="1995"] .glass-pill:active {
-    border-color: #808080 #fff #fff #808080;
-    /* Inset effect */
-    transform: translateY(1px);
-}
-
-[data-theme="1995"] .glass-pill:hover {
-    background: #c0c0c0;
-    transform: none;
-    color: #000;
-}
-
-[data-theme="1995"] .subpage .layout {
-    margin-top: 8rem;
-}
-
-[data-theme="1995"] .hud,
-[data-theme="1995"] .glass-nav {
-    max-width: 800px;
-    padding: 0;
 }
 
 /* TERMINAL SPECIFIC OVERRIDES */
@@ -398,7 +380,8 @@ a {
     color: var(--text-color);
 }
 
-.hud>div {
+.hud>div:not(.dropdown),
+.hud .dropdown-trigger {
     pointer-events: auto;
     background: var(--hud-bg);
     backdrop-filter: blur(12px);
@@ -412,8 +395,12 @@ a {
     letter-spacing: 0.02em;
 }
 
+.hud .dropdown {
+    pointer-events: auto;
+}
+
 /* Theme Selector Specifics */
-#theme-btn {
+#theme-label {
     cursor: pointer;
     user-select: none;
     min-width: 120px;
@@ -691,7 +678,7 @@ section.visible {
 .dropdown-menu {
     position: absolute;
     top: 100%;
-    left: 0;
+    right: 0;
     margin-top: 0.5rem;
     background: var(--hud-bg);
     backdrop-filter: blur(12px);
@@ -737,24 +724,6 @@ section.visible {
 }
 
 /* Dropdown theme overrides */
-[data-theme="1995"] .dropdown-menu {
-    background: #c0c0c0;
-    backdrop-filter: none;
-    border-radius: 0;
-    border: 2px outset #fff;
-    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
-}
-
-[data-theme="1995"] .dropdown-menu a {
-    text-decoration: none;
-    color: #000;
-}
-
-[data-theme="1995"] .dropdown-menu a:hover {
-    background: #000080;
-    color: white;
-}
-
 [data-theme="terminal"] .dropdown-menu {
     background: #000;
     border-radius: 0;
@@ -764,4 +733,39 @@ section.visible {
 [data-theme="terminal"] .dropdown-menu a:hover {
     background: var(--text-color);
     color: #000;
+}
+
+[data-theme="acid"] .dropdown-menu {
+    background: #fff;
+    border-radius: 0;
+    border: 4px solid #000;
+    box-shadow: 8px 8px 0 #000;
+    transform: skewX(-5deg);
+}
+
+[data-theme="acid"] .dropdown-menu a {
+    color: #000;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+[data-theme="acid"] .dropdown-menu a:hover {
+    background: #ff00ff;
+    color: #fff;
+}
+
+[data-theme="minimal"] .dropdown-menu {
+    background: #fff;
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="minimal"] .dropdown-menu a {
+    color: #111;
+}
+
+[data-theme="minimal"] .dropdown-menu a:hover {
+    background: #002FA7;
+    color: #fff;
 }

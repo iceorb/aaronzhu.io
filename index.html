@@ -4,306 +4,342 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aaron Zhu</title>
+    <title>Aaron</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'Martina Plantijn';
+            src: url('fonts/TestMartinaPlantijn-Regular-BF663c36d1ec6d5.otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+        }
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&display=swap"
-        rel="stylesheet">
+        @font-face {
+            font-family: 'Martina Plantijn';
+            src: url('fonts/TestMartinaPlantijn-Italic-BF663c36d1ed0f9.otf') format('opentype');
+            font-weight: 400;
+            font-style: italic;
+        }
 
-    <link rel="stylesheet" href="styles.css">
+        @font-face {
+            font-family: 'Martina Plantijn';
+            src: url('fonts/TestMartinaPlantijn-Medium-BF663c36d1e5bed.otf') format('opentype');
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        :root {
+            --font-main: 'Outfit', sans-serif;
+            --font-serif: 'Martina Plantijn', serif;
+            --font-mono: monospace;
+            --color-text: #333;
+            --color-muted: #6b6b6b;
+            --color-link: #2a5bd7;
+            --color-bg: #fff;
+            --accent: #002FA7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-serif);
+            font-weight: 400;
+            color: var(--color-text);
+            background: var(--color-bg);
+            line-height: 1.7;
+            font-size: 18px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 32px 120px;
+        }
+
+        header {
+            margin-bottom: 56px;
+        }
+
+        .header-line {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .header-line h1 {
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .header-line a {
+            font-family: var(--font-main);
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--color-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .header-line a.active {
+            color: var(--color-text);
+        }
+
+        .header-line a:hover {
+            color: var(--color-text);
+        }
+
+        .header-line h1 a {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .header-line .dot {
+            color: #bbb;
+            font-size: 14px;
+            user-select: none;
+            margin: 0 4px;
+        }
+
+        #ascii-container {
+            width: 100%;
+            height: 280px;
+            margin-top: 56px;
+            overflow: hidden;
+        }
+
+        #ascii-container canvas {
+            display: block;
+        }
+
+        .bio p {
+            font-family: var(--font-serif);
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 1.55;
+            margin-bottom: 16px;
+            color: var(--color-text);
+        }
+
+        .bio ul {
+            font-family: var(--font-serif);
+            font-size: 18px;
+            line-height: 1.55;
+            color: var(--color-text);
+            margin: -4px 0 16px 20px;
+            padding: 0;
+        }
+
+        .bio ul li {
+            margin-bottom: 2px;
+        }
+
+        .bio a {
+            color: var(--color-link);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+        .bio a:hover {
+            opacity: 0.7;
+        }
+
+        .highlight {
+            background: #ebebeb;
+            padding: 1px 5px;
+        }
+
+        footer {
+            margin-top: 48px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        footer a {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--color-muted);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            transition: color 0.2s;
+        }
+
+        footer a:hover {
+            color: var(--color-text);
+        }
+
+        footer .sep {
+            color: #ccc;
+            font-size: 13px;
+            user-select: none;
+        }
+
+        @media (max-width: 620px) {
+            .container {
+                padding: 48px 20px 80px;
+            }
+
+            body {
+                font-size: 16px;
+            }
+
+            #ascii-container {
+                height: 200px;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <div class="container">
+        <header>
+            <div class="header-line">
+                <h1><a href="index.html" class="active">Aaron Zhu</a></h1>
+                <span class="dot">·</span>
+                <a href="#">Projects</a>
+                <span class="dot">·</span>
+                <a href="reading.html">Reading</a>
+                <span class="dot">·</span>
+                <a href="acknowledgements.html">Acknowledgements</a>
+            </div>
+        </header>
 
-    <div class="noise"></div>
-    <div class="orb" id="orb"></div>
-    <!-- cursor-dot removed -->
-    <div class="cursor-circle" id="c-circle"></div>
+        <section class="bio">
+            <p>I'm an <span class="highlight">engineer + researcher</span> based in
+                NYC, focused on the applied AI in society:
+                <br>
+            </p>
+            <ul>
+                <li>Predictive intelligence</li>
+                <li>Human behavior modelling</li>
+                <li>Simulated environments and synthetic data</li>
+            </ul>
+            <p>Lately I've been thinking a lot about <span class="highlight">simulations</span> and <span
+                    class="highlight">synthetic data</span>, and how they can train both AI and
+                eventually humans.</p>
+            <p>I'm from Minnesota and went to UW-Madison. I've worked at places like <span
+                    class="highlight">TikTok</span>
+                and <span class="highlight">DoorDash</span>. Before that, I did research on model safety and
+                vision-language models.
+            </p>
 
-    <div class="hud">
-        <div id="time">00:00</div>
-        <div id="theme-btn" class="glass-pill magnet" role="button" style="cursor: pointer; pointer-events: auto;">MODE:
-            DEFAULT</div>
+            <p>Outside of work I travel, read, snowboard, and play tennis as much as possible. I like learning languages
+                --outside of English and Mandarin speak French, Japanese and Korean to varying proficiencies.</p>
+        </section>
+
+        <div id="ascii-container"></div>
+
+        <footer>
+            <a href="#">Email</a>
+            <span class="sep">/</span>
+            <a href="#">LinkedIn</a>
+        </footer>
     </div>
 
-    <div class="layout">
-
-
-
-        <main>
-            <section id="home" class="visible"
-                style="min-height: calc(100vh - 10rem); display: flex; flex-direction: column; justify-content: center; position: relative;">
-                <h1 class="serif">
-                    <span class="scramble">hi, i'm aaron.</span>
-                </h1>
-                <p>
-                    I'm an engineer and researcher currently based in NYC.
-                </p>
-                <p>
-                    My recent interest has been in simulations and synthetic data for model and human RL.
-                </p>
-                <p>
-                    Outside of work, I try to travel, read, write, snowboard, and play tennis as much as possible.
-                </p>
-                <p style="font-size: 0.95rem; margin-top: 2rem;" class="mono">
-                    <a href="reading.html" class="magnet">READING LIST</a> / <a href="acknowledgements.html"
-                        class="magnet">ACKNOWLEDGEMENTS</a> / <span class="dropdown">
-                        <span class="dropdown-trigger magnet">GAMES ▾</span>
-                        <span class="dropdown-menu">
-                            <a href="game.html">Agent Evolution</a>
-                            <a href="bucky.html">Bucky's Last Stand</a>
-                        </span>
-                    </span>
-                </p>
-                <div id="scroll-hint"
-                    style="position: absolute; bottom: 2rem; left: 0; opacity: 0; transition: opacity 1s ease;">
-                    <div style="animation: bounce 2s infinite;">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 5v14M19 12l-7 7-7-7" />
-                        </svg>
-                    </div>
-                </div>
-                <style>
-                    @keyframes bounce {
-
-                        0%,
-                        100% {
-                            transform: translateY(0);
-                            opacity: 0.3;
-                        }
-
-                        50% {
-                            transform: translateY(5px);
-                            opacity: 0.7;
-                        }
-                    }
-                </style>
-            </section>
-
-            <section id="exp">
-                <h2 class="serif">Selected Work</h2>
-                <div class="resume-list">
-                    <div class="resume-item magnet-area">
-                        <div>
-                            <span class="role">Machine Learning Engineer Intern</span>
-                            <span class="company">DoorDash</span>
-                        </div>
-                        <span class="date">2025</span>
-                    </div>
-                    <div class="resume-item magnet-area">
-                        <div>
-                            <span class="role">Software Engineer Intern</span>
-                            <span class="company">TikTok</span>
-                        </div>
-                        <span class="date">2024 — 2025</span>
-                    </div>
-                    <div class="resume-item magnet-area">
-                        <div>
-                            <span class="role">Undergraduate Researcher</span>
-                            <span class="company">Safe Foundational Models Lab</span>
-                        </div>
-                        <span class="date">2023 — 2025</span>
-                    </div>
-                    <div class="resume-item magnet-area">
-                        <div>
-                            <span class="role">Undergraduate Researcher</span>
-                            <span class="company">Yonsei University Vision-Language Lab</span>
-                        </div>
-                        <span class="date">2023</span>
-                    </div>
-                </div>
-            </section>
-
-            <section id="edu">
-                <h2 class="serif">Education</h2>
-                <div class="resume-list">
-                    <div class="resume-item magnet-area">
-                        <div>
-                            <span class="role">M.S. Engineering (AI + Data Science)</span>
-                            <span class="company">University of Pennsylvania</span>
-                        </div>
-                        <span class="date">2026</span>
-                    </div>
-                    <div class="resume-item magnet-area">
-                        <div>
-                            <span class="role">B.S. Computer Science, Math, Econ</span>
-                            <span class="company">University of Wisconsin-Madison</span>
-                        </div>
-                        <span class="date">2021 — 2025</span>
-                    </div>
-                </div>
-
-                <h2 class="serif" style="margin-top: 4rem;">Papers</h2>
-                <div class="resume-list">
-                    <div class="resume-item magnet-area">
-                        <div>
-                            <span class="role">BackdoorGCG: Prompt Injection against Falcon, LLaMa</span>
-                            <span class="company">Greedy Coordinate Gradient optimization</span>
-                        </div>
-                        <span class="date">2024</span>
-                    </div>
-                </div>
-            </section>
-
-            <section id="awards">
-                <h2 class="serif">Recognition</h2>
-                <div class="resume-list">
-                    <div class="resume-item magnet-area">
-                        <div><span class="role">Lorraine A. & W. Dwight Stone Scholarship</span></div>
-                        <span class="date">2025</span>
-                    </div>
-                    <div class="resume-item magnet-area">
-                        <div><span class="role">Finalist — GE Healthcare x N+1 Institute</span></div>
-                        <span class="date">2025</span>
-                    </div>
-                    <div class="resume-item magnet-area">
-                        <div><span class="role">1st Place — Healthcare Empowerment (MadHacks)</span></div>
-                        <span class="date">2023</span>
-                    </div>
-                </div>
-            </section>
-
-            <footer style="margin-top: 10rem; padding-bottom: 4rem;">
-                <div style="display: flex; gap: 2rem; margin-bottom: 2rem;" class="mono">
-                    <a href="mailto:amzhu@upenn.edu" class="magnet">EMAIL</a>
-                    <a href="#" class="magnet">LINKEDIN</a>
-                </div>
-                <p class="mono" style="color: var(--tertiary);">© 2026 Aaron Zhu</p>
-            </footer>
-
-        </main>
-    </div>
-
-    <script src="common.js"></script>
     <script>
-        // --- 1. MOUSE PHYSICS & ORB ---
-        // (Handled by common.js)
+        const container = document.getElementById('ascii-container');
+        const canvas = document.createElement('canvas');
+        container.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
 
-        // --- 2. THEME SWITCHER LOGIC ---
-        // (Handled by common.js)
+        const chars = ' .·:;~+=*<>^/%#&@'.split('');
+        const charW = 7.5;
+        const charH = 12;
 
-        // --- 3. SCROLL PROGRESS (Specific to this page) ---
-        const progressEl = document.getElementById('progress');
-        window.addEventListener('scroll', () => {
-            // Update Progress
-            const scrolled = window.scrollY;
-            const max = document.body.scrollHeight - window.innerHeight;
-            const percentage = Math.round((scrolled / max) * 100);
-            if (progressEl) progressEl.innerText = percentage;
+        let cols, rows;
+
+        function sizeCanvas() {
+            const dpr = window.devicePixelRatio || 1;
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+            cols = Math.floor(w / charW);
+            rows = Math.floor(h / charH);
+            const displayW = cols * charW;
+            const displayH = rows * charH;
+            canvas.width = displayW * dpr;
+            canvas.height = displayH * dpr;
+            canvas.style.width = displayW + 'px';
+            canvas.style.height = displayH + 'px';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.font = '11px Courier New';
+            ctx.textBaseline = 'top';
+            // regenerate bleed
+            bleed.length = 0;
+            for (let i = 0; i < cols * rows; i++) {
+                bleed.push(Math.random() * 0.12 - 0.06);
+            }
+        }
+
+        ctx.font = '11px Courier New';
+        ctx.textBaseline = 'top';
+
+        let t = 0;
+        let mouse = { x: 0.5, y: 0.5 };
+        let smoothMouse = { x: 0.5, y: 0.5 };
+        const bleed = [];
+
+        document.addEventListener('mousemove', (e) => {
+            const r = canvas.getBoundingClientRect();
+            mouse.x = (e.clientX - r.left) / r.width;
+            mouse.y = (e.clientY - r.top) / r.height;
         });
 
-        // --- 4. TIME ---
-        // (Handled by common.js)
+        sizeCanvas();
 
-        // --- 5. TEXT SCRAMBLE (Synced from index.html) ---
-        class TextScramble {
-            constructor(el) {
-                this.el = el;
-                // Removed wide chars like '—' and '_' to reduce width variance
-                this.chars = '!<>-_\\[]{}=+*^?#';
-                this.update = this.update.bind(this);
-            }
+        function render() {
+            t += 0.003;
 
-            setText(newText, durationMultiplier = 1) {
-                const oldText = this.el.innerText;
-                const length = Math.max(oldText.length, newText.length);
-                const promise = new Promise((resolve) => this.resolve = resolve);
-                this.queue = [];
+            smoothMouse.x += (mouse.x - smoothMouse.x) * 0.03;
+            smoothMouse.y += (mouse.y - smoothMouse.y) * 0.03;
 
-                for (let i = 0; i < length; i++) {
-                    const from = oldText[i] || '';
-                    const to = newText[i] || '';
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                    // Extended duration for the "dots" phase
-                    const start = Math.floor(Math.random() * 40 * durationMultiplier) + 15; // Delay start slightly
-                    const end = start + Math.floor(Math.random() * 40 * durationMultiplier);
-                    this.queue.push({ from, to, start, end });
-                }
+            for (let y = 0; y < rows; y++) {
+                for (let x = 0; x < cols; x++) {
+                    const nx = x / cols;
+                    const ny = y / rows;
 
-                cancelAnimationFrame(this.frameRequest);
-                this.frame = 0;
-                this.update();
-                return promise;
-            }
+                    const dx = nx - smoothMouse.x;
+                    const dy = ny - smoothMouse.y;
+                    const mouseDist = Math.sqrt(dx * dx + dy * dy);
+                    const mouseInfluence = Math.max(0, 1 - mouseDist / 0.4) * 0.25;
 
-            update() {
-                let output = '';
-                let complete = 0;
+                    const flow1 = Math.sin(nx * 3.5 + t * 0.7) * Math.cos(ny * 2.8 - t * 0.5);
+                    const flow2 = Math.sin((nx + ny) * 2.2 - t * 0.9) * 0.5;
+                    const flow3 = Math.cos(nx * 1.8 - ny * 3.0 + t * 0.6) * 0.4;
+                    const flow4 = Math.sin(Math.sqrt((nx - 0.5) ** 2 + (ny - 0.5) ** 2) * 6 - t * 1.2) * 0.3;
 
-                for (let i = 0, n = this.queue.length; i < n; i++) {
-                    let { from, to, start, end, char } = this.queue[i];
+                    let val = (flow1 + flow2 + flow3 + flow4 + 1.5) / 3.0;
+                    val += bleed[y * cols + x];
+                    val += mouseInfluence;
+                    const clamped = Math.max(0, Math.min(1, val));
 
-                    if (this.frame >= end) {
-                        // Phase 3: Final Text
-                        complete++;
-                        output += to;
-                    } else if (this.frame >= start) {
-                        // Phase 2: Scramble Chars
-                        if (!char || Math.random() < 0.28) {
-                            char = this.randomChar();
-                            this.queue[i].char = char;
-                        }
-                        output += `<span class="dud">${char}</span>`;
-                    } else {
-                        // Phase 1: Pre-scramble
-                        output += from;
-                    }
-                }
+                    const ci = Math.floor(clamped * (chars.length - 1));
 
-                this.el.innerHTML = output;
+                    const alpha = 0.08 + clamped * 0.9;
+                    const shade = Math.floor(30 + (1 - clamped) * 80);
 
-                if (complete === this.queue.length) {
-                    this.resolve();
-                } else {
-                    this.frameRequest = requestAnimationFrame(this.update);
-                    this.frame++; // Run at 60fps for smoother chaotic feel
+                    ctx.fillStyle = `rgba(${shade},${shade},${shade},${alpha})`;
+                    ctx.fillText(chars[ci], x * charW, y * charH);
                 }
             }
 
-            randomChar() {
-                return this.chars[Math.floor(Math.random() * this.chars.length)];
-            }
+            requestAnimationFrame(render);
         }
 
-        const greetings = ["hi, i'm aaron.", "salut, moi c'est aaron.", "aaronです。", "aaron입니다.", "我是aaron。"];
-        const title = document.querySelector('.scramble');
+        render();
 
-        if (title) {
-            const fx = new TextScramble(title);
-            let i = 0;
-            const next = () => {
-                // Lock width to current computed width preventing layout shift
-                const currentWidth = title.offsetWidth;
-                title.style.width = `${currentWidth}px`;
-                title.style.display = 'inline-block';
-                title.style.whiteSpace = 'nowrap';
-
-                fx.setText(greetings[i]).then(() => {
-                    // Unlock after scramble
-                    title.style.width = 'auto';
-                    setTimeout(next, 4000);
-                });
-                i = (i + 1) % greetings.length;
-            };
-
-            // Initial delay before starting the loop
-            setTimeout(next, 500);
-        }
-
-        // --- 6. SCROLL HINT TIMING ---
-        setTimeout(() => {
-            const hint = document.getElementById('scroll-hint');
-            if (hint) hint.style.opacity = '1';
-        }, 5000);
-
-        setTimeout(() => {
-            const hint = document.getElementById('scroll-hint');
-            if (hint) hint.style.opacity = '0';
-        }, 15000);
-
+        window.addEventListener('resize', sizeCanvas);
     </script>
 </body>
 
