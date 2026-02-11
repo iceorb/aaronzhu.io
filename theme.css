@@ -1,0 +1,66 @@
+/* Dark Mode Variables */
+:root.dark {
+    --color-bg: #111111;
+    --color-text: #e0e0e0;
+    --color-muted: #a0a0a0;
+    --color-link: #7aa5eb;
+    --color-user-bg: #222222;
+    --color-ai-bg: #111111;
+    /* Ensure accent is readable if used */
+    /* Ensure accent is readable if used */
+    --accent: #4A90E2;
+    --highlight-bg: #333;
+    /* Dark mode highlight */
+    --highlight-text: #fff;
+}
+
+:root {
+    --highlight-bg: #ebebeb;
+    /* Default light mode highlight */
+    --highlight-text: #1a1a1a;
+}
+
+/* Specific component overrides */
+.dark .ascii-stats {
+    background: #1a1a1a;
+    border-color: #333;
+    color: #ccc;
+}
+
+.dark input,
+.dark textarea {
+    background: #1a1a1a;
+    color: #e0e0e0;
+    border-color: #333;
+}
+
+.dark .input-container {
+    background: rgba(17, 17, 17, 0.9);
+    border-top-color: #333;
+}
+
+.dark .send-btn {
+    background: #333;
+}
+
+.dark .send-btn:hover {
+    background: #444;
+}
+
+/* Button Styling matching footer links */
+#theme-toggle {
+    font-family: var(--font-mono, monospace);
+    font-size: 13px;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s;
+    padding: 0;
+}
+
+#theme-toggle:hover {
+    color: var(--color-text);
+}

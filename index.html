@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aaron</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js"></script>
     <style>
         @font-face {
             font-family: 'Martina Plantijn';
@@ -152,8 +154,11 @@
         }
 
         .highlight {
-            background: #ebebeb;
+            background: var(--highlight-bg);
+            color: var(--highlight-text);
             padding: 1px 5px;
+            border-radius: 2px;
+            transition: background 0.3s, color 0.3s;
         }
 
         footer {
@@ -215,7 +220,7 @@
 
         <section class="bio">
             <p>I'm an <span class="highlight">engineer + researcher</span> based in
-                NYC, focused on applied AI in society:
+                NYC, focused on applied AI in various domains:
                 <br>
             </p>
             <ul>
@@ -302,7 +307,10 @@
             smoothMouse.x += (mouse.x - smoothMouse.x) * 0.03;
             smoothMouse.y += (mouse.y - smoothMouse.y) * 0.03;
 
-            ctx.fillStyle = '#ffffff';
+            const isDark = document.documentElement.classList.contains('dark');
+
+            // Dynamic Background
+            ctx.fillStyle = isDark ? '#111111' : '#ffffff';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             for (let y = 0; y < rows; y++) {
@@ -328,7 +336,16 @@
                     const ci = Math.floor(clamped * (chars.length - 1));
 
                     const alpha = 0.08 + clamped * 0.9;
-                    const shade = Math.floor(30 + (1 - clamped) * 80);
+
+                    // Dynamic Text Color
+                    let shade;
+                    if (isDark) {
+                        // Light text for dark mode (100 to 255)
+                        shade = Math.floor(100 + clamped * 155);
+                    } else {
+                        // Dark text for light mode (30 to 110)
+                        shade = Math.floor(30 + (1 - clamped) * 80);
+                    }
 
                     ctx.fillStyle = `rgba(${shade},${shade},${shade},${alpha})`;
                     ctx.fillText(chars[ci], x * charW, y * charH);
