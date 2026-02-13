@@ -188,17 +188,41 @@
             user-select: none;
         }
 
+        /* Mobile spacing updates */
         @media (max-width: 620px) {
             .container {
-                padding: 48px 20px 80px;
+                padding: 48px 24px 80px;
             }
 
             body {
                 font-size: 16px;
             }
 
+            .header-line {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .nav-links {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: baseline;
+                gap: 6px;
+                color: var(--color-muted);
+            }
+
+            .mobile-hide {
+                display: none;
+            }
+
             #ascii-container {
                 height: 200px;
+                margin-top: 40px;
+            }
+
+            header {
+                margin-bottom: 40px;
             }
         }
     </style>
@@ -209,12 +233,14 @@
         <header>
             <div class="header-line">
                 <h1><a href="index.html" class="active">Aaron Zhu</a></h1>
-                <span class="dot">·</span>
-                <a href="works.html">Works</a>
-                <span class="dot">·</span>
-                <a href="reading.html">Reading</a>
-                <span class="dot">·</span>
-                <a href="acknowledgements.html">Acknowledgements</a>
+                <div class="nav-links">
+                    <span class="dot mobile-hide">·</span>
+                    <a href="works.html">Works</a>
+                    <span class="dot">·</span>
+                    <a href="reading.html">Reading</a>
+                    <span class="dot">·</span>
+                    <a href="acknowledgements.html">Acknowledgements</a>
+                </div>
             </div>
         </header>
 
