@@ -102,13 +102,13 @@
         }
 
         a {
-            color: #4A90E2;
+            color: var(--color-link);
             text-decoration: none;
         }
 
         a:hover {
             opacity: 0.7;
-            color: #4A90E2;
+            color: var(--color-link);
         }
 
         .header-line .dot {
@@ -212,13 +212,32 @@
             user-select: none;
         }
 
+        /* Mobile spacing updates */
         @media (max-width: 620px) {
             .container {
-                padding: 48px 20px 80px;
+                padding: 48px 24px 80px;
             }
 
             body {
                 font-size: 16px;
+            }
+
+            .header-line {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .nav-links {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: baseline;
+                gap: 6px;
+                color: var(--color-muted);
+            }
+
+            .mobile-hide {
+                display: none;
             }
 
             .page-title {
@@ -227,6 +246,10 @@
 
             .colophon {
                 font-size: 16px;
+            }
+
+            header {
+                margin-bottom: 40px;
             }
         }
     </style>
@@ -237,34 +260,42 @@
         <header>
             <div class="header-line">
                 <h1><a href="index.html">Aaron Zhu</a></h1>
-                <span class="dot">·</span>
-                <a href="works.html">Works</a>
-                <span class="dot">·</span>
-                <a href="reading.html">Reading</a>
-                <span class="dot">·</span>
-                <a href="acknowledgements.html" class="active">Acknowledgements</a>
+                <div class="nav-links">
+                    <span class="dot mobile-hide">·</span>
+                    <a href="works.html">Works</a>
+                    <span class="dot">·</span>
+                    <a href="reading.html">Reading</a>
+                    <span class="dot">·</span>
+                    <a href="acknowledgements.html" class="active">Acknowledgements</a>
+                </div>
             </div>
         </header>
 
 
 
         <p class="colophon">
-            I've had the privilege of working with <a href="https://en.wikipedia.org/wiki/Andy_Fang">Andy Fang</a>,
-            Peter Ahnn, and
-            Brad Willard at DoorDash. At TikTok, I worked closely with
-            Cicy Chen,
-            Jing Sun, and Max Kuang.
-            <br><br>
-            In academia, I'm grateful for the guidance of <a
-                href="https://en.wikipedia.org/wiki/Remzi_Arpaci-Dusseau">Remzi Arpaci-Dusseau</a> and
-            Christopher
-            McKelvey at UW-Madison, as well as Dr. Chaowei Xiao and
-            Xiaogeng
-            Liu at JHU.
-            <br><br>
-            Finally, I wouldn't be here without the early support of my teachers: Mrs. Etterman, Mr. Strey, Mrs.
-            Fairbanks, Mr. Peters, and Mr. Terry.
+            I've had the privilege of working with many incredibly thoughtful and talented individuals, many of whom
+            inspired and shaped my thinking and career.
         </p>
+
+        <ul class="colophon" style="margin-top: 24px; padding-left: 20px; list-style-type: disc;">
+            <li style="margin-bottom: 8px;">
+                <a href="https://en.wikipedia.org/wiki/Andy_Fang">Andy Fang</a>, Peter Ahnn, and Brad Willard (DoorDash)
+            </li>
+            <li style="margin-bottom: 8px;">
+                Cicy Chen, Jing Sun, and Max Kuang (TikTok)
+            </li>
+            <li style="margin-bottom: 8px;">
+                <a href="https://en.wikipedia.org/wiki/Remzi_Arpaci-Dusseau">Remzi Arpaci-Dusseau</a> and Christopher
+                McKelvey (UW-Madison)
+            </li>
+            <li style="margin-bottom: 8px;">
+                Dr. Chaowei Xiao and Xiaogeng Liu (UW-Madison, now JHU)
+            </li>
+            <li>
+                Mrs. Etterman, Mr. Strey, Mrs. Fairbanks, Mr. Peters, and Mr. Terry (Teachers)
+            </li>
+        </ul>
 
 
 
