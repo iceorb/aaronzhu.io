@@ -235,36 +235,37 @@
                 <h1><a href="index.html" class="active">Aaron Zhu</a></h1>
                 <div class="nav-links">
                     <span class="dot mobile-hide">·</span>
-                    <a href="works.html">Works</a>
+                    <a href="works.html">Things</a>
                     <span class="dot">·</span>
-                    <a href="reading.html">Reading</a>
+                    <a href="reading.html">Readings</a>
                     <span class="dot">·</span>
-                    <a href="acknowledgements.html">Acknowledgements</a>
+                    <a href="acknowledgements.html">Nods</a>
                 </div>
             </div>
         </header>
 
         <section class="bio">
-            <p>I'm an <span class="highlight">engineer + researcher</span> based in
-                NYC.
-                <br>
-            </p>
+            <p>I'm an <span class="highlight">engineer + researcher</span> based in NYC.</p>
             <!-- <ul>
                 <li>Predictive intelligence</li>
                 <li>Human behavior modelling</li>
                 <li>Simulated environments and synthetic data</li>
             </ul> -->
             <p>Lately I've been thinking a lot about <span class="highlight">simulations</span> and <span
-                    class="highlight">synthetic data</span>, and how they can train both AI and
-                humans.</p>
-            <p>I'm from Minnesota and went to UW-Madison. I've worked at places like <span
-                    class="highlight">TikTok</span>
-                and <span class="highlight">DoorDash</span>. Before that, I did research on model safety and
-                vision-language models.
+                    class="highlight">synthetic data</span> for training AI/humans.</p>
+            <p>I'm from Minnesota and went to UW-Madison. I've done applied research at <span
+                    class="highlight">DoorDash</span> and <span class="highlight">TikTok</span>. Before that,
+                research at the <span class="highlight">Safe Foundational Models Lab</span>
+                (Johns Hopkins/UW-Madison) and the <span class="highlight">Vision &amp; Learning Lab</span>
+                (Yonsei University).
             </p>
 
-            <p>I try to travel, read, snowboard, and play tennis as much as possible. I like learning languages
-                --outside of English and Mandarin speak French, Japanese and Korean to varying proficiencies.</p>
+            <p>I like to travel, snowboard, play tennis, and pick up languages — English and Mandarin fluently,
+                French, Japanese, and Korean to varying degrees.</p>
+
+            <p>I also grew up in museums as a kid and went to art school — in an alternate universe I'd be an
+                architect. My favorite artists are <span class="highlight">Edward Hopper</span> and
+                <span class="highlight">Tadao Ando</span>.</p>
 
         </section>
 
@@ -333,10 +334,7 @@
             smoothMouse.x += (mouse.x - smoothMouse.x) * 0.03;
             smoothMouse.y += (mouse.y - smoothMouse.y) * 0.03;
 
-            const isDark = document.documentElement.classList.contains('dark');
-
-            // Dynamic Background
-            ctx.fillStyle = isDark ? '#111111' : '#ffffff';
+            ctx.fillStyle = '#111111';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             for (let y = 0; y < rows; y++) {
@@ -362,17 +360,7 @@
                     const ci = Math.floor(clamped * (chars.length - 1));
 
                     const alpha = 0.08 + clamped * 0.9;
-
-                    // Dynamic Text Color
-                    let shade;
-                    if (isDark) {
-                        // Light text for dark mode (100 to 255)
-                        shade = Math.floor(100 + clamped * 155);
-                    } else {
-                        // Dark text for light mode (30 to 110)
-                        shade = Math.floor(30 + (1 - clamped) * 80);
-                    }
-
+                    const shade = Math.floor(100 + clamped * 155);
                     ctx.fillStyle = `rgba(${shade},${shade},${shade},${alpha})`;
                     ctx.fillText(chars[ci], x * charW, y * charH);
                 }
