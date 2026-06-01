@@ -290,7 +290,7 @@
         </section>
 
         <div id="ascii-container"></div>
-        <div class="ascii-caption">click to swap ↻</div>
+        <div class="ascii-caption">refresh ↻ for another</div>
 
         <footer>
             <a href="#">Email</a>
@@ -305,28 +305,37 @@
         container.appendChild(canvas);
         const ctx = canvas.getContext('2d');
 
-        const MODES = ['waves', 'bourse', 'photo'];
+        const MODES = ['waves', 'bourse', 'photo', 'hopper'];
+        const HISTORY_KEY = 'asciiModeHistory';
+        const MEMORY = MODES.length - 1;  // remember last N-1 shown
+
         const MODE = (() => {
             const fromHash = location.hash.replace('#', '');
             if (MODES.includes(fromHash)) return fromHash;
-            const r = Math.random();
-            if (r < 1 / 3) return 'waves';
-            if (r < 2 / 3) return 'bourse';
-            return 'photo';
+            let history = [];
+            try {
+                history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+            } catch { }
+            const available = MODES.filter(m => !history.includes(m));
+            const pool = available.length ? available : MODES;
+            const chosen = pool[Math.floor(Math.random() * pool.length)];
+            history.push(chosen);
+            if (history.length > MEMORY) history = history.slice(-MEMORY);
+            try { localStorage.setItem(HISTORY_KEY, JSON.stringify(history)); } catch { }
+            return chosen;
         })();
 
         function cycleMode() {
-            const next = MODES[(MODES.indexOf(MODE) + 1) % MODES.length];
-            location.hash = next;
+            if (location.hash) location.hash = '';
             location.reload();
         }
         container.addEventListener('click', cycleMode);
         document.querySelector('.ascii-caption')?.addEventListener('click', cycleMode);
 
-        if (MODE === 'photo') {
+        if (MODE === 'photo' || MODE === 'hopper') {
             const photoImg = new Image();
             photoImg.crossOrigin = 'anonymous';
-            photoImg.src = 'imgs/bourse_reflect.png';
+            photoImg.src = MODE === 'hopper' ? 'imgs/hopper.jpeg' : 'imgs/bourse.webp';
 
             function drawPhoto() {
                 const dpr = window.devicePixelRatio || 1;
@@ -534,7 +543,7 @@
 
         window.addEventListener('resize', sizeCanvas);
 
-        }  // end MODE !== 'photo'
+        }  // end ASCII modes
     </script>
 </body>
 
