@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nods — Aaron Zhu</title>
+    <title>Photos — Aaron Zhu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="theme.css">
     <script src="theme.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         @font-face {
             font-family: 'Martina Plantijn';
@@ -36,7 +36,7 @@
             --font-mono: monospace;
             --color-text: #1a1a1a;
             --color-muted: #6b6b6b;
-            --color-link: #2a5bd7;
+            --color-link: #4A90E2;
             --color-bg: #fff;
         }
 
@@ -101,16 +101,6 @@
             color: var(--color-text);
         }
 
-        a {
-            color: var(--color-link);
-            text-decoration: none;
-        }
-
-        a:hover {
-            opacity: 0.7;
-            color: var(--color-link);
-        }
-
         .header-line .dot {
             color: #bbb;
             font-size: 14px;
@@ -118,71 +108,12 @@
             margin: 0 4px;
         }
 
-
-
-        .colophon {
-            font-family: var(--font-serif);
-            font-size: 18px;
-            line-height: 1.55;
-            color: var(--color-text);
-        }
-
-        .highlight {
-            background: #ebebeb;
-            padding: 1px 5px;
-        }
-
-        .colophon .name {
-            font-family: var(--font-main);
-            font-weight: 500;
-            font-size: 16px;
-        }
-
-        .colophon .affil {
+        .placeholder {
             font-family: var(--font-serif);
             font-style: italic;
-            font-size: 15px;
-            color: var(--color-muted);
-        }
-
-        .colophon .sep {
-            color: #ccc;
-            margin: 0 6px;
-            user-select: none;
-        }
-
-        .timeline {
-            margin-top: 48px;
-            width: 100%;
-            border-collapse: collapse;
-            font-family: var(--font-serif);
             font-size: 16px;
-        }
-
-        .timeline td {
-            padding: 8px 0;
-            vertical-align: top;
-            border-bottom: 1px solid #eee;
-        }
-
-        .timeline .date {
-            font-family: var(--font-mono);
             color: var(--color-muted);
-            width: 140px;
-            font-size: 13px;
-            padding-top: 4px;
-        }
-
-        .timeline .role {
-            display: block;
-            color: var(--color-muted);
-            font-style: italic;
-            font-size: 15px;
-        }
-
-        .timeline strong {
-            font-weight: 500;
-            display: block;
+            margin-top: 24px;
         }
 
         footer {
@@ -212,7 +143,6 @@
             user-select: none;
         }
 
-        /* Mobile spacing updates */
         @media (max-width: 620px) {
             .container {
                 padding: 48px 24px 80px;
@@ -240,14 +170,6 @@
                 display: none;
             }
 
-            .page-title {
-                font-size: 26px;
-            }
-
-            .colophon {
-                font-size: 16px;
-            }
-
             header {
                 margin-bottom: 40px;
             }
@@ -266,54 +188,19 @@
                     <span class="dot">·</span>
                     <a href="reading.html">Reads</a>
                     <span class="dot">·</span>
-                    <a><s>Photos</s></a>
+                    <a href="photos.html" class="active">Photos</a>
                     <span class="dot">·</span>
-                    <a href="acknowledgements.html" class="active">Nods</a>
+                    <a href="acknowledgements.html">Nods</a>
                 </div>
             </div>
         </header>
 
-
-
-        <p class="colophon">
-            I've had the privilege of working with many incredibly thoughtful and talented individuals, many of whom
-            inspired and shaped my thinking and career.
-        </p>
-
-        <ul class="colophon" style="margin-top: 24px; padding-left: 20px; list-style-type: disc;">
-            <li style="margin-bottom: 8px;">
-                <a href="https://en.wikipedia.org/wiki/Andy_Fang">Andy Fang</a>, Peter Ahnn, and Brad Willard (DoorDash)
-            </li>
-            <li style="margin-bottom: 8px;">
-                Cicy Chen, Jing Sun, and Max Kuang (TikTok)
-            </li>
-            <li style="margin-bottom: 8px;">
-                <a href="https://en.wikipedia.org/wiki/Remzi_Arpaci-Dusseau">Remzi Arpaci-Dusseau</a> and Christopher
-                McKelvey (UW-Madison)
-            </li>
-            <li style="margin-bottom: 8px;">
-                Dr. <a href="https://scholar.google.com/citations?user=Juoqtj8AAAAJ&hl=en">Chaowei Xiao</a> and Xiaogeng
-                Liu (UW-Madison, now JHU)
-            </li>
-            <li style="margin-bottom: 8px;">
-                Dr. <a href="https://scholar.google.com/citations?user=uiGWnm4AAAAJ&hl=en">Jonghyun Choi</a> (SNU)
-            </li>
-            <li>
-                Mrs. Etterman, Mr. Strey, Mrs. Fairbanks, Mr. Peters, and Mr. Terry (Teachers)
-            </li>
-        </ul>
-
-
-
-        <p class="colophon" style="margin-top: 48px; font-size: 16px; color: var(--color-muted);">
-            There are many others I've met along the way who have shaped my thinking and career. If you're reading this,
-            thank you for being a part of my journey.
-        </p>
+        <p class="placeholder">Coming soon.</p>
 
         <footer>
             <a href="#">Email</a>
             <span class="sep">/</span>
-            <a href="#">LinkedIn</a>
+            <a href="#">Linkedin</a>
         </footer>
     </div>
 </body>

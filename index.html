@@ -237,7 +237,9 @@
                     <span class="dot mobile-hide">·</span>
                     <a href="works.html">Things</a>
                     <span class="dot">·</span>
-                    <a href="reading.html">Readings</a>
+                    <a href="reading.html">Reads</a>
+                    <span class="dot">·</span>
+                    <a><s>Photos</s></a>
                     <span class="dot">·</span>
                     <a href="acknowledgements.html">Nods</a>
                 </div>
@@ -252,20 +254,18 @@
                 <li>Simulated environments and synthetic data</li>
             </ul> -->
             <p>Lately I've been thinking a lot about <span class="highlight">simulations</span> and <span
-                    class="highlight">synthetic data</span> for training AI/humans.</p>
-            <p>I'm from Minnesota and went to UW-Madison. I've done applied research at <span
-                    class="highlight">DoorDash</span> and <span class="highlight">TikTok</span>. Before that,
-                research at the <span class="highlight">Safe Foundational Models Lab</span>
-                (Johns Hopkins/UW-Madison) and the <span class="highlight">Vision &amp; Learning Lab</span>
-                (Yonsei University).
+                    class="highlight">synthetic data</span> for training AI and humans.</p>
+            <p>I've done applied research at <span class="highlight">DoorDash</span> and <span
+                    class="highlight">TikTok</span>. Before that, research at the <span
+                    class="highlight">Safe Foundational Models Lab</span> (Johns Hopkins/UW-Madison) and the
+                <span class="highlight">Vision &amp; Learning Lab</span> (Yonsei University).
             </p>
 
-            <p>I like to travel, snowboard, play tennis, and pick up languages. English and Mandarin fluently,
-                French, Japanese, and Korean to varying degrees.</p>
+            <p>I like to travel, snowboard, play tennis, and pick up languages. Fluent in English and Mandarin,
+                plus French, Japanese, and Korean to varying degrees.</p>
 
-            <p>I grew up in museums and art schools. In an alternate universe I'd be an architect. My favorite
-                artists are <span class="highlight">Edward Hopper</span> and
-                <span class="highlight">Tadao Ando</span>.</p>
+            <p>I grew up in museums and art schools. In an alternate universe I'd be an architect. My favorites are
+                <span class="highlight">Edward Hopper</span> and <span class="highlight">Tadao Ando</span>.</p>
 
         </section>
 
@@ -284,11 +284,103 @@
         container.appendChild(canvas);
         const ctx = canvas.getContext('2d');
 
-        const chars = ' .·:;~+=*<>^/%#&@'.split('');
-        const charW = 7.5;
-        const charH = 12;
+        const chars = ' .\'`,:;-~+*=ovxz%#&@'.split('');
+        const edgeChars = ['|', '\\', '_', '/'];
+        const charW = 2.5;
+        const charH = 5;
+        const FONT = '5px Courier New';
+        const EDGE_THRESHOLD = 0.15;
 
         let cols, rows;
+        const bleed = [];
+        let lum = null;  // per-cell luminance from image, 0..1
+        let gradMag = null;  // sobel magnitude per cell, 0..1
+        let gradAngle = null;  // sobel angle per cell, [0, π)
+        let imgPixels = null;  // ImageData for hover reveal
+        let imgReady = false;
+
+        let smearX = null;  // per-cell horizontal displacement (cell units)
+        let smearY = null;
+        let mouseLast = null;  // {x, y} in cell coords
+
+        const sourceImg = new Image();
+        sourceImg.crossOrigin = 'anonymous';
+        sourceImg.src = 'imgs/bourse.webp';
+
+        function sampleImage() {
+            if (!sourceImg.complete || !sourceImg.naturalWidth) return;
+            const off = document.createElement('canvas');
+            off.width = cols;
+            off.height = rows;
+            const octx = off.getContext('2d');
+            // cover-fit
+            const targetAR = cols / rows;
+            const imgAR = sourceImg.naturalWidth / sourceImg.naturalHeight;
+            let sx = 0, sy = 0, sw = sourceImg.naturalWidth, sh = sourceImg.naturalHeight;
+            if (imgAR > targetAR) {
+                sw = sh * targetAR;
+                sx = (sourceImg.naturalWidth - sw) / 2;
+            } else {
+                sh = sw / targetAR;
+                sy = (sourceImg.naturalHeight - sh) / 2;
+            }
+            octx.drawImage(sourceImg, sx, sy, sw, sh, 0, 0, cols, rows);
+            const data = octx.getImageData(0, 0, cols, rows).data;
+            lum = new Float32Array(cols * rows);
+            for (let i = 0; i < cols * rows; i++) {
+                const r = data[i * 4], g = data[i * 4 + 1], b = data[i * 4 + 2];
+                lum[i] = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+            }
+            // Sobel
+            gradMag = new Float32Array(cols * rows);
+            gradAngle = new Float32Array(cols * rows);
+            let maxMag = 0;
+            for (let y = 1; y < rows - 1; y++) {
+                for (let x = 1; x < cols - 1; x++) {
+                    const tl = lum[(y - 1) * cols + (x - 1)];
+                    const tc = lum[(y - 1) * cols + x];
+                    const tr = lum[(y - 1) * cols + (x + 1)];
+                    const ml = lum[y * cols + (x - 1)];
+                    const mr = lum[y * cols + (x + 1)];
+                    const bl = lum[(y + 1) * cols + (x - 1)];
+                    const bc = lum[(y + 1) * cols + x];
+                    const br = lum[(y + 1) * cols + (x + 1)];
+                    const gx = (tr + 2 * mr + br) - (tl + 2 * ml + bl);
+                    const gy = (bl + 2 * bc + br) - (tl + 2 * tc + tr);
+                    const mag = Math.sqrt(gx * gx + gy * gy);
+                    if (mag > maxMag) maxMag = mag;
+                    gradMag[y * cols + x] = mag;
+                    let a = Math.atan2(gy, gx);
+                    a = ((a % Math.PI) + Math.PI) % Math.PI;  // fold to [0, π)
+                    gradAngle[y * cols + x] = a;
+                }
+            }
+            // normalize
+            if (maxMag > 0) {
+                for (let i = 0; i < cols * rows; i++) gradMag[i] /= maxMag;
+            }
+            // also sample at full char-cell resolution for the hover reveal
+            const hi = document.createElement('canvas');
+            hi.width = cols * charW;
+            hi.height = rows * charH;
+            const hctx = hi.getContext('2d');
+            const hiAR = hi.width / hi.height;
+            let hsx = 0, hsy = 0, hsw = sourceImg.naturalWidth, hsh = sourceImg.naturalHeight;
+            if (imgAR > hiAR) {
+                hsw = hsh * hiAR;
+                hsx = (sourceImg.naturalWidth - hsw) / 2;
+            } else {
+                hsh = hsw / hiAR;
+                hsy = (sourceImg.naturalHeight - hsh) / 2;
+            }
+            hctx.drawImage(sourceImg, hsx, hsy, hsw, hsh, 0, 0, hi.width, hi.height);
+            imgPixels = hctx.getImageData(0, 0, hi.width, hi.height);
+            imgReady = true;
+        }
+
+        sourceImg.onload = () => {
+            if (cols && rows) sampleImage();
+        };
 
         function sizeCanvas() {
             const dpr = window.devicePixelRatio || 1;
@@ -303,66 +395,129 @@
             canvas.style.width = displayW + 'px';
             canvas.style.height = displayH + 'px';
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            ctx.font = '11px Courier New';
+            ctx.font = FONT;
             ctx.textBaseline = 'top';
-            // regenerate bleed
             bleed.length = 0;
             for (let i = 0; i < cols * rows; i++) {
-                bleed.push(Math.random() * 0.12 - 0.06);
+                bleed.push(Math.random() * 0.08 - 0.04);
             }
+            smearX = new Float32Array(cols * rows);
+            smearY = new Float32Array(cols * rows);
+            if (sourceImg.complete) sampleImage();
         }
 
-        ctx.font = '11px Courier New';
+        container.addEventListener('mousemove', (e) => {
+            if (!smearX) return;
+            const r = canvas.getBoundingClientRect();
+            const cx = ((e.clientX - r.left) / r.width) * cols;
+            const cy = ((e.clientY - r.top) / r.height) * rows;
+            if (mouseLast) {
+                const dx = cx - mouseLast.x;
+                const dy = cy - mouseLast.y;
+                const radius = 18;  // cells
+                const cxi = Math.floor(cx), cyi = Math.floor(cy);
+                for (let oy = -radius; oy <= radius; oy++) {
+                    const py = cyi + oy;
+                    if (py < 0 || py >= rows) continue;
+                    for (let ox = -radius; ox <= radius; ox++) {
+                        const px = cxi + ox;
+                        if (px < 0 || px >= cols) continue;
+                        const d2 = ox * ox + oy * oy;
+                        if (d2 > radius * radius) continue;
+                        const falloff = 1 - Math.sqrt(d2) / radius;
+                        const idx = py * cols + px;
+                        smearX[idx] += dx * falloff * 0.6;
+                        smearY[idx] += dy * falloff * 0.6;
+                    }
+                }
+            }
+            mouseLast = { x: cx, y: cy };
+        });
+        container.addEventListener('mouseleave', () => { mouseLast = null; });
+
+        ctx.font = FONT;
         ctx.textBaseline = 'top';
 
         let t = 0;
-        let mouse = { x: 0.5, y: 0.5 };
-        let smoothMouse = { x: 0.5, y: 0.5 };
-        const bleed = [];
-
-        document.addEventListener('mousemove', (e) => {
-            const r = canvas.getBoundingClientRect();
-            mouse.x = (e.clientX - r.left) / r.width;
-            mouse.y = (e.clientY - r.top) / r.height;
-        });
 
         sizeCanvas();
 
         function render() {
             t += 0.003;
 
-            smoothMouse.x += (mouse.x - smoothMouse.x) * 0.03;
-            smoothMouse.y += (mouse.y - smoothMouse.y) * 0.03;
-
             ctx.fillStyle = '#111111';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // decay smear
+            if (smearX) {
+                const decay = 0.975;
+                for (let i = 0; i < smearX.length; i++) {
+                    smearX[i] *= decay;
+                    smearY[i] *= decay;
+                }
+            }
 
             for (let y = 0; y < rows; y++) {
                 for (let x = 0; x < cols; x++) {
                     const nx = x / cols;
                     const ny = y / rows;
-
-                    const dx = nx - smoothMouse.x;
-                    const dy = ny - smoothMouse.y;
-                    const mouseDist = Math.sqrt(dx * dx + dy * dy);
-                    const mouseInfluence = Math.max(0, 1 - mouseDist / 0.4) * 0.25;
-
                     const flow1 = Math.sin(nx * 3.5 + t * 0.7) * Math.cos(ny * 2.8 - t * 0.5);
                     const flow2 = Math.sin((nx + ny) * 2.2 - t * 0.9) * 0.5;
                     const flow3 = Math.cos(nx * 1.8 - ny * 3.0 + t * 0.6) * 0.4;
-                    const flow4 = Math.sin(Math.sqrt((nx - 0.5) ** 2 + (ny - 0.5) ** 2) * 6 - t * 1.2) * 0.3;
+                    const baseFlow = (flow1 + flow2 + flow3 + 1.5) / 3.0;
 
-                    let val = (flow1 + flow2 + flow3 + flow4 + 1.5) / 3.0;
-                    val += bleed[y * cols + x];
-                    val += mouseInfluence;
-                    const clamped = Math.max(0, Math.min(1, val));
+                    let clamped, glyph;
+                    if (lum) {
+                        const v = lum[y * cols + x];
+                        const boosted = Math.pow(v, 0.7);
+                        const shimmer = (baseFlow - 0.5) * 0.1;
+                        clamped = Math.max(0, Math.min(1, boosted + shimmer));
+                        const mag = gradMag[y * cols + x];
+                        if (mag > EDGE_THRESHOLD) {
+                            const a = gradAngle[y * cols + x];
+                            let bin;
+                            if (a < Math.PI / 8 || a >= 7 * Math.PI / 8) bin = 2;
+                            else if (a < 3 * Math.PI / 8) bin = 3;
+                            else if (a < 5 * Math.PI / 8) bin = 0;
+                            else bin = 1;
+                            glyph = edgeChars[bin];
+                            clamped = Math.max(clamped, 0.55 + mag * 0.45);
+                        } else {
+                            glyph = chars[Math.floor(clamped * (chars.length - 1))];
+                        }
+                    } else {
+                        clamped = Math.max(0, Math.min(1, baseFlow + bleed[y * cols + x]));
+                        glyph = chars[Math.floor(clamped * (chars.length - 1))];
+                    }
 
-                    const ci = Math.floor(clamped * (chars.length - 1));
+                    // Glitch dropout: random corruption in cells the mouse has touched
+                    if (smearX) {
+                        const sx = smearX[y * cols + x];
+                        const sy = smearY[y * cols + x];
+                        const smag = Math.sqrt(sx * sx + sy * sy);
+                        if (smag > 0.3) {
+                            const intensity = Math.min(smag * 0.3, 0.5);
+                            const roll = Math.random();
+                            if (roll < intensity * 0.5) {
+                                glyph = ' ';  // dropout
+                            } else if (roll < intensity * 0.8) {
+                                // scramble: pick a random char from the ramp
+                                glyph = chars[Math.floor(Math.random() * chars.length)];
+                                clamped = Math.min(1, clamped + 0.2);
+                            } else if (roll < intensity) {
+                                // shift: borrow a char from a few cells to the left
+                                const sxi = Math.max(0, x - 2 - Math.floor(Math.random() * 3));
+                                const srcIdx = y * cols + sxi;
+                                const v = lum ? Math.pow(lum[srcIdx], 0.7) : 0.5;
+                                glyph = chars[Math.floor(v * (chars.length - 1))];
+                            }
+                        }
+                    }
 
-                    const alpha = 0.08 + clamped * 0.9;
-                    const shade = Math.floor(100 + clamped * 155);
+                    const alpha = 0.25 + clamped * 0.75;
+                    const shade = Math.floor(140 + clamped * 115);
                     ctx.fillStyle = `rgba(${shade},${shade},${shade},${alpha})`;
-                    ctx.fillText(chars[ci], x * charW, y * charH);
+                    ctx.fillText(glyph, x * charW, y * charH);
                 }
             }
 
