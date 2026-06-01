@@ -64,3 +64,42 @@
 #theme-toggle:hover {
     color: var(--color-text);
 }
+
+/* Mobile glassmorphic floating bottom nav pill */
+@media (max-width: 620px) {
+    body .nav-links {
+        position: fixed;
+        bottom: calc(24px + env(safe-area-inset-bottom));
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(255, 255, 255, 0.55);
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        border-radius: 999px;
+        padding: 10px 20px;
+        display: inline-flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+        z-index: 100;
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    }
+
+    .dark body .nav-links {
+        background: rgba(30, 30, 30, 0.55);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    body .container,
+    body .post-container {
+        padding-bottom: 120px;
+    }
+
+    body .mobile-hide {
+        display: none;
+    }
+}
