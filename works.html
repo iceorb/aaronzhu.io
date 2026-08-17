@@ -30,10 +30,18 @@
             font-style: normal;
         }
 
+        @font-face {
+            font-family: 'Roobert Mono';
+            src: url('fonts/roobert-mono-regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
         :root {
             --font-main: 'Outfit', sans-serif;
             --font-serif: 'Martina Plantijn', serif;
-            --font-mono: monospace;
+            --font-mono: 'Roobert Mono', ui-monospace, SFMono-Regular, monospace;
             --color-text: #1a1a1a;
             --color-muted: #6b6b6b;
             --color-link: #4A90E2;
@@ -108,67 +116,87 @@
             margin: 0 4px;
         }
 
-        /* Works Specific Styles */
-        .section-title {
-            font-family: var(--font-main);
-            font-size: 14px;
+        /* Ledger */
+        .ledger-head {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
             color: var(--color-muted);
-            margin-bottom: 24px;
-            margin-top: 48px;
-            display: block;
-            font-weight: 600;
+            margin: 56px 0 14px;
         }
 
-        .section-title:first-of-type {
+        .ledger-head:first-of-type {
             margin-top: 0;
         }
 
-        .works-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-family: var(--font-serif);
-            font-size: 16px;
+        .leader {
+            flex: 1;
+            min-width: 24px;
+            border-bottom: 1px dotted rgba(107, 107, 107, 0.5);
+            position: relative;
+            top: -4px;
         }
 
-        .works-table td {
-            padding: 8px 0;
-            vertical-align: baseline;
-            border-bottom: 1px solid #eee;
+        .ledger-row {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            padding: 9px 0;
         }
 
-        .works-table:last-child td {
-            border-bottom: none;
-        }
-
-        .works-date {
+        .ledger-date {
             font-family: var(--font-mono);
-            color: var(--color-muted);
-            width: 80px;
             font-size: 13px;
-            padding-top: 4px;
+            color: var(--color-muted);
+            flex: none;
+            width: 48px;
         }
 
-        .works-item {
-            padding-left: 16px;
-        }
-
-        .works-title {
+        .ledger-title {
             font-family: var(--font-main);
             font-weight: 500;
             font-size: 16px;
             color: var(--color-text);
-            display: inline-block;
-            margin-right: 8px;
+            text-decoration: none;
         }
 
-        .works-desc {
+        a.ledger-title:hover {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .ledger-note {
             font-family: var(--font-serif);
             font-style: italic;
-            font-size: 15px;
+            font-size: 14.5px;
             color: var(--color-muted);
-            display: inline-block;
+            flex: none;
+            text-align: right;
+            max-width: 46%;
+        }
+
+        .ledger-memo {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 14.5px;
+            color: var(--color-muted);
+            margin: -2px 0 4px 60px;
+        }
+
+        .ledger-foot {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-top: 64px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-muted);
         }
 
         footer {
@@ -226,8 +254,16 @@
                 display: none;
             }
 
-            .works-date {
+            .ledger-date {
                 display: none;
+            }
+
+            .ledger-memo {
+                margin-left: 0;
+            }
+
+            .ledger-note {
+                max-width: 40%;
             }
 
             .ai-tag {
@@ -263,6 +299,8 @@
                     <span class="dot">·</span>
                     <a href="works.html" class="active">Things</a>
                     <span class="dot">·</span>
+                    <a href="design.html">Design</a>
+                    <span class="dot">·</span>
                     <a href="reading.html">Reads</a>
                     <span class="dot">·</span>
                     <a><s>Photos</s></a>
@@ -272,95 +310,85 @@
             </div>
         </header>
 
-        <span class="section-title">Writing</span>
-        <table class="works-table">
-            <tr>
-                <td class="works-date">2026</td>
-                <td class="works-item">
-                    <a href="other_maxima.html" class="works-title" style="text-decoration: none;">Other
-                        Maxima</a>
-                </td>
-            </tr>
-            <tr>
-                <td class="works-date">2026</td>
-                <td class="works-item">
-                    <a href="evals.html" class="works-title" style="text-decoration: none;">Evals Are Not the
-                        Product</a>
-                </td>
-            </tr>
-            <tr>
-                <td class="works-date">2026</td>
-                <td class="works-item">
-                    <a href="digital_landlords.html" class="works-title" style="text-decoration: none;">Digital
-                        Landlords & The Zero-Sum Economy</a>
-                </td>
-            </tr>
-            <tr>
-                <td class="works-date">2025</td>
-                <td class="works-item">
-                    <a href="deepseek.html" class="works-title" style="text-decoration: none;">DeepSeek & American
-                        Innovation</a>
-                </td>
-            </tr>
+        <div class="ledger-head"><span>Writing</span><span class="leader"></span><span>folio 01</span></div>
 
-        </table>
+        <!-- unlisted for now:
+        <div class="ledger-row">
+            <span class="ledger-date">2026</span>
+            <a href="lessons_billionaire.html" class="ledger-title">Lessons from a Billionaire</a>
+            <span class="leader"></span>
+            <span class="ledger-note">essay</span>
+        </div>
+        -->
+        <div class="ledger-row">
+            <span class="ledger-date">2026</span>
+            <a href="other_maxima.html" class="ledger-title">Other Maxima</a>
+            <span class="leader"></span>
+            <span class="ledger-note">essay</span>
+        </div>
+        <div class="ledger-row">
+            <span class="ledger-date">2026</span>
+            <a href="evals.html" class="ledger-title">Evals Are Not the Product</a>
+            <span class="leader"></span>
+            <span class="ledger-note">essay</span>
+        </div>
+        <div class="ledger-row">
+            <span class="ledger-date">2026</span>
+            <a href="digital_landlords.html" class="ledger-title">Digital Landlords & The Zero-Sum Economy</a>
+            <span class="leader"></span>
+            <span class="ledger-note">essay</span>
+        </div>
+        <div class="ledger-row">
+            <span class="ledger-date">2025</span>
+            <a href="deepseek.html" class="ledger-title">DeepSeek & American Innovation</a>
+            <span class="leader"></span>
+            <span class="ledger-note">essay</span>
+        </div>
 
-        <span class="section-title">Awards & Honors</span>
-        <table class="works-table">
-            <tr>
-                <td class="works-date">2025</td>
-                <td class="works-item">
-                    <span class="works-title">Lorraine A. & W. Dwight Stone Scholarship</span>
-                    <span class="works-desc">UW-Madison, Dept. of Economics.</span>
-                </td>
-            </tr>
-            <tr>
-                <td class="works-date">2025</td>
-                <td class="works-item">
-                    <span class="works-title">Finalist</span>
-                    <span class="works-desc">GE Healthcare x N+1 Institute.</span>
-                </td>
-            </tr>
-            <tr>
-                <td class="works-date">2024</td>
-                <td class="works-item">
-                    <span class="works-title">Participant</span>
-                    <span class="works-desc">Google x N+1 Institute.</span>
-                </td>
-            </tr>
-            <tr>
-                <td class="works-date">2024</td>
-                <td class="works-item">
-                    <span class="works-title">Invitee</span>
-                    <span class="works-desc">Palantir for Hospitals, Build the Future.</span>
-                </td>
-            </tr>
-            <tr>
-                <td class="works-date">2023</td>
-                <td class="works-item">
-                    <span class="works-title">1st Place</span>
-                    <span class="works-desc">Epic Systems Healthcare Empowerment Award at MadHacks.</span>
-                </td>
-            </tr>
-        </table>
+        <div class="ledger-head"><span>Awards & Honors</span><span class="leader"></span><span>folio 02</span></div>
 
+        <div class="ledger-row">
+            <span class="ledger-date">2025</span>
+            <span class="ledger-title">Lorraine A. & W. Dwight Stone Scholarship</span>
+            <span class="leader"></span>
+            <span class="ledger-note">UW-Madison, Dept. of Economics</span>
+        </div>
+        <div class="ledger-row">
+            <span class="ledger-date">2025</span>
+            <span class="ledger-title">Finalist</span>
+            <span class="leader"></span>
+            <span class="ledger-note">GE Healthcare x N+1 Institute</span>
+        </div>
+        <div class="ledger-row">
+            <span class="ledger-date">2024</span>
+            <span class="ledger-title">Participant</span>
+            <span class="leader"></span>
+            <span class="ledger-note">Google x N+1 Institute</span>
+        </div>
+        <div class="ledger-row">
+            <span class="ledger-date">2024</span>
+            <span class="ledger-title">Invitee</span>
+            <span class="leader"></span>
+            <span class="ledger-note">Palantir for Hospitals, Build the Future</span>
+        </div>
+        <div class="ledger-row">
+            <span class="ledger-date">2023</span>
+            <span class="ledger-title">1st Place</span>
+            <span class="leader"></span>
+            <span class="ledger-note">Epic Systems Healthcare Empowerment Award at MadHacks</span>
+        </div>
 
+        <div class="ledger-head"><span>Papers & Research</span><span class="leader"></span><span>folio 03</span></div>
 
-        <span class="section-title">Papers & Research</span>
-        <table class="works-table">
-            <tr>
-                <td class="works-date">2024</td>
-                <td class="works-item">
-                    <span class="works-title">BackdoorGCG</span>
-                    <span class="works-desc">(Greedy Coordinate Gradient) Prompt Injection against Falcon, LLaMa.
-                        Working
-                        paper.</span>
-                </td>
-            </tr>
-        </table>
+        <div class="ledger-row">
+            <span class="ledger-date">2024</span>
+            <span class="ledger-title">BackdoorGCG</span>
+            <span class="leader"></span>
+            <span class="ledger-note">working paper</span>
+        </div>
+        <div class="ledger-memo">(Greedy Coordinate Gradient) Prompt Injection against Falcon, LLaMa.</div>
 
-
-
+        <div class="ledger-foot"><span class="leader"></span><span>carried forward →</span></div>
 
         <footer>
             <a href="#">Email</a>

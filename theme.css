@@ -94,6 +94,25 @@
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
 
+    body .nav-links a {
+        font-size: 14px;
+    }
+
+    @media (max-width: 400px) {
+        body .nav-links {
+            gap: 6px;
+            padding: 10px 14px;
+        }
+
+        body .nav-links a {
+            font-size: 13px;
+        }
+
+        body .nav-links .dot {
+            margin: 0 1px;
+        }
+    }
+
     body .container,
     body .post-container {
         padding-bottom: 120px;

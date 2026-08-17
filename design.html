@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Design — Aaron Zhu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js"></script>
+    <style>
+        @font-face {
+            font-family: 'Martina Plantijn';
+            src: url('fonts/TestMartinaPlantijn-Regular-BF663c36d1ec6d5.otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Martina Plantijn';
+            src: url('fonts/TestMartinaPlantijn-Italic-BF663c36d1ed0f9.otf') format('opentype');
+            font-weight: 400;
+            font-style: italic;
+        }
+
+        @font-face {
+            font-family: 'Martina Plantijn';
+            src: url('fonts/TestMartinaPlantijn-Medium-BF663c36d1e5bed.otf') format('opentype');
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Roobert Mono';
+            src: url('fonts/roobert-mono-regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        :root {
+            --font-main: 'Outfit', sans-serif;
+            --font-serif: 'Martina Plantijn', serif;
+            --font-mono: 'Roobert Mono', ui-monospace, SFMono-Regular, monospace;
+            --color-text: #1a1a1a;
+            --color-muted: #6b6b6b;
+            --color-link: #4A90E2;
+            --color-bg: #fff;
+            --grid-minor: rgba(0, 0, 0, 0.04);
+            --grid-major: rgba(0, 0, 0, 0.08);
+            --dim: rgba(0, 0, 0, 0.26);
+            --frame: #fff;
+            --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 14px 36px rgba(0, 0, 0, 0.12);
+            --card-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.06), 0 24px 56px rgba(0, 0, 0, 0.18);
+        }
+
+        :root.dark {
+            --grid-minor: rgba(255, 255, 255, 0.035);
+            --grid-major: rgba(255, 255, 255, 0.07);
+            --dim: rgba(255, 255, 255, 0.28);
+            --frame: #f4f2ec;
+            --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 16px 40px rgba(0, 0, 0, 0.5);
+            --card-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.4), 0 26px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+            overscroll-behavior: none;
+        }
+
+        body {
+            font-family: var(--font-serif);
+            color: var(--color-text);
+            background: var(--color-bg);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ---------- header ---------- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 28px 0 36px;
+            z-index: 100;
+            pointer-events: none;
+            background: linear-gradient(to bottom, var(--color-bg) 0%, var(--color-bg) 55%, transparent 100%);
+        }
+
+        .header-line {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 6px;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        .header-line h1 {
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .header-line a {
+            font-family: var(--font-main);
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--color-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+            pointer-events: auto;
+        }
+
+        .header-line a.active,
+        .header-line a:hover {
+            color: var(--color-text);
+        }
+
+        .header-line h1 a {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .header-line .dot {
+            color: #bbb;
+            font-size: 14px;
+            user-select: none;
+            margin: 0 4px;
+        }
+
+        .nav-links {
+            pointer-events: auto;
+        }
+
+        /* ---------- drafting sheet ---------- */
+        #viewport {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            cursor: grab;
+            touch-action: none;
+            background-image:
+                linear-gradient(var(--grid-minor) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px);
+            background-size: 26px 26px, 26px 26px;
+        }
+
+        body.dragging #viewport {
+            cursor: grabbing;
+        }
+
+        #ocean {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        #world {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3200px;
+            height: 2200px;
+            will-change: transform;
+        }
+
+        /* ---------- sheet stamp (center) ---------- */
+        .stamp {
+            position: absolute;
+            left: 1600px;
+            top: 1100px;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            user-select: none;
+            border: 1px solid var(--dim);
+            padding: 30px 46px;
+            animation: fade-in 1.2s ease 0.15s backwards;
+        }
+
+        .stamp .stamp-name {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 26px;
+            letter-spacing: 0.32em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            margin-right: -0.32em;
+        }
+
+        .stamp .stamp-sub {
+            display: block;
+            margin-top: 14px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-muted);
+            margin-right: -0.2em;
+        }
+
+        /* ---------- figures ---------- */
+        .card {
+            position: absolute;
+            left: var(--x);
+            top: var(--y);
+            width: var(--w);
+            transform: rotate(var(--r));
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            user-select: none;
+        }
+
+        .cardbox {
+            position: relative;
+            background: var(--frame);
+            padding: 12px;
+            border-radius: 2px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+            animation: card-in 0.9s cubic-bezier(0.22, 0.68, 0.22, 1) var(--d) backwards;
+        }
+
+
+        .card:hover .cardbox {
+            transform: translateY(-6px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .card img,
+        .card video {
+            display: block;
+            width: 100%;
+            pointer-events: none;
+            -webkit-user-drag: none;
+        }
+
+        .card video {
+            aspect-ratio: 1600 / 938;
+            object-fit: cover;
+            background: #0d0d0d;
+        }
+
+        /* figure caption */
+        .anno {
+            margin-top: 12px;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--color-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* text posters */
+        .textcard {
+            padding: 26px;
+            color: #1a1a1a;
+        }
+
+        .textcard pre {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            line-height: 1.5;
+            color: #3a3a3a;
+            overflow: hidden;
+        }
+
+        .textcard .specimen {
+            font-family: var(--font-serif);
+            font-size: 104px;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .textcard .specimen em {
+            font-style: italic;
+        }
+
+        .textcard .specimen-sub {
+            font-family: var(--font-main);
+            font-weight: 500;
+            font-size: 13px;
+            color: #6b6b6b;
+            margin-top: 10px;
+        }
+
+        /* trailblazers plate */
+        .trail-label {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #8a8a8a;
+            margin-bottom: 10px;
+        }
+
+        .trail-head {
+            font-family: var(--font-serif);
+            font-size: 26px;
+            line-height: 1.15;
+            letter-spacing: -0.01em;
+            margin-bottom: 10px;
+        }
+
+        .trail-prose p {
+            font-family: var(--font-main);
+            font-weight: 400;
+            font-size: 13.5px;
+            line-height: 1.55;
+            color: #4a4a4a;
+            margin-bottom: 8px;
+        }
+
+        .trail-plate {
+            display: block;
+            width: 100%;
+            aspect-ratio: 580 / 364;
+            margin-top: 14px;
+        }
+
+        .trail-caption {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            color: #8a8a8a;
+            margin-top: 8px;
+        }
+
+        @keyframes card-in {
+            from {
+                opacity: 0;
+                transform: translateY(18px) scale(0.985);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* ---------- key plan (minimap) ---------- */
+        #minimap {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            width: 180px;
+            border: 1px solid var(--dim);
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(12px) saturate(160%);
+            -webkit-backdrop-filter: blur(12px) saturate(160%);
+            z-index: 90;
+            cursor: pointer;
+            touch-action: none;
+            overflow: hidden;
+            animation: fade-in 1s ease 0.6s backwards;
+        }
+
+        .dark #minimap {
+            background: rgba(24, 24, 24, 0.72);
+        }
+
+
+        .mm-item {
+            position: absolute;
+            border: 1px solid var(--color-muted);
+            border-radius: 1px;
+            opacity: 0.75;
+        }
+
+        #mm-view {
+            position: absolute;
+            border: 1px solid var(--color-muted);
+            background: rgba(127, 127, 127, 0.08);
+        }
+
+
+        /* ---------- mobile ---------- */
+        @media (max-width: 620px) {
+            header {
+                padding: 20px 0 28px;
+            }
+
+            .header-line {
+                padding: 0 24px;
+            }
+
+            .stamp {
+                padding: 22px 26px;
+            }
+
+            .stamp .stamp-name {
+                font-size: 17px;
+            }
+
+            .stamp .stamp-sub {
+                font-size: 9px;
+            }
+
+            #minimap {
+                width: 110px;
+                right: 16px;
+                bottom: calc(88px + env(safe-area-inset-bottom));
+            }
+
+
+            .mobile-hide {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-line">
+            <h1><a href="index.html">Aaron Zhu</a></h1>
+            <div class="nav-links">
+                <span class="dot mobile-hide">·</span>
+                <a href="index.html">Home</a>
+                <span class="dot">·</span>
+                <a href="works.html">Things</a>
+                <span class="dot">·</span>
+                <a href="design.html" class="active">Design</a>
+                <span class="dot">·</span>
+                <a href="reading.html">Reads</a>
+                <span class="dot">·</span>
+                <a><s>Photos</s></a>
+                <span class="dot">·</span>
+                <a href="acknowledgements.html">Nods</a>
+            </div>
+        </div>
+    </header>
+
+    <div id="viewport">
+        <canvas id="ocean"></canvas>
+        <div id="world">
+            <div class="stamp">
+                <span class="stamp-name">The Drafting Table</span>
+                <span class="stamp-sub">Aaron Zhu · Visual Work</span>
+            </div>
+
+            <div class="card" style="--x: 880px; --y: 640px; --w: 460px; --r: -1.2deg; --d: 0.1s">
+                <div class="cardbox">
+                    <img src="imgs/hopper.jpeg" alt="Edward Hopper painting" draggable="false">
+                </div>
+                <div class="anno">Hopper</div>
+            </div>
+
+            <div class="card" style="--x: 2080px; --y: 590px; --w: 430px; --r: 0.9deg; --d: 0.2s">
+                <div class="cardbox">
+                    <img src="imgs/bourse.webp" alt="La Bourse" draggable="false">
+                </div>
+                <div class="anno">La Bourse</div>
+            </div>
+
+            <div class="card" style="--x: 690px; --y: 1200px; --w: 330px; --r: 0.6deg; --d: 0.3s">
+                <div class="cardbox">
+                    <img src="imgs/me2.jpg" alt="Self portrait" draggable="false">
+                </div>
+                <div class="anno">Self, NYC</div>
+            </div>
+
+            <a class="card" href="other_maxima.html" style="--x: 1930px; --y: 1310px; --w: 470px; --r: -0.8deg; --d: 0.4s">
+                <div class="cardbox">
+                    <img src="imgs/other_maxima_header.jpg" alt="Lost in Translation still" draggable="false">
+                </div>
+                <div class="anno">Other Maxima</div>
+            </a>
+
+            <a class="card" href="evals.html" style="--x: 1290px; --y: 1660px; --w: 440px; --r: 1.1deg; --d: 0.5s">
+                <div class="cardbox">
+                    <img src="imgs/evals_header.jpg" alt="Evals essay header" draggable="false">
+                </div>
+                <div class="anno">Evals</div>
+            </a>
+
+            <div class="card" style="--x: 2620px; --y: 1020px; --w: 300px; --r: -1.6deg; --d: 0.6s">
+                <div class="cardbox">
+                    <img src="imgs/bastiat.jpg" alt="Bastiat portrait" draggable="false">
+                </div>
+                <div class="anno">Bastiat</div>
+            </div>
+
+            <a class="card" href="index.html" style="--x: 420px; --y: 460px; --w: 360px; --r: 1.4deg; --d: 0.7s">
+                <div class="cardbox textcard">
+                    <pre>
+      .           ~
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈ ≈
+   ~ ~ ~ ~ ~ ~ ~ ~</pre>
+                </div>
+                <div class="anno">ASCII Waves</div>
+            </a>
+
+            <div class="card" style="--x: 1330px; --y: 330px; --w: 620px; --r: 0.5deg; --d: 0.9s">
+                <div class="cardbox textcard">
+                    <div class="trail-label">/ trailblazers</div>
+                    <div class="trail-head">For the bold and curious</div>
+                    <div class="trail-prose">
+                        <p>The way the world makes decisions — in finance, in healthcare, in real estate — is
+                            being redefined. Not eventually: here, now, at the frontier, by a small team that
+                            refuses to follow the old script.</p>
+                        <p>Most careers follow a path someone else cleared. This is for the trailblazers.</p>
+                    </div>
+                    <canvas class="trail-plate" id="trail-plate"></canvas>
+                    <div class="trail-caption">/ Sallie Gardner at a Gallop — E. Muybridge, 1878</div>
+                </div>
+                <div class="anno">Trailblazers · TextQL Careers</div>
+            </div>
+
+            <div class="card" style="--x: 560px; --y: 1790px; --w: 560px; --r: 0.7deg; --d: 1s">
+                <div class="cardbox">
+                    <video src="imgs/mission-control-loop.mp4" poster="imgs/mission-control-poster.jpg" muted
+                        autoplay loop playsinline preload="metadata"></video>
+                </div>
+                <div class="anno">Data Apps · Mission Control</div>
+            </div>
+
+            <div class="card" style="--x: 2480px; --y: 1720px; --w: 320px; --r: -1deg; --d: 0.8s">
+                <div class="cardbox textcard">
+                    <div class="specimen">A<em>a</em></div>
+                    <div class="specimen-sub">Martina Plantijn · Outfit</div>
+                </div>
+                <div class="anno">Type Specimen</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="minimap">
+        <div id="mm-view"></div>
+    </div>
+
+        <div class="tb-row">Sheet 01 · Figs 01–10</div>
+        <div class="tb-row">Nav: drag / scroll / key plan</div>
+    </div>
+
+    <script>
+        (function () {
+            const vp = document.getElementById('viewport');
+            const world = document.getElementById('world');
+            const minimap = document.getElementById('minimap');
+            const mmView = document.getElementById('mm-view');
+            const ocean = document.getElementById('ocean');
+            const octx = ocean.getContext('2d');
+
+            const W = 3200, H = 2200;
+            const scale = () => minimap.offsetWidth / W;
+            minimap.style.height = Math.round(minimap.offsetWidth * (H / W)) + 'px';
+
+            const pos = { x: 0, y: 0 };
+            const target = { x: 0, y: 0 };
+            const vel = { x: 0, y: 0 };
+            let dragging = false, mmDragging = false, moved = 0;
+            let lastX = 0, lastY = 0;
+
+            // start centered on the stamp
+            target.x = pos.x = window.innerWidth / 2 - 1600;
+            target.y = pos.y = window.innerHeight / 2 - 1100;
+
+            function bounds() {
+                return {
+                    minX: Math.min(0, window.innerWidth - W),
+                    minY: Math.min(0, window.innerHeight - H)
+                };
+            }
+
+            function clamp(v, min, max) { return v < min ? min : v > max ? max : v; }
+
+            // --- ocean (ASCII waves on the sheet) ---
+            const RAMP = [' ', ' ', ' ', ' ', '.', '·', '~'];
+            let cw = 8, chh = 18, dpr = 1;
+            function sizeOcean() {
+                dpr = Math.min(window.devicePixelRatio || 1, 2);
+                ocean.width = window.innerWidth * dpr;
+                ocean.height = window.innerHeight * dpr;
+                ocean.style.width = window.innerWidth + 'px';
+                ocean.style.height = window.innerHeight + 'px';
+                octx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                octx.font = '13px monospace';
+                octx.textBaseline = 'top';
+                cw = octx.measureText('~').width || 8;
+            }
+            sizeOcean();
+            window.addEventListener('resize', sizeOcean);
+
+            let t = 0, energy = 0;
+            function wave(x, y, tt) {
+                return Math.sin(x * 0.35 + tt * 1.3)
+                    + Math.sin(x * 0.5 + y * 0.9 - tt)
+                    + Math.cos(y * 0.7 + tt * 0.6);
+            }
+            function drawOcean(speed) {
+                const eTarget = clamp(speed / 40, 0, 1);
+                energy += (eTarget - energy) * 0.04;
+                t += 0.0045 + energy * 0.016;
+
+                octx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+                octx.fillStyle = document.documentElement.classList.contains('dark')
+                    ? 'rgba(255, 255, 255, 0.11)'
+                    : 'rgba(0, 0, 0, 0.10)';
+
+                const cols = Math.ceil(window.innerWidth / cw) + 2;
+                const rows = Math.ceil(window.innerHeight / chh) + 2;
+                const startCol = Math.floor(-pos.x / cw) - 1;
+                const startRow = Math.floor(-pos.y / chh) - 1;
+                const amp = 0.72 + energy * 0.5;
+
+                for (let r = 0; r < rows; r++) {
+                    const wy = startRow + r;
+                    const sy = wy * chh + pos.y;
+                    let line = '';
+                    for (let c = 0; c < cols; c++) {
+                        const wx = startCol + c;
+                        const n = (wave(wx, wy, t) + 3) / 6;
+                        const i = Math.floor(((n - 0.5) * amp + 0.5) * RAMP.length);
+                        line += RAMP[clamp(i, 0, RAMP.length - 1)];
+                    }
+                    octx.fillText(line, startCol * cw + pos.x, sy);
+                }
+            }
+
+            // --- sheet dragging ---
+            vp.addEventListener('pointerdown', (e) => {
+                dragging = true;
+                moved = 0;
+                lastX = e.clientX;
+                lastY = e.clientY;
+                vel.x = 0; vel.y = 0;
+                vp.setPointerCapture(e.pointerId);
+                document.body.classList.add('dragging');
+            });
+
+            vp.addEventListener('pointermove', (e) => {
+                if (!dragging) return;
+                const dx = e.clientX - lastX;
+                const dy = e.clientY - lastY;
+                lastX = e.clientX;
+                lastY = e.clientY;
+                target.x += dx;
+                target.y += dy;
+                vel.x = vel.x * 0.4 + dx * 0.6;
+                vel.y = vel.y * 0.4 + dy * 0.6;
+                moved += Math.abs(dx) + Math.abs(dy);
+            });
+
+            function endDrag() {
+                dragging = false;
+                document.body.classList.remove('dragging');
+            }
+            vp.addEventListener('pointerup', endDrag);
+            vp.addEventListener('pointercancel', endDrag);
+
+            // suppress link clicks after a real drag
+            vp.addEventListener('click', (e) => {
+                if (moved > 8) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            }, true);
+
+            // trackpad / wheel panning
+            vp.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const b = bounds();
+                target.x = clamp(target.x - e.deltaX, b.minX, 0);
+                target.y = clamp(target.y - e.deltaY, b.minY, 0);
+            }, { passive: false });
+
+            // --- key plan ---
+            function mmJump(e) {
+                const r = minimap.getBoundingClientRect();
+                const s = scale();
+                const cx = (e.clientX - r.left) / s;
+                const cy = (e.clientY - r.top) / s;
+                const b = bounds();
+                target.x = clamp(window.innerWidth / 2 - cx, b.minX, 0);
+                target.y = clamp(window.innerHeight / 2 - cy, b.minY, 0);
+            }
+            minimap.addEventListener('pointerdown', (e) => {
+                e.stopPropagation();
+                mmDragging = true;
+                minimap.setPointerCapture(e.pointerId);
+                mmJump(e);
+            });
+            minimap.addEventListener('pointermove', (e) => { if (mmDragging) mmJump(e); });
+            minimap.addEventListener('pointerup', () => { mmDragging = false; });
+            minimap.addEventListener('pointercancel', () => { mmDragging = false; });
+
+            function buildMinimap() {
+                minimap.querySelectorAll('.mm-item').forEach(el => el.remove());
+                const s = scale();
+                document.querySelectorAll('.card').forEach(card => {
+                    const d = document.createElement('div');
+                    d.className = 'mm-item';
+                    d.style.left = (card.offsetLeft * s) + 'px';
+                    d.style.top = (card.offsetTop * s) + 'px';
+                    d.style.width = Math.max(3, card.offsetWidth * s) + 'px';
+                    d.style.height = Math.max(3, card.offsetHeight * s) + 'px';
+                    minimap.appendChild(d);
+                });
+            }
+            window.addEventListener('load', buildMinimap);
+            document.querySelectorAll('.card img').forEach(img => {
+                img.addEventListener('load', buildMinimap);
+            });
+            buildMinimap();
+
+            // --- render loop ---
+            function frame() {
+                const b = bounds();
+
+                if (!dragging) {
+                    target.x += vel.x;
+                    target.y += vel.y;
+                    vel.x *= 0.94;
+                    vel.y *= 0.94;
+                    if (Math.abs(vel.x) < 0.05) vel.x = 0;
+                    if (Math.abs(vel.y) < 0.05) vel.y = 0;
+                    target.x += (clamp(target.x, b.minX, 0) - target.x) * 0.18;
+                    target.y += (clamp(target.y, b.minY, 0) - target.y) * 0.18;
+                } else {
+                    const cxv = clamp(target.x, b.minX, 0);
+                    const cyv = clamp(target.y, b.minY, 0);
+                    target.x = cxv + (target.x - cxv) * 0.35;
+                    target.y = cyv + (target.y - cyv) * 0.35;
+                }
+
+                const ease = dragging ? 0.32 : 0.12;
+                const px = pos.x, py = pos.y;
+                pos.x += (target.x - pos.x) * ease;
+                pos.y += (target.y - pos.y) * ease;
+                const speed = Math.abs(pos.x - px) + Math.abs(pos.y - py);
+
+                world.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
+                vp.style.backgroundPosition = `${pos.x}px ${pos.y}px`;
+                drawOcean(speed);
+
+                const s = scale();
+                mmView.style.left = (-pos.x * s) + 'px';
+                mmView.style.top = (-pos.y * s) + 'px';
+                mmView.style.width = (window.innerWidth * s) + 'px';
+                mmView.style.height = (window.innerHeight * s) + 'px';
+
+                requestAnimationFrame(frame);
+            }
+            frame();
+        })();
+
+        /* Fig. 09 — the Muybridge locomotion plate, ported from the TextQL
+           careers page (LocomotionPlate.svelte, 'torn' treatment). The plate
+           runs at 12fps split down a torn seam: one side sharp, the other
+           re-dithered chunky, dust streaming back along the line of motion. */
+        (function () {
+            const el = document.getElementById('trail-plate');
+            if (!el) return;
+            const ctx = el.getContext('2d');
+            if (!ctx) return;
+            const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            const src = 'imgs/muybridge-gallop.png';
+            const cols = 5, frames = 15, fw = 580, fh = 364;
+            const seam = 0.58, stillT = 42.05;
+            const ink = [51, 61, 54];
+
+            const FRAME_MS = 48;
+            const PLATE_FPS = 12;
+            const CELL = 3;
+            const BAND = 28;
+            const TAU = Math.PI * 2;
+
+            const BAYER = [
+                0, 32, 8, 40, 2, 34, 10, 42,
+                48, 16, 56, 24, 50, 18, 58, 26,
+                12, 44, 4, 36, 14, 46, 6, 38,
+                60, 28, 52, 20, 62, 30, 54, 22,
+                3, 35, 11, 43, 1, 33, 9, 41,
+                51, 19, 59, 27, 49, 17, 57, 25,
+                15, 47, 7, 39, 13, 45, 5, 37,
+                63, 31, 55, 23, 61, 29, 53, 21,
+            ];
+
+            /* torn: banded tears, crawling dither, shear + frame-lag glitches */
+            const cfg = { tears: true, frozen: false, shear: true, lag: true, crawl: 8, breathe: 0.05, sweep: 0, decay: 0, wobble: 0 };
+
+            const hash32 = (i) => {
+                let h = (i + 1) * 0x9e3779b1;
+                h ^= h >>> 16;
+                h = Math.imul(h, 0x85ebca6b);
+                h ^= h >>> 13;
+                h = Math.imul(h, 0xc2b2ae35);
+                h ^= h >>> 16;
+                return h >>> 0;
+            };
+
+            let W = 0, H = 0, dx = 0, dy = 0, dw = 0, dh = 0, gw = 0, gh = 0;
+            let cov = new Array(frames).fill(null);
+            let gimg = null;
+
+            const covC = document.createElement('canvas');
+            const glitchC = document.createElement('canvas');
+            const covG = covC.getContext('2d', { willReadFrequently: true });
+            const glG = glitchC.getContext('2d');
+            if (!covG || !glG) return;
+
+            const img = new Image();
+
+            const build = () => {
+                W = el.clientWidth;
+                H = el.clientHeight;
+                const dpr = Math.min(2, window.devicePixelRatio || 1);
+                el.width = Math.round(W * dpr);
+                el.height = Math.round(H * dpr);
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                const k = Math.min(W / fw, H / fh);
+                dw = fw * k;
+                dh = fh * k;
+                dx = (W - dw) / 2;
+                dy = (H - dh) / 2;
+                gw = Math.max(1, Math.ceil(W / CELL));
+                gh = Math.max(1, Math.ceil(H / CELL));
+                covC.width = gw;
+                covC.height = gh;
+                glitchC.width = gw;
+                glitchC.height = gh;
+                gimg = glG.createImageData(gw, gh);
+                cov = new Array(frames).fill(null);
+            };
+
+            const getCov = (f) => {
+                const hit = cov[f];
+                if (hit) return hit;
+                if (!img.complete || !img.naturalWidth) return null;
+                covG.clearRect(0, 0, gw, gh);
+                covG.drawImage(
+                    img,
+                    (f % cols) * fw, Math.floor(f / cols) * fh, fw, fh,
+                    dx / CELL, dy / CELL, dw / CELL, dh / CELL
+                );
+                const d = covG.getImageData(0, 0, gw, gh).data;
+                const c = new Uint8ClampedArray(gw * gh);
+                for (let i = 0; i < c.length; i++) c[i] = d[i * 4 + 3];
+                cov[f] = c;
+                return c;
+            };
+
+            const seams = (phase) => {
+                let center = seam + cfg.breathe * Math.sin(phase * 0.18 * TAU);
+                if (cfg.sweep) center = seam + cfg.sweep * Math.sin((phase * TAU) / 14);
+                const base = dx + dw * center;
+                const n = Math.ceil(H / BAND);
+                const out = new Array(n);
+                for (let i = 0; i < n; i++) {
+                    let x = base;
+                    if (cfg.tears) {
+                        const tick = cfg.frozen ? 0 : Math.floor(phase * 2.5 + (hash32(i) % 97) / 97);
+                        x += (hash32(i * 29 + tick * 101) % 37) - 18;
+                    } else if (cfg.wobble) {
+                        x += Math.sin(i * 1.7 + phase * 0.5 * TAU * 0.1) * cfg.wobble;
+                    }
+                    out[i] = x;
+                }
+                return out;
+            };
+
+            const render = (phase) => {
+                ctx.clearRect(0, 0, W, H);
+                if (!img.complete || !img.naturalWidth || !gimg) return;
+                const f = Math.floor(phase * PLATE_FPS) % frames;
+                const sx = seams(phase);
+
+                ctx.save();
+                ctx.beginPath();
+                for (let i = 0; i < sx.length; i++) {
+                    ctx.rect(sx[i], i * BAND, Math.max(0, W - sx[i]), Math.min(BAND, H - i * BAND));
+                }
+                ctx.clip();
+                ctx.drawImage(img, (f % cols) * fw, Math.floor(f / cols) * fh, fw, fh, dx, dy, dw, dh);
+                ctx.restore();
+
+                const c0 = getCov(f);
+                const c1 = getCov((f + frames - 1) % frames);
+                if (!c0 || !c1) return;
+                const crawlTick = cfg.crawl ? Math.floor(phase * cfg.crawl) : 0;
+                const jx = cfg.crawl ? hash32(crawlTick * 11) & 7 : 0;
+                const jy = cfg.crawl ? hash32(crawlTick * 17 + 5) & 7 : 0;
+                const shearTick = Math.floor(phase * 5);
+                const trailLen = Math.max(6, Math.round((dw * 0.3) / CELL));
+                const trailFar = Math.round(trailLen * 1.6);
+                const runEdge = Math.max(1, Math.floor(dx / CELL));
+                const trailTick = cfg.frozen ? 0 : Math.floor(phase * 6);
+                const stridePulse = 0.7 + 0.3 * Math.sin((f / frames) * TAU);
+                const gy0 = Math.max(0, Math.floor(dy / CELL));
+                const gy1 = Math.min(gh, Math.ceil((dy + dh) / CELL));
+                const gx0 = Math.max(0, Math.floor(dx / CELL));
+                const data = gimg.data;
+                data.fill(0);
+                for (let y = gy0; y < gy1; y++) {
+                    const band = Math.min(sx.length - 1, Math.floor((y * CELL) / BAND));
+                    const edge = sx[band] / CELL;
+                    const bh = hash32(band * 31 + shearTick * 7);
+                    const cc = cfg.lag && bh % 5 === 0 ? c1 : c0;
+                    const shift = cfg.shear && bh % 7 === 0 ? ((bh >> 8) % 9) - 4 : 0;
+                    const row = y * gw;
+                    for (let x = 0; x < gw && x < edge; x++) {
+                        const sxp = Math.min(gw - 1, Math.max(0, x + shift));
+                        let a = cc[row + sxp] / 255;
+                        const t = Math.max(0, x - gx0) / Math.max(1, edge - gx0);
+                        if (cfg.decay) a *= 1 - cfg.decay + cfg.decay * t;
+                        if (a < 0.04 && hash32(y * 71) % 100 < 38) {
+                            const len = trailLen * (0.4 + 1.1 * ((hash32(y * 113 + Math.floor(phase * 1.2) * 17) % 100) / 100));
+                            const jr = (hash32(x * 29 + y * 53 + trailTick * 97) % 3) - 1;
+                            const srow = Math.min(gh - 1, Math.max(0, y + jr)) * gw;
+                            let trail = 0;
+                            for (let d = 3; d <= trailFar; d += 3) {
+                                const sx2 = x + d;
+                                if (sx2 >= edge) break;
+                                const srcA = cc[srow + sx2] / 255;
+                                if (srcA < 0.2) continue;
+                                const edgeW = 1 - (cc[srow + Math.max(0, sx2 - 2)] / 255) * 0.85;
+                                const w = d <= len
+                                    ? (1 - d / len) ** 2 * 0.55
+                                    : 0.06 * Math.max(0, 1 - (d - len) / Math.max(1, trailFar - len));
+                                const v = srcA * edgeW * w;
+                                if (v > trail) trail = v;
+                            }
+                            a = trail * stridePulse;
+                            if (x < runEdge) a *= 0.3 * (x / runEdge) ** 3;
+                        }
+                        if (a > (BAYER[((y + jy) & 7) * 8 + ((x + jx) & 7)] + 0.5) / 64) {
+                            const p = (row + x) * 4;
+                            data[p] = ink[0];
+                            data[p + 1] = ink[1];
+                            data[p + 2] = ink[2];
+                            data[p + 3] = 255;
+                        }
+                    }
+                }
+                const strayTick = cfg.frozen ? 0 : Math.floor(phase * 0.8);
+                const fz1 = Math.floor(dx / CELL);
+                const yb0 = Math.floor((dy + dh * 0.3) / CELL);
+                const ybN = Math.max(1, Math.floor((dh * 0.5) / CELL));
+                for (let s2 = 0; s2 < 9; s2++) {
+                    const h1 = hash32(s2 * 101 + strayTick * 7);
+                    if ((h1 & 3) === 0) continue;
+                    const skew = Math.max(h1 % 1000, hash32(s2 * 57 + strayTick * 29) % 1000) / 1000;
+                    const gx2 = Math.floor(skew * fz1);
+                    const gy2 = yb0 + (hash32(s2 * 211 + strayTick * 13) % ybN);
+                    if (gx2 < 0 || gx2 >= gw || gy2 < 0 || gy2 >= gh) continue;
+                    const p2 = (gy2 * gw + gx2) * 4;
+                    data[p2] = ink[0];
+                    data[p2 + 1] = ink[1];
+                    data[p2 + 2] = ink[2];
+                    data[p2 + 3] = 255;
+                }
+                glG.putImageData(gimg, 0, 0);
+                ctx.save();
+                ctx.beginPath();
+                for (let i = 0; i < sx.length; i++) {
+                    ctx.rect(0, i * BAND, Math.max(0, sx[i]), Math.min(BAND, H - i * BAND));
+                }
+                ctx.clip();
+                ctx.imageSmoothingEnabled = false;
+                ctx.drawImage(glitchC, 0, 0, gw, gh, 0, 0, gw * CELL, gh * CELL);
+                ctx.restore();
+                ctx.imageSmoothingEnabled = true;
+            };
+
+            let raf = 0;
+            let last = 0;
+            let phase = 0;
+            let inView = true;
+            let ready = false;
+
+            const frame = (ts) => {
+                raf = requestAnimationFrame(frame);
+                if (ts - last < FRAME_MS) return;
+                phase += Math.min((ts - last) / 1000, 0.25);
+                last = ts;
+                render(phase);
+            };
+            const setRunning = () => {
+                const on = ready && inView && !document.hidden && !still;
+                if (on && !raf) {
+                    last = performance.now();
+                    raf = requestAnimationFrame(frame);
+                } else if (!on && raf) {
+                    cancelAnimationFrame(raf);
+                    raf = 0;
+                }
+            };
+
+            const io = new IntersectionObserver(([entry]) => {
+                inView = entry.isIntersecting;
+                setRunning();
+            });
+            io.observe(el);
+            document.addEventListener('visibilitychange', setRunning);
+            const ro = new ResizeObserver(() => {
+                if (!ready) return;
+                build();
+                render(still ? stillT : phase);
+            });
+            ro.observe(el);
+
+            const start = () => {
+                if (ready) return;
+                ready = true;
+                build();
+                if (still) render(stillT);
+                else setRunning();
+            };
+            img.onload = start;
+            img.src = src;
+            if (img.complete && img.naturalWidth) start();
+        })();
+    </script>
+</body>
+
+</html>
