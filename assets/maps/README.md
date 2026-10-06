@@ -2,7 +2,7 @@
 
 Edit `../../places-data.js` to add a country, city, island, or region. Each place
 has a stable `id` for selection. Coordinates use `[longitude, latitude]`.
-Country `mapId` values use ISO 3166-1 numeric codes. `familiar: true` adds the pale-blue
+Country `mapId` values use ISO 3166-1 numeric codes. `familiar: true` adds the larger ring
 marker for places that were more than a visit; no dates or durations are shown.
 `context` can distinguish names such as Taizhou (Zhejiang) or Madison (Wisconsin).
 State, region, and island pins represent those areas, not a particular city.
@@ -18,9 +18,10 @@ The full-viewport globe renders simplified geographic context rather than
 street-level detail. Drag to rotate, scroll or pinch to zoom, or select a region
 to fly there. The list button opens the country and city index. Keyboard controls
 are arrow keys, plus/minus, and Home to reset; Escape closes the place index.
-Familiar places have a pale-blue ring; visited countries have a blue fill.
-The pen button (or `?style=ink`) switches to a monochrome ink style: hairline
-outlines, rivers, and graticule, with visited countries hatched instead of filled.
+The globe opens in a monochrome ink style: hairline outlines, rivers, and
+graticule, with visited countries hatched. The pen button (or `?style=relief`)
+switches to shaded relief, where familiar places have a pale-blue ring and
+visited countries have a blue fill.
 D3 7.9.0 and topojson-client 3.1.0 are vendored in `../vendor` with their licenses.
 There are no map API keys, tracking requests, or runtime CDN dependencies.
 

@@ -19,8 +19,8 @@
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const gl = canvas.getContext('webgl', { alpha: true, antialias: true, premultipliedAlpha: false });
   let currentRegion = null, selected = null, terrain = true, ready = false;
-  // Ink is a monochrome, engraved-atlas treatment; `?style=ink` opens with it on.
-  let ink = new URLSearchParams(location.search).get('style') === 'ink';
+  // Ink is the default engraved-atlas treatment; `?style=relief` opens the shaded relief instead.
+  let ink = new URLSearchParams(location.search).get('style') !== 'relief';
   const inkButton = document.querySelector('#ink');
   const palettes = {
     relief: { provinces: '#c7d8f230', selectedFill: '#b7ddff26', selectedStroke: '#dcefffef', active: '#ffffff',
@@ -543,7 +543,7 @@
     document.body.classList.toggle('ink', ink);
     inkButton.setAttribute('aria-pressed', String(ink));
     const url = new URL(location.href);
-    if (ink) url.searchParams.set('style', 'ink'); else url.searchParams.delete('style');
+    if (ink) url.searchParams.delete('style'); else url.searchParams.set('style', 'relief');
     history.replaceState(null, '', url);
     scheduleDraw();
   }
