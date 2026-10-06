@@ -35,7 +35,7 @@ coverage follows the source dataset; not every country has internal boundaries.
 Closer views draw province boundaries as a vector overlay. Country outlines and
 place markers remain on the globe's surface, without exaggerated heights.
 
-`visited-countries-10m.json` contains the 16 visited countries/territories from
+`visited-countries-10m.json` contains the 19 visited countries/territories from
 Natural Earth v5.1.2 `ne_10m_admin_0_countries.geojson`, with coordinates rounded
 to four decimals and only names and numeric country IDs retained. These finer
 coastlines replace the 50m outlines around visited places on the globe.

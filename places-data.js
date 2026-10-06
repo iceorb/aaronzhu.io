@@ -3,6 +3,16 @@
 // Keep memories personal; dates and durations aren't part of this map.
 window.travelPlaces = [
     {
+        id: 'africa', name: 'Africa', bounds: [[-11, 28], [-1, 36]],
+        places: [
+            { id: 'morocco', name: 'Morocco', mapId: '504', center: [-6.5, 31.8], places: [
+                { id: 'marrakesh', name: 'Marrakesh', coordinates: [-7.9811, 31.6295] },
+                { id: 'fez', name: 'Fez', coordinates: [-5.0078, 34.0181] },
+                { id: 'merzouga', name: 'Merzouga', context: 'Sahara', coordinates: [-3.9762, 31.0802] }
+            ] }
+        ]
+    },
+    {
         id: 'asia', name: 'Asia', bounds: [[72, -12], [148, 52]],
         places: [
             { id: 'china', name: 'China', mapId: '156', center: [104, 35], places: [
@@ -27,10 +37,17 @@ window.travelPlaces = [
         id: 'europe', name: 'Europe', bounds: [[-13, 35], [21, 61]],
         places: [
             { id: 'austria', name: 'Austria', mapId: '040', center: [14.5, 47.5] },
+            { id: 'denmark', name: 'Denmark', mapId: '208', center: [10, 56], places: [
+                { id: 'copenhagen', name: 'Copenhagen', coordinates: [12.5683, 55.6761] }
+            ] },
             { id: 'germany', name: 'Germany', mapId: '276', center: [10.4, 51] },
             { id: 'ireland', name: 'Ireland', mapId: '372', center: [-8, 53.3] },
             { id: 'portugal', name: 'Portugal', mapId: '620', center: [-8.2, 39.5], bounds: [[-10, 36.5], [-5.5, 42.5]], places: [
                 { id: 'porto', name: 'Porto', coordinates: [-8.6291, 41.1579] }
+            ] },
+            { id: 'spain', name: 'Spain', mapId: '724', center: [-3.7, 40.2], bounds: [[-9.5, 36], [3.5, 43.8]], places: [
+                { id: 'barcelona', name: 'Barcelona', coordinates: [2.1734, 41.3851] },
+                { id: 'madrid', name: 'Madrid', coordinates: [-3.7038, 40.4168] }
             ] },
             { id: 'switzerland', name: 'Switzerland', mapId: '756', center: [8.2, 46.8] },
             { id: 'united-kingdom', name: 'United Kingdom', mapId: '826', center: [-2.5, 54.5], places: [
