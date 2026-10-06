@@ -1,6 +1,6 @@
 @font-face{font-family:'Martina Plantijn';src:url('fonts/TestMartinaPlantijn-Regular-BF663c36d1ec6d5.otf');font-display:swap}
 @font-face{font-family:'Martina Plantijn';src:url('fonts/TestMartinaPlantijn-Italic-BF663c36d1ed0f9.otf');font-style:italic;font-display:swap}
-:root{color-scheme:dark;--font-main:'Outfit',sans-serif;--font-serif:'Martina Plantijn',Georgia,serif;--map-accent:#a8d4ff;--quiet:#94a1b8}
+:root{color-scheme:dark;--font-main:'Outfit',sans-serif;--font-serif:'Martina Plantijn',Georgia,serif;--map-accent:#a8d4ff;--quiet:#94a1b8;--font-mono:ui-monospace,SFMono-Regular,Menlo,monospace}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--color-bg,#111);color:var(--color-text,#e0e0e0);font:18px/1.7 var(--font-serif);-webkit-font-smoothing:antialiased;overflow:hidden}
 a{color:inherit;text-decoration:none}
@@ -44,6 +44,14 @@ button:focus-visible,select:focus-visible,a:focus-visible,canvas:focus-visible{o
 .map-controls{position:absolute;z-index:3;right:32px;bottom:40px;display:flex;align-items:center;padding:4px;background:#151c2bd9;border:1px solid #b8caff24;border-radius:28px;backdrop-filter:blur(16px)}
 .map-controls button{display:grid;place-items:center;width:44px;height:44px;border:0;background:none;color:#c0ccdf;font:24px/1 var(--font-main);border-radius:50%}
 .map-controls button:hover{color:#fff;background:#ffffff0b}
+.map-controls button[aria-pressed=true]{color:var(--map-accent)}
+/* Ink: one warm off-white on near-black, labels set like a ledger. */
+.ink{--map-accent:#e6dfcf}
+.ink .map-stage{background:none}
+.ink .map-label{font:11px/1.5 var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:#d8d1c1;background:#121212d9;border-radius:2px;text-shadow:none}
+.ink .map-label.familiar{font:italic 11px/1.5 var(--font-mono);color:#f1ebdd}
+.ink .map-label.selected{background:#121212;border-color:#e6dfcf88;color:#fff}
+.ink #selection{font-family:var(--font-mono);font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:#e6dfcf}
 .map-caption{position:absolute;bottom:48px;left:max(32px,calc((100vw - 736px)/2));z-index:3;max-width:calc(100% - 220px);pointer-events:none}
 #selection{font-size:18px;line-height:1.4;color:#e1e9f7}
 #selection:empty{display:none}

@@ -19,9 +19,18 @@
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const gl = canvas.getContext('webgl', { alpha: true, antialias: true, premultipliedAlpha: false });
   let currentRegion = null, selected = null, terrain = true, ready = false;
+  // Ink is a monochrome, engraved-atlas treatment; `?style=ink` opens with it on.
+  let ink = new URLSearchParams(location.search).get('style') === 'ink';
+  const inkButton = document.querySelector('#ink');
+  const palettes = {
+    relief: { provinces: '#c7d8f230', selectedFill: '#b7ddff26', selectedStroke: '#dcefffef', active: '#ffffff',
+      familiarRing: '#a8d9ffbb', ring: '#a9bdd8', familiarDot: '#e4f3ff', dot: '#cbd9ee' },
+    ink: { provinces: '#e6dfcf2e', selectedFill: '#e6dfcf14', selectedStroke: '#f1ebdd', active: '#f6f1e6',
+      familiarRing: '#e6dfcfcc', ring: '#e6dfcf88', familiarDot: '#f1ebdd', dot: '#d8d1c1' }
+  };
   let width = 1, height = 1, ratio = 1, radius = 1, center = [0, 0];
   let animation = 0, frame = 0, features = [], details, blocked = [];
-  let renderGlobe = () => {};
+  let renderGlobe = () => {}, globeTexture = () => null;
   const labelNodes = new Map();
   const wrap = value => ((value + 180) % 360 + 360) % 360 - 180;
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
@@ -204,26 +213,29 @@
     const projection = d3.geoOrthographic().rotate([-camera.longitude, -camera.latitude])
       .translate(center).scale(radius * camera.zoom).clipAngle(90).precision(.4);
     const path = d3.geoPath(projection, context);
+    const colors = palettes[ink ? 'ink' : 'relief'];
     // Vector boundaries remain crisp when looking closer at a country.
     if (camera.zoom > 2) {
       context.beginPath(); path(details.provinces);
-      context.strokeStyle = '#c7d8f230'; context.lineWidth = .65; context.stroke();
+      context.setLineDash(ink ? [2, 3] : []);
+      context.strokeStyle = colors.provinces; context.lineWidth = ink ? .5 : .65; context.stroke();
+      context.setLineDash([]);
     }
     const selectedFeature = selected && features.find(feature => +feature.id === +(selected.mapId || selected.country?.mapId));
     if (selectedFeature) {
       context.beginPath(); path(selectedFeature);
-      context.fillStyle = '#b7ddff26'; context.fill();
-      context.strokeStyle = '#dcefffef'; context.lineWidth = 1; context.stroke();
+      context.fillStyle = colors.selectedFill; context.fill();
+      context.strokeStyle = colors.selectedStroke; context.lineWidth = 1; context.stroke();
     }
     const projected = points.map(place => ({ place, position: project(place.coordinates) }))
       .filter(({ position: [x, y, z] }) => z > .06 && x > 8 && x < width - 8 && y > 8 && y < height - 8);
     for (const { place, position: [x, y] } of projected) {
       const active = selected?.id === place.id;
       context.beginPath(); context.arc(x, y, active ? 11 : place.familiar ? 7 : 3, 0, Math.PI * 2);
-      context.strokeStyle = active ? '#ffffff' : place.familiar ? '#a8d9ffbb' : '#a9bdd8';
-      context.lineWidth = 1; context.stroke();
-      context.beginPath(); context.arc(x, y, active ? 3.5 : place.familiar ? 3 : 2, 0, Math.PI * 2);
-      context.fillStyle = place.familiar || active ? '#e4f3ff' : '#cbd9ee'; context.fill();
+      context.strokeStyle = active ? colors.active : place.familiar ? colors.familiarRing : colors.ring;
+      context.lineWidth = ink ? .75 : 1; context.stroke();
+      context.beginPath(); context.arc(x, y, active ? 3.5 : place.familiar ? 3 : ink ? 1.6 : 2, 0, Math.PI * 2);
+      context.fillStyle = place.familiar || active ? colors.familiarDot : colors.dot; context.fill();
     }
     const occupied = [...blocked, ...projected.map(({ position: [x, y] }) => [x - 8, y - 8, x + 8, y + 8])];
     for (const node of labelNodes.values()) node.hidden = true;
@@ -279,6 +291,7 @@
     try { await terrainImage.decode(); } catch { terrain = false; }
 
     function texture(withTerrain) {
+      if (ink) return inkTexture();
       const surface = document.createElement('canvas');
       surface.width = Math.min(4096, gl.getParameter(gl.MAX_TEXTURE_SIZE));
       surface.height = surface.width / 2;
@@ -304,6 +317,37 @@
         ctx.lineWidth = visited.has(+feature.id) ? 1.1 : .6; ctx.stroke();
       }
       ctx.beginPath(); path(details.lakes); ctx.fillStyle = '#101a2c'; ctx.fill();
+      return upload(surface);
+    }
+    function inkTexture() {
+      const surface = document.createElement('canvas');
+      surface.width = Math.min(4096, gl.getParameter(gl.MAX_TEXTURE_SIZE));
+      surface.height = surface.width / 2;
+      const ctx = surface.getContext('2d');
+      const projection = d3.geoEquirectangular().scale(surface.width / (2 * Math.PI)).translate([surface.width / 2, surface.height / 2]);
+      const path = d3.geoPath(projection, ctx);
+      const paper = '#121212', line = '#e6dfcf';
+      ctx.fillStyle = paper; ctx.fillRect(0, 0, surface.width, surface.height);
+      ctx.beginPath(); path(d3.geoGraticule().step([10, 10])());
+      ctx.strokeStyle = line + '1c'; ctx.lineWidth = .7; ctx.stroke();
+      ctx.beginPath(); path({ type: 'FeatureCollection', features }); ctx.fillStyle = '#171716'; ctx.fill();
+      // Fine diagonal hatching marks visited countries, as on an engraved plate.
+      const spacing = surface.width / 400;
+      ctx.save(); ctx.beginPath(); path({ type: 'FeatureCollection', features: features.filter(f => visited.has(+f.id)) }); ctx.clip();
+      ctx.beginPath();
+      for (let x = -surface.height; x < surface.width; x += spacing) { ctx.moveTo(x, surface.height); ctx.lineTo(x + surface.height, 0); }
+      ctx.strokeStyle = line + '8c'; ctx.lineWidth = 1.1; ctx.stroke(); ctx.restore();
+      ctx.beginPath(); path(details.lakes); ctx.fillStyle = paper; ctx.fill();
+      ctx.strokeStyle = line + '55'; ctx.lineWidth = .6; ctx.stroke();
+      ctx.beginPath(); path(details.rivers); ctx.strokeStyle = line + '40'; ctx.lineWidth = .5; ctx.stroke();
+      for (const feature of features) {
+        ctx.beginPath(); path(feature);
+        ctx.strokeStyle = visited.has(+feature.id) ? line + 'e6' : line + '73';
+        ctx.lineWidth = visited.has(+feature.id) ? 1.2 : .6; ctx.stroke();
+      }
+      return upload(surface);
+    }
+    function upload(surface) {
       const value = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, value);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, surface);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
@@ -313,7 +357,8 @@
       gl.generateMipmap(gl.TEXTURE_2D);
       return value;
     }
-    const globeTexture = texture(terrain);
+    const textures = {};
+    globeTexture = () => textures[ink] ||= texture(terrain);
     function shader(type, source) {
       const result = gl.createShader(type);
       gl.shaderSource(result, source); gl.compileShader(result);
@@ -328,7 +373,7 @@
     gl.attachShader(program, shader(gl.FRAGMENT_SHADER, `
       precision highp float;
       uniform vec2 u_size, u_center, u_rotation;
-      uniform float u_radius, u_ratio;
+      uniform float u_radius, u_ratio, u_ink;
       uniform sampler2D u_texture;
       const float PI = 3.14159265359;
       void main() {
@@ -337,7 +382,7 @@
         float distance = length(p);
         if (distance > 1.0) {
           float halo = exp(-(distance - 1.0) * 55.0) * 0.22;
-          gl_FragColor = vec4(0.28, 0.49, 0.95, halo);
+          gl_FragColor = vec4(mix(vec3(0.28, 0.49, 0.95), vec3(0.90, 0.87, 0.81), u_ink), halo * (1.0 - u_ink * 0.6));
           return;
         }
         float z = sqrt(max(0.0, 1.0 - dot(p, p)));
@@ -348,9 +393,9 @@
         vec3 color = texture2D(u_texture, uv).rgb;
         vec3 normal = vec3(p, z);
         float light = 0.70 + 0.30 * max(dot(normal, normalize(vec3(-0.45, 0.6, 1.2))), 0.0);
-        color *= light;
+        color *= mix(light, 0.92 + 0.08 * light, u_ink);
         float rim = pow(1.0 - z, 4.0);
-        color = mix(color, vec3(0.30, 0.48, 0.78), rim * 0.36);
+        color = mix(color, mix(vec3(0.30, 0.48, 0.78), vec3(0.90, 0.87, 0.81), u_ink), rim * mix(0.36, 0.18, u_ink));
         float edge = 1.0 - smoothstep(1.0 - 1.5 / u_radius, 1.0, distance);
         gl_FragColor = vec4(color, edge);
       }
@@ -362,13 +407,14 @@
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
     const position = gl.getAttribLocation(program, 'a_position');
     gl.enableVertexAttribArray(position); gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-    const uniforms = Object.fromEntries(['size', 'center', 'rotation', 'radius', 'ratio', 'texture'].map(name => [name, gl.getUniformLocation(program, 'u_' + name)]));
+    const uniforms = Object.fromEntries(['size', 'center', 'rotation', 'radius', 'ratio', 'texture', 'ink'].map(name => [name, gl.getUniformLocation(program, 'u_' + name)]));
     renderGlobe = () => {
       gl.viewport(0, 0, canvas.width, canvas.height);
       gl.uniform2f(uniforms.size, width, height); gl.uniform2fv(uniforms.center, center);
       gl.uniform2f(uniforms.rotation, camera.longitude * radians, camera.latitude * radians);
       gl.uniform1f(uniforms.radius, radius * camera.zoom); gl.uniform1f(uniforms.ratio, ratio);
-      gl.uniform1i(uniforms.texture, 0); gl.bindTexture(gl.TEXTURE_2D, globeTexture);
+      gl.uniform1f(uniforms.ink, ink ? 1 : 0);
+      gl.uniform1i(uniforms.texture, 0); gl.bindTexture(gl.TEXTURE_2D, globeTexture());
       gl.drawArrays(gl.TRIANGLES, 0, 6);
     };
     for (const place of points) {
@@ -492,6 +538,17 @@
   document.querySelector('#zoom-in').onclick = () => zoom(1.25);
   document.querySelector('#zoom-out').onclick = () => zoom(.8);
   document.querySelector('#reset').onclick = reset;
+  function setInk(value) {
+    ink = value;
+    document.body.classList.toggle('ink', ink);
+    inkButton.setAttribute('aria-pressed', String(ink));
+    const url = new URL(location.href);
+    if (ink) url.searchParams.set('style', 'ink'); else url.searchParams.delete('style');
+    history.replaceState(null, '', url);
+    scheduleDraw();
+  }
+  setInk(ink);
+  inkButton.onclick = () => setInk(!ink);
   canvas.addEventListener('webglcontextlost', event => {
     event.preventDefault(); ready = false; cancelAnimationFrame(animation);
     loading.hidden = false; loading.textContent = 'Globe paused. Reload to resume.';

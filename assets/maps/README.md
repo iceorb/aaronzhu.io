@@ -19,6 +19,8 @@ street-level detail. Drag to rotate, scroll or pinch to zoom, or select a region
 to fly there. The list button opens the country and city index. Keyboard controls
 are arrow keys, plus/minus, and Home to reset; Escape closes the place index.
 Familiar places have a pale-blue ring; visited countries have a blue fill.
+The pen button (or `?style=ink`) switches to a monochrome ink style: hairline
+outlines, rivers, and graticule, with visited countries hatched instead of filled.
 D3 7.9.0 and topojson-client 3.1.0 are vendored in `../vendor` with their licenses.
 There are no map API keys, tracking requests, or runtime CDN dependencies.
 
