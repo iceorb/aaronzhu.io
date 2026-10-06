@@ -1,3 +1,53 @@
+/* Keep the site navigation continuous while the page underneath changes. */
+@view-transition {
+    navigation: auto;
+}
+
+.header-line h1 {
+    view-transition-name: site-name;
+}
+
+.header-line .nav-links {
+    view-transition-name: site-nav;
+}
+
+::view-transition-group(*) {
+    animation-duration: 420ms;
+    animation-timing-function: cubic-bezier(.22, .68, .22, 1);
+}
+
+::view-transition-old(root) {
+    animation: page-out 180ms ease-out both;
+}
+
+::view-transition-new(root) {
+    animation: page-in 420ms cubic-bezier(.22, .68, .22, 1) both;
+}
+
+@keyframes page-out {
+    to { opacity: 0; }
+}
+
+@keyframes page-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .page-fade-fallback body {
+        animation: page-in 300ms ease-out;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
+    }
+}
+
 /* Dark Mode Variables */
 :root.dark {
     --color-bg: #111111;

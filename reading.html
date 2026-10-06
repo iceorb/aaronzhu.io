@@ -116,114 +116,58 @@
             margin: 0 4px;
         }
 
-        /* Card catalog */
         .reading-section {
-            margin-bottom: 56px;
+            margin-bottom: 40px;
         }
 
-        .drawer-head {
-            display: flex;
-            align-items: baseline;
-            gap: 12px;
-            font-family: var(--font-mono);
-            font-size: 12px;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
+        .reading-section h2 {
+            font-family: var(--font-main);
+            font-size: 13px;
+            font-weight: 500;
             color: var(--color-muted);
-            margin-bottom: 18px;
+            margin-bottom: 12px;
         }
 
-        .drawer-head .leader {
-            flex: 1;
-            min-width: 24px;
-            border-bottom: 1px dotted rgba(107, 107, 107, 0.5);
-            position: relative;
-            top: -4px;
+        .reading-list {
+            list-style: none;
         }
 
-        .card-grid {
+        .read-link {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-        }
-
-        .read-card {
-            position: relative;
-            display: block;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: baseline;
+            gap: 4px 24px;
+            min-height: 44px;
+            padding: 9px 0;
             text-decoration: none;
-            border: 1px solid rgba(107, 107, 107, 0.35);
-            border-radius: 3px;
-            padding: 15px 18px 30px;
-            background-image: repeating-linear-gradient(to bottom,
-                    transparent 0px,
-                    transparent 21px,
-                    rgba(107, 107, 107, 0.13) 21px,
-                    rgba(107, 107, 107, 0.13) 22px);
-            transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.25s;
-        }
-
-        a.read-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-        }
-
-        .read-card::after {
-            content: '';
-            position: absolute;
-            bottom: 7px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 9px;
-            height: 9px;
-            border: 1px solid rgba(107, 107, 107, 0.45);
-            border-radius: 50%;
         }
 
         .read-title {
-            display: block;
             font-family: var(--font-serif);
-            font-size: 17px;
-            line-height: 22px;
+            font-size: 18px;
+            line-height: 1.4;
             color: var(--color-text);
-            margin-bottom: 7px;
+            overflow-wrap: anywhere;
         }
 
         .read-author {
-            display: block;
-            font-family: var(--font-mono);
-            font-size: 11.5px;
-            letter-spacing: 0.06em;
+            font-family: var(--font-main);
+            font-size: 14px;
+            line-height: 1.5;
             color: var(--color-muted);
         }
 
-        .ascii-stats {
-            font-family: var(--font-mono);
-            font-size: 13px;
-            line-height: 1.4;
-            color: var(--color-muted);
-            white-space: pre;
-            overflow-x: auto;
-            margin-top: 12px;
-            border: 1px dashed #ccc;
-            padding: 24px;
-            background: #fafafa;
+        .read-link:hover .read-title,
+        .read-link:focus-visible .read-title {
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 4px;
         }
 
-        .ascii-stats {
-            font-family: var(--font-mono);
-            font-size: 13px;
-            line-height: 1.4;
-            color: var(--color-muted);
-            white-space: pre;
-            overflow-x: auto;
-            margin-top: 12px;
-            border: 1px dashed #ccc;
-            padding: 24px;
-            background: #fafafa;
-        }
-
-        .ascii-stats::-webkit-scrollbar {
-            display: none;
+        .read-link:focus-visible {
+            outline: 2px solid var(--color-link);
+            outline-offset: 4px;
+            border-radius: 2px;
         }
 
         footer {
@@ -259,8 +203,22 @@
                 padding: 48px 24px 80px;
             }
 
-            .card-grid {
+            .read-link {
                 grid-template-columns: 1fr;
+                gap: 2px;
+                padding: 10px 0;
+            }
+
+            .read-title {
+                font-size: 17px;
+            }
+
+            .read-author {
+                font-size: 13px;
+            }
+
+            .reading-section {
+                margin-bottom: 32px;
             }
 
             body {
@@ -303,7 +261,7 @@
                     <span class="dot">·</span>
                     <a href="works.html">Things</a>
                     <span class="dot">·</span>
-                    <a href="reading.html" class="active">Reads</a>
+                    <a href="reading.html" class="active" aria-current="page">Reads</a>
                     <span class="dot">·</span>
                     <a href="places.html">Places</a>
                     <span class="dot">·</span>
@@ -312,78 +270,103 @@
             </div>
         </header>
 
-        <section class="reading-section">
-            <div class="drawer-head"><span>AI & Alignment</span><span class="leader"></span><span>drawer 1 of
-                    3</span></div>
-            <div class="card-grid">
-                <a class="read-card" href="https://www.anthropic.com/research/agentic-misalignment">
-                    <span class="read-title">Agentic Misalignment</span>
-                    <span class="read-author">Lynch et al.</span>
-                </a>
-                <a class="read-card" href="https://blog.tilderesearch.com/blog/sparse-attn">
-                    <span class="read-title">Sparsity is Cool</span>
-                    <span class="read-author">Dhruv Pai et al.</span>
-                </a>
-                <a class="read-card" href="#">
-                    <span class="read-title">DRL from Human Preferences</span>
-                    <span class="read-author">Christiano et al.</span>
-                </a>
-                <a class="read-card" href="https://fleuret.org/public/lbdl.pdf">
-                    <span class="read-title">The Little Book of Deep Learning</span>
-                    <span class="read-author">François Fleuret</span>
-                </a>
-            </div>
-        </section>
+        <main>
+            <section class="reading-section" aria-labelledby="ai-alignment">
+                <h2 id="ai-alignment">AI & Alignment</h2>
+                <ul class="reading-list">
+                    <li>
+                        <a class="read-link" href="https://www.anthropic.com/research/agentic-misalignment">
+                            <span class="read-title">Agentic Misalignment</span>
+                            <span class="read-author">Lynch et al.</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="read-link" href="https://blog.tilderesearch.com/blog/sparse-attn">
+                            <span class="read-title">Sparsity is Cool</span>
+                            <span class="read-author">Dhruv Pai et al.</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="read-link" href="#">
+                            <span class="read-title">DRL from Human Preferences</span>
+                            <span class="read-author">Christiano et al.</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="read-link" href="https://fleuret.org/public/lbdl.pdf">
+                            <span class="read-title">The Little Book of Deep Learning</span>
+                            <span class="read-author">François Fleuret</span>
+                        </a>
+                    </li>
+                </ul>
+            </section>
 
-        <section class="reading-section">
-            <div class="drawer-head"><span>On Living</span><span class="leader"></span><span>drawer 2 of 3</span>
-            </div>
-            <div class="card-grid">
-                <a class="read-card" href="https://www.themarginalian.org/2016/05/05/either-or-kierkegaard/">
-                    <span class="read-title">do it, or do not; you will regret both</span>
-                    <span class="read-author">Søren Kierkegaard</span>
-                </a>
-                <a class="read-card" href="https://www.youtube.com/watch?v=nxpITF8fswE">
-                    <span class="read-title">We Are Here On Earth To Fart Around</span>
-                    <span class="read-author">Kurt Vonnegut</span>
-                </a>
-                <a class="read-card" href="https://en.wikipedia.org/wiki/Profession_(novella)">
-                    <span class="read-title">Profession</span>
-                    <span class="read-author">Isaac Asimov</span>
-                </a>
-                <a class="read-card" href="https://www.goodreads.com/book/show/44175374-exhalation">
-                    <span class="read-title">Exhalation</span>
-                    <span class="read-author">Ted Chiang</span>
-                </a>
-                <a class="read-card" href="https://www.goodreads.com/en/book/show/905.The_Inner_Game_of_Tennis">
-                    <span class="read-title">The Inner Game of Tennis</span>
-                    <span class="read-author">W. Timothy Gallwey</span>
-                </a>
-                <a class="read-card" href="https://www.youtube.com/watch?v=y56WxOQAzoA&t=194s">
-                    <span class="read-title">How to Train Your Brain to Crave Doing Hard Things</span>
-                    <span class="read-author">Izzy Sealey</span>
-                </a>
-            </div>
-        </section>
+            <section class="reading-section" aria-labelledby="on-living">
+                <h2 id="on-living">On Living</h2>
+                <ul class="reading-list">
+                    <li>
+                        <a class="read-link" href="https://www.themarginalian.org/2016/05/05/either-or-kierkegaard/">
+                            <span class="read-title">do it, or do not; you will regret both</span>
+                            <span class="read-author">Søren Kierkegaard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="read-link" href="https://www.youtube.com/watch?v=nxpITF8fswE">
+                            <span class="read-title">We Are Here On Earth To Fart Around</span>
+                            <span class="read-author">Kurt Vonnegut</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="read-link" href="https://en.wikipedia.org/wiki/Profession_(novella)">
+                            <span class="read-title">Profession</span>
+                            <span class="read-author">Isaac Asimov</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="read-link" href="https://www.goodreads.com/book/show/44175374-exhalation">
+                            <span class="read-title">Exhalation</span>
+                            <span class="read-author">Ted Chiang</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="read-link" href="https://www.goodreads.com/en/book/show/905.The_Inner_Game_of_Tennis">
+                            <span class="read-title">The Inner Game of Tennis</span>
+                            <span class="read-author">W. Timothy Gallwey</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="read-link" href="https://www.youtube.com/watch?v=y56WxOQAzoA&t=194s">
+                            <span class="read-title">How to Train Your Brain to Crave Doing Hard Things</span>
+                            <span class="read-author">Izzy Sealey</span>
+                        </a>
+                    </li>
+                </ul>
+            </section>
 
-        <section class="reading-section">
-            <div class="drawer-head"><span>Society & Economics</span><span class="leader"></span><span>drawer 3 of
-                    3</span></div>
-            <div class="card-grid">
-                <a class="read-card" href="https://www.goodreads.com/book/show/219561103-inheritocracy">
-                    <span class="read-title">Inheritocracy</span>
-                    <span class="read-author">Eliza Filby</span>
-                </a>
-                <a class="read-card" href="https://digitaltinz.substack.com/p/no-original-thoughts-club">
-                    <span class="read-title">no original thoughts club</span>
-                    <span class="read-author">Tina Zhang</span>
-                </a>
-                <a class="read-card" href="#">
-                    <span class="read-title">Thinking, Fast and Slow</span>
-                    <span class="read-author">Daniel Kahneman</span>
-                </a>
-            </div>
-        </section>
+            <section class="reading-section" aria-labelledby="society-economics">
+                <h2 id="society-economics">Society & Economics</h2>
+                <ul class="reading-list">
+                    <li>
+                        <a class="read-link" href="https://www.goodreads.com/book/show/219561103-inheritocracy">
+                            <span class="read-title">Inheritocracy</span>
+                            <span class="read-author">Eliza Filby</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="read-link" href="https://digitaltinz.substack.com/p/no-original-thoughts-club">
+                            <span class="read-title">no original thoughts club</span>
+                            <span class="read-author">Tina Zhang</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="read-link" href="#">
+                            <span class="read-title">Thinking, Fast and Slow</span>
+                            <span class="read-author">Daniel Kahneman</span>
+                        </a>
+                    </li>
+                </ul>
+            </section>
+        </main>
 
         <footer>
             <a href="#">Email</a>

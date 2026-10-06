@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="A few places I’ve been, and a few that feel more familiar.">
   <title>Places — Aaron Zhu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme.js"></script>
   <link rel="stylesheet" href="places.css">
   <script src="places-data.js" defer></script>
   <script src="assets/vendor/d3-7.9.0.min.js" defer></script>
@@ -12,25 +15,44 @@
   <script src="places.js" defer></script>
 </head>
 <body>
-  <header><a class="name" href="index.html">Aaron Zhu</a><nav aria-label="Main navigation"><a href="index.html">Home</a><span>·</span><a href="works.html">Things</a><span>·</span><a href="reading.html">Reads</a><span>·</span><a href="places.html" aria-current="page">Places</a><span>·</span><a href="acknowledgements.html">Nods</a></nav></header>
-  <main>
-    <div class="intro"><h1>Places</h1><p>Some places stay with you.</p></div>
-    <section class="atlas" aria-label="Places in relief">
-      <div class="map-stage">
-        <canvas id="map" aria-label="Interactive 3D map. Click a visited country or marker to explore. Drag to turn, Shift-drag to pan, or scroll to zoom." tabindex="0"></canvas>
-        <div class="map-orientation" aria-hidden="true"><span id="north-arrow">↑</span><span>N</span></div>
-        <div id="map-readout" aria-hidden="true"></div>
-        <svg id="leaders" aria-hidden="true"></svg>
-        <div id="labels" aria-label="Places on the map"></div>
-        <p id="loading" role="status">Unfolding the world…</p>
-        <div class="map-controls" aria-label="Map controls"><button id="zoom-in" aria-label="Zoom in">+</button><button id="zoom-out" aria-label="Zoom out">−</button><button id="tilt" aria-pressed="true">Tilt</button><button id="terrain" aria-pressed="true">Terrain</button><button id="reset">Reset</button></div>
-        <p class="gesture">Drag to turn · Shift-drag to move</p>
+  <header class="site-header map-overlay">
+    <div class="header-line">
+      <h1><a href="index.html">Aaron Zhu</a></h1>
+      <nav class="nav-links" aria-label="Main navigation">
+        <span class="dot mobile-hide">·</span><a href="index.html">Home</a>
+        <span class="dot">·</span><a href="works.html">Things</a>
+        <span class="dot">·</span><a href="reading.html">Reads</a>
+        <span class="dot">·</span><a href="places.html" class="active" aria-current="page">Places</a>
+        <span class="dot">·</span><a href="acknowledgements.html">Nods</a>
+      </nav>
+    </div>
+  </header>
+  <main class="atlas" aria-label="Interactive travel globe">
+    <div class="map-stage">
+      <canvas id="map" tabindex="0" aria-label="Travel globe. Drag to rotate, scroll or pinch to zoom. Use arrow keys to rotate, plus and minus to zoom, and Home to reset. Select places using the region and place buttons."></canvas>
+      <canvas id="map-details" aria-hidden="true"></canvas>
+      <div id="labels" aria-label="Places on the globe"></div>
+      <p id="loading" role="status">Loading…</p>
+    </div>
+    <section class="explorer map-overlay" aria-label="Explore places">
+      <div class="explorer-controls">
+        <select id="region-select" aria-label="Choose a region"></select>
+        <button id="browse" aria-label="Browse places" title="Browse places" aria-expanded="false" aria-controls="index"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h1M4 12h1M4 18h1"/></svg></button>
       </div>
-      <aside><nav id="regions" aria-label="Regions"></nav><div id="index"></div></aside>
+      <div id="index" aria-label="Place index" hidden></div>
     </section>
-    <div class="map-caption"><p id="selection" aria-live="polite">A few places, so far.</p><p class="legend"><span></span> More than a visit</p></div>
-    <noscript><p>This map needs JavaScript. Places so far: South Korea (Seoul), China (Beijing, Shanghai, Shenzhen, Taizhou in Zhejiang), Hong Kong, Indonesia (Bali), Japan, Singapore, Taiwan; Austria, Germany, Ireland, Portugal (Porto), Switzerland, the United Kingdom (Northern Ireland); Canada, Mexico, and the United States (Madison, Wisconsin; Minnesota; New York; San Francisco; Seattle).</p></noscript>
-    <footer>Geography from <a href="https://www.naturalearthdata.com/downloads/50m-physical-vectors/">Natural Earth</a>. Still filling in the details.</footer>
+    <div class="map-controls map-overlay" aria-label="Map controls">
+      <button id="reset" aria-label="Reset globe" title="Reset globe"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><ellipse cx="12" cy="12" rx="3.5" ry="8"/><path d="M4 12h16"/></svg></button>
+      <button id="zoom-in" aria-label="Zoom in" title="Zoom in">+</button>
+      <button id="zoom-out" aria-label="Zoom out" title="Zoom out">−</button>
+    </div>
+    <div class="map-caption map-overlay">
+      <p id="selection" aria-live="polite"></p>
+    </div>
+    <div class="map-meta map-overlay">
+      <a href="https://www.naturalearthdata.com/">Natural Earth</a>
+    </div>
+    <noscript><p class="fallback">This globe needs JavaScript. Places so far: South Korea (Seoul), China (Beijing, Shanghai, Shenzhen, Taizhou in Zhejiang), Hong Kong, Indonesia (Bali), Japan, Singapore, Taiwan; Austria, Germany, Ireland, Portugal (Porto), Switzerland, the United Kingdom (Northern Ireland); Canada, Mexico, and the United States (Madison, Wisconsin; Minnesota; New York; San Francisco; Seattle).</p></noscript>
   </main>
 </body>
 </html>
