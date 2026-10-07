@@ -8,7 +8,7 @@ window.travelPlaces = [
             { id: 'morocco', name: 'Morocco', mapId: '504', center: [-6.5, 31.8], places: [
                 { id: 'marrakesh', name: 'Marrakesh', coordinates: [-7.9811, 31.6295] },
                 { id: 'fez', name: 'Fez', coordinates: [-5.0078, 34.0181] },
-                { id: 'merzouga', name: 'Merzouga', context: 'Sahara', coordinates: [-3.9762, 31.0802] }
+                { id: 'merzouga', name: 'Merzouga', context: 'Sahara', coordinates: [-3.9762, 31.0802], kind: 'desert' }
             ] }
         ]
     },

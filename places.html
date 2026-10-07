@@ -10,11 +10,11 @@
   <script src="theme.js"></script>
   <link rel="stylesheet" href="places.css">
   <script src="places-data.js" defer></script>
-  <script src="assets/vendor/d3-7.9.0.min.js" defer></script>
-  <script src="assets/vendor/topojson-client-3.1.0.min.js" defer></script>
+  <link rel="stylesheet" href="assets/vendor/maplibre-gl-5.24.0.css">
+  <script src="assets/vendor/maplibre-gl-5.24.0.js" defer></script>
   <script src="places.js" defer></script>
 </head>
-<body>
+<body class="ink">
   <header class="site-header map-overlay">
     <div class="header-line">
       <h1><a href="index.html">Aaron Zhu</a></h1>
@@ -29,9 +29,7 @@
   </header>
   <main class="atlas" aria-label="Interactive travel globe">
     <div class="map-stage">
-      <canvas id="map" tabindex="0" aria-label="Travel globe. Drag to rotate, scroll or pinch to zoom. Use arrow keys to rotate, plus and minus to zoom, and Home to reset. Select places using the region and place buttons."></canvas>
-      <canvas id="map-details" aria-hidden="true"></canvas>
-      <div id="labels" aria-label="Places on the globe"></div>
+      <div id="map"></div>
       <p id="loading" role="status">Loading…</p>
     </div>
     <section class="explorer map-overlay" aria-label="Explore places">
@@ -45,13 +43,12 @@
       <button id="reset" aria-label="Reset globe" title="Reset globe"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><ellipse cx="12" cy="12" rx="3.5" ry="8"/><path d="M4 12h16"/></svg></button>
       <button id="zoom-in" aria-label="Zoom in" title="Zoom in">+</button>
       <button id="zoom-out" aria-label="Zoom out" title="Zoom out">−</button>
-      <button id="ink" aria-label="Ink style" title="Ink style" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19l3.5-1 9-9a1.8 1.8 0 0 0-2.5-2.5l-9 9z"/><path d="M14 8l2.5 2.5M5 19h14"/></svg></button>
     </div>
     <div class="map-caption map-overlay">
       <p id="selection" aria-live="polite"></p>
     </div>
     <div class="map-meta map-overlay">
-      <a href="https://www.naturalearthdata.com/">Natural Earth</a>
+      <a href="https://openfreemap.org">OpenFreeMap</a> <a href="https://www.openmaptiles.org/">© OpenMapTiles</a> <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a> <a href="https://github.com/tilezen/joerd/blob/master/docs/attribution.md">Terrain: Mapzen/AWS</a> <a href="https://www.naturalearthdata.com/">Natural Earth</a>
     </div>
     <noscript><p class="fallback">This globe needs JavaScript. Places so far: Morocco (Marrakesh, Fez, the Sahara at Merzouga); South Korea (Seoul), China (Beijing, Shanghai, Shenzhen, Taizhou in Zhejiang), Hong Kong, Indonesia (Bali), Japan, Singapore, Taiwan; Austria, Denmark (Copenhagen), Germany, Ireland, Portugal (Porto), Spain (Barcelona, Madrid), Switzerland, the United Kingdom (Northern Ireland); Canada, Mexico, and the United States (Madison, Wisconsin; Minnesota; New York; San Francisco; Seattle).</p></noscript>
   </main>
