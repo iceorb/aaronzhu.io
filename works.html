@@ -121,16 +121,21 @@
             display: flex;
             align-items: baseline;
             gap: 12px;
-            font-family: var(--font-mono);
-            font-size: 12px;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
+            font-family: var(--font-main);
+            font-size: 13px;
+            font-weight: 500;
             color: var(--color-muted);
-            margin: 56px 0 14px;
+            margin: 48px 0 8px;
         }
 
         .ledger-head:first-of-type {
             margin-top: 0;
+        }
+
+        /* Reads-style rows: no dotted leaders between title and note. */
+        .ledger-head .leader,
+        .ledger-row .leader {
+            display: none;
         }
 
         .leader {
@@ -145,7 +150,7 @@
             display: flex;
             align-items: baseline;
             gap: 12px;
-            padding: 9px 0;
+            padding: 6px 0;
         }
 
         .ledger-date {
@@ -157,24 +162,25 @@
         }
 
         .ledger-title {
-            font-family: var(--font-main);
-            font-weight: 500;
-            font-size: 16px;
+            font-family: var(--font-serif);
+            font-size: 18px;
+            line-height: 1.4;
             color: var(--color-text);
             text-decoration: none;
         }
 
         a.ledger-title:hover {
             text-decoration: underline;
-            text-underline-offset: 3px;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 4px;
         }
 
         .ledger-note {
-            font-family: var(--font-serif);
-            font-style: italic;
-            font-size: 14.5px;
+            font-family: var(--font-main);
+            font-size: 14px;
             color: var(--color-muted);
             flex: none;
+            margin-left: auto;
             text-align: right;
             max-width: 46%;
         }
