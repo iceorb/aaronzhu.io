@@ -116,58 +116,32 @@
             margin: 0 4px;
         }
 
-        .reading-section {
-            margin-bottom: 40px;
-        }
-
-        .reading-section h2 {
-            font-family: var(--font-main);
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--color-muted);
-            margin-bottom: 12px;
-        }
-
-        .reading-list {
+        .reads {
             list-style: none;
         }
 
-        .read-link {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) auto;
-            align-items: baseline;
-            gap: 4px 24px;
-            min-height: 44px;
-            padding: 9px 0;
+        .reads li {
+            padding: 6px 0;
+        }
+
+        .reads a {
+            color: var(--color-text);
             text-decoration: none;
         }
 
-        .read-title {
-            font-family: var(--font-serif);
-            font-size: 18px;
-            line-height: 1.4;
-            color: var(--color-text);
-            overflow-wrap: anywhere;
-        }
-
-        .read-author {
-            font-family: var(--font-main);
-            font-size: 14px;
-            line-height: 1.5;
-            color: var(--color-muted);
-        }
-
-        .read-link:hover .read-title,
-        .read-link:focus-visible .read-title {
+        .reads a:hover,
+        .reads a:focus-visible {
             text-decoration: underline;
             text-decoration-thickness: 1px;
             text-underline-offset: 4px;
         }
 
-        .read-link:focus-visible {
-            outline: 2px solid var(--color-link);
-            outline-offset: 4px;
-            border-radius: 2px;
+        .reads .author {
+            font-family: var(--font-main);
+            font-size: 14px;
+            color: var(--color-muted);
+            margin-left: 8px;
+            white-space: nowrap;
         }
 
         footer {
@@ -201,24 +175,6 @@
         @media (max-width: 620px) {
             .container {
                 padding: 48px 24px 80px;
-            }
-
-            .read-link {
-                grid-template-columns: 1fr;
-                gap: 2px;
-                padding: 10px 0;
-            }
-
-            .read-title {
-                font-size: 17px;
-            }
-
-            .read-author {
-                font-size: 13px;
-            }
-
-            .reading-section {
-                margin-bottom: 32px;
             }
 
             body {
@@ -271,101 +227,22 @@
         </header>
 
         <main>
-            <section class="reading-section" aria-labelledby="ai-alignment">
-                <h2 id="ai-alignment">AI & Alignment</h2>
-                <ul class="reading-list">
-                    <li>
-                        <a class="read-link" href="https://www.anthropic.com/research/agentic-misalignment">
-                            <span class="read-title">Agentic Misalignment</span>
-                            <span class="read-author">Lynch et al.</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="read-link" href="https://blog.tilderesearch.com/blog/sparse-attn">
-                            <span class="read-title">Sparsity is Cool</span>
-                            <span class="read-author">Dhruv Pai et al.</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="read-link" href="#">
-                            <span class="read-title">DRL from Human Preferences</span>
-                            <span class="read-author">Christiano et al.</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="read-link" href="https://fleuret.org/public/lbdl.pdf">
-                            <span class="read-title">The Little Book of Deep Learning</span>
-                            <span class="read-author">François Fleuret</span>
-                        </a>
-                    </li>
-                </ul>
-            </section>
-
-            <section class="reading-section" aria-labelledby="on-living">
-                <h2 id="on-living">On Living</h2>
-                <ul class="reading-list">
-                    <li>
-                        <a class="read-link" href="https://www.themarginalian.org/2016/05/05/either-or-kierkegaard/">
-                            <span class="read-title">do it, or do not; you will regret both</span>
-                            <span class="read-author">Søren Kierkegaard</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="read-link" href="https://www.youtube.com/watch?v=nxpITF8fswE">
-                            <span class="read-title">We Are Here On Earth To Fart Around</span>
-                            <span class="read-author">Kurt Vonnegut</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="read-link" href="https://en.wikipedia.org/wiki/Profession_(novella)">
-                            <span class="read-title">Profession</span>
-                            <span class="read-author">Isaac Asimov</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="read-link" href="https://www.goodreads.com/book/show/44175374-exhalation">
-                            <span class="read-title">Exhalation</span>
-                            <span class="read-author">Ted Chiang</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="read-link" href="https://www.goodreads.com/en/book/show/905.The_Inner_Game_of_Tennis">
-                            <span class="read-title">The Inner Game of Tennis</span>
-                            <span class="read-author">W. Timothy Gallwey</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="read-link" href="https://www.youtube.com/watch?v=y56WxOQAzoA&t=194s">
-                            <span class="read-title">How to Train Your Brain to Crave Doing Hard Things</span>
-                            <span class="read-author">Izzy Sealey</span>
-                        </a>
-                    </li>
-                </ul>
-            </section>
-
-            <section class="reading-section" aria-labelledby="society-economics">
-                <h2 id="society-economics">Society & Economics</h2>
-                <ul class="reading-list">
-                    <li>
-                        <a class="read-link" href="https://www.goodreads.com/book/show/219561103-inheritocracy">
-                            <span class="read-title">Inheritocracy</span>
-                            <span class="read-author">Eliza Filby</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="read-link" href="https://digitaltinz.substack.com/p/no-original-thoughts-club">
-                            <span class="read-title">no original thoughts club</span>
-                            <span class="read-author">Tina Zhang</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="read-link" href="#">
-                            <span class="read-title">Thinking, Fast and Slow</span>
-                            <span class="read-author">Daniel Kahneman</span>
-                        </a>
-                    </li>
-                </ul>
-            </section>
+            <ul class="reads">
+                <li><a href="https://www.anthropic.com/research/agentic-misalignment">Agentic Misalignment</a><span class="author">Lynch et al.</span></li>
+                <li><a href="https://blog.tilderesearch.com/blog/sparse-attn">Sparsity is Cool</a><span class="author">Dhruv Pai et al.</span></li>
+                <li>DRL from Human Preferences<span class="author">Christiano et al.</span></li>
+                <li><a href="https://fleuret.org/public/lbdl.pdf">The Little Book of Deep Learning</a><span class="author">François Fleuret</span></li>
+                <li><a href="https://www.themarginalian.org/2016/05/05/either-or-kierkegaard/">do it, or do not; you will regret both</a><span class="author">Søren Kierkegaard</span></li>
+                <li><a href="https://www.youtube.com/watch?v=nxpITF8fswE">We Are Here On Earth To Fart Around</a><span class="author">Kurt Vonnegut</span></li>
+                <li><a href="https://en.wikipedia.org/wiki/Profession_(novella)">Profession</a><span class="author">Isaac Asimov</span></li>
+                <li><a href="https://www.goodreads.com/book/show/44175374-exhalation">Exhalation</a><span class="author">Ted Chiang</span></li>
+                <li><a href="https://www.goodreads.com/en/book/show/905.The_Inner_Game_of_Tennis">The Inner Game of Tennis</a><span class="author">W. Timothy Gallwey</span></li>
+                <li><a href="https://www.youtube.com/watch?v=y56WxOQAzoA&amp;t=194s">How to Train Your Brain to Crave Doing Hard Things</a><span class="author">Izzy Sealey</span></li>
+                <li><a href="https://musings.suryamidha.com/san-francisco">san francisco</a><span class="author">Surya Midha</span></li>
+                <li><a href="https://www.goodreads.com/book/show/219561103-inheritocracy">Inheritocracy</a><span class="author">Eliza Filby</span></li>
+                <li><a href="https://digitaltinz.substack.com/p/no-original-thoughts-club">no original thoughts club</a><span class="author">Tina Zhang</span></li>
+                <li>Thinking, Fast and Slow<span class="author">Daniel Kahneman</span></li>
+            </ul>
         </main>
 
         <footer>
