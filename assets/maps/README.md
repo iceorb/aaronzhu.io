@@ -9,7 +9,7 @@ State, region, island, and desert pins represent those areas, not a particular c
 and get a wider camera than a city.
 
 The page is a MapLibre GL JS globe that turns into a street-level 3D map.
-Selecting a city flies down to about zoom 15 with the camera tilted, so terrain
+Selecting a city flies down to about zoom 14 with the camera tilted, so terrain
 and extruded buildings are visible; countries and regions frame themselves from
 just above. `places.html#place=<id>` opens with a place selected. Drag to move,
 right-drag or two-finger drag to tilt and turn, scroll or pinch to zoom. Keyboard

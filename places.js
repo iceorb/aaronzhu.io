@@ -12,6 +12,8 @@
     : [{ ...country, coordinates: country.center, country, region: country.region }]);
   const visited = new Set(countries.map(country => +country.mapId));
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  // With nothing selected, the caption says what the map is.
+  const overview = () => currentRegion ? `Places I've been in ${currentRegion.name}` : "Places I've been";
   let currentRegion = null, selected = null, outlines = [];
 
   const ink = '#e6dfcf', paper = '#121212';
@@ -89,11 +91,11 @@
       { ...roads(['motorway'], .42, [5, .4, 18, 9]), id: 'motorways', minzoom: 5 },
       { ...roads(['rail', 'transit'], .25, [10, .3, 18, 1.5]), id: 'rail', minzoom: 10,
         paint: { 'line-color': alpha(.25), 'line-width': byZoom(10, .3, 18, 1.5), 'line-dasharray': [3, 3] } },
-      { id: 'buildings', type: 'fill-extrusion', source: 'streets', 'source-layer': 'building', minzoom: 13.5,
+      { id: 'buildings', type: 'fill-extrusion', source: 'streets', 'source-layer': 'building', minzoom: 13,
         filter: ['!=', ['get', 'hide_3d'], true],
         paint: {
           'fill-extrusion-color': ['interpolate', ['linear'], ['get', 'render_height'], 0, '#23221f', 40, '#312e29', 150, '#423e37', 400, '#5a544a'],
-          'fill-extrusion-height': ['interpolate', ['linear'], ['zoom'], 13.5, 0, 14.5, ['get', 'render_height']],
+          'fill-extrusion-height': ['interpolate', ['linear'], ['zoom'], 13, 0, 13.6, ['get', 'render_height']],
           'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0],
           'fill-extrusion-opacity': .9, 'fill-extrusion-vertical-gradient': true
         } },
@@ -127,8 +129,14 @@
     const size = Math.min(innerWidth, innerHeight);
     return { center: [-25, 24], zoom: Math.log2(.36 * size * 2 * Math.PI / 512), pitch: 0, bearing: 0 };
   };
+  const cityCamera = (target) => {
+    const close = { state: 7, region: 8, island: 10, desert: 12.4 }[target.kind];
+    return { center: target.coordinates, zoom: close || 14.3, pitch: close ? (target.kind === 'desert' ? 68 : 40) : 62, bearing: close ? 0 : -24 };
+  };
+  // The page opens on the streets of New York unless a link names another place.
+  const start = points.find(place => '#place=' + place.id === location.hash) || points.find(place => place.id === 'new-york');
   const map = new maplibregl.Map({
-    container: 'map', style, ...home(), attributionControl: false, maxPitch: 75,
+    container: 'map', style, ...(start ? cityCamera(start) : home()), attributionControl: false, maxPitch: 75,
     canvasContextAttributes: { antialias: true }
   });
   map.getCanvas().setAttribute('aria-label', 'Travel map. Drag to move, right-drag or two-finger drag to tilt, scroll or pinch to zoom. Arrow keys move, plus and minus zoom, Home resets.');
@@ -160,10 +168,7 @@
   function focus(target) {
     if (!target) return move(home());
     const city = target.coordinates && (!target.mapId || target.tiny);
-    if (city) {
-      const close = { state: 7, region: 8, island: 10, desert: 12.4 }[target.kind];
-      return move({ center: target.coordinates, zoom: close || 15.3, pitch: close ? (target.kind === 'desert' ? 68 : 40) : 62, bearing: close ? 0 : -24 });
-    }
+    if (city) return move(cityCamera(target));
     const bounds = boundsOf(target);
     if (!bounds) return move({ center: target.center, zoom: 3.4, pitch: 0, bearing: 0 });
     const camera = map.cameraForBounds(bounds, { padding: padding(), maxZoom: 8 });
@@ -223,7 +228,7 @@
   function reset() {
     selected = currentRegion = null;
     regionSelect.value = '';
-    caption.textContent = '';
+    caption.textContent = overview();
     history.replaceState(null, '', location.pathname + location.search);
     updateIndex();
     highlight();
@@ -239,7 +244,7 @@
   regionSelect.addEventListener('change', () => {
     currentRegion = regions.find(region => region.id === regionSelect.value) || null;
     selected = null;
-    caption.textContent = '';
+    caption.textContent = overview();
     updateIndex();
     setBrowseOpen(false);
     highlight();
@@ -258,12 +263,62 @@
   });
   document.querySelector('#zoom-in').onclick = () => map.zoomIn();
   document.querySelector('#zoom-out').onclick = () => map.zoomOut();
-  document.querySelector('#reset').onclick = reset;
+
+  // A small globe in the corner shows where the map is looking; pressing it zooms out to the world.
+  const globe = document.querySelector('#globe'), sketch = globe.querySelector('canvas').getContext('2d');
+  const radians = Math.PI / 180;
+  let sketchFrame = 0;
+  function drawGlobe() {
+    sketchFrame = 0;
+    // The inset is redundant once the map itself is a globe.
+    globe.hidden = map.getZoom() < 3.5;
+    if (globe.hidden) return;
+    const size = globe.clientWidth, ratio = devicePixelRatio || 1, r = size / 2 - 1.5;
+    sketch.canvas.width = sketch.canvas.height = size * ratio;
+    sketch.setTransform(ratio, 0, 0, ratio, 0, 0);
+    const { lng, lat } = map.getCenter(), lon0 = lng * radians, lat0 = lat * radians;
+    // Orthographic projection centred on the map; null for the far side.
+    const project = ([lon, la]) => {
+      const l = lon * radians - lon0, p = la * radians;
+      if (Math.sin(lat0) * Math.sin(p) + Math.cos(lat0) * Math.cos(p) * Math.cos(l) < 0) return null;
+      return [size / 2 + r * Math.cos(p) * Math.sin(l), size / 2 - r * (Math.cos(lat0) * Math.sin(p) - Math.sin(lat0) * Math.cos(p) * Math.cos(l))];
+    };
+    const trace = (coordinates, step = 1) => {
+      let drawing = false;
+      for (let i = 0; i < coordinates.length; i += step) {
+        const point = project(coordinates[i]);
+        if (!point) { drawing = false; continue; }
+        drawing ? sketch.lineTo(...point) : sketch.moveTo(...point);
+        drawing = true;
+      }
+    };
+    sketch.lineWidth = .6; sketch.strokeStyle = alpha(.16); sketch.beginPath();
+    for (let lon = -180; lon < 180; lon += 30) trace(Array.from({ length: 37 }, (_, i) => [lon, i * 5 - 90]));
+    for (let la = -60; la <= 60; la += 30) trace(Array.from({ length: 73 }, (_, i) => [i * 5 - 180, la]));
+    sketch.stroke();
+    sketch.strokeStyle = alpha(.55); sketch.beginPath();
+    for (const outline of outlines) {
+      const polygons = outline.geometry.type === 'Polygon' ? [outline.geometry.coordinates] : outline.geometry.coordinates;
+      for (const [ring] of polygons) if (ring.length > 40) trace(ring, Math.ceil(ring.length / 80));
+    }
+    sketch.stroke();
+    sketch.fillStyle = alpha(.8);
+    for (const place of points) {
+      const point = project(place.coordinates);
+      if (point) { sketch.beginPath(); sketch.arc(...point, 1.1, 0, Math.PI * 2); sketch.fill(); }
+    }
+    sketch.lineWidth = 1; sketch.strokeStyle = ink;
+    sketch.beginPath(); sketch.arc(size / 2, size / 2, r, 0, Math.PI * 2); sketch.stroke();
+    sketch.beginPath(); sketch.arc(size / 2, size / 2, 4, 0, Math.PI * 2); sketch.stroke();
+  }
+  map.on('move', () => { sketchFrame ||= requestAnimationFrame(drawGlobe); });
+  globe.onclick = reset;
 
   map.on('load', () => {
     loading.hidden = true;
+    drawGlobe();
     updateIndex();
-    const linked = points.concat(countries).find(place => '#place=' + place.id === location.hash);
+    const linked = points.concat(countries).find(place => '#place=' + place.id === location.hash) || start;
     if (linked) choose(linked);
   });
   map.on('click', event => {

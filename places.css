@@ -36,6 +36,10 @@ button:focus-visible,select:focus-visible,a:focus-visible,canvas:focus-visible{o
 .map-controls{position:absolute;z-index:3;right:32px;bottom:40px;display:flex;align-items:center;gap:4px}
 .map-controls button{display:grid;place-items:center;width:40px;height:44px;border:0;background:none;color:var(--color-muted,#8a8a8a);font:22px/1 var(--font-main);transition:color .2s}
 .map-controls button:hover{color:var(--color-text,#e0e0e0)}
+#globe{position:absolute;z-index:3;right:40px;bottom:100px;display:grid;justify-items:center;gap:6px;width:96px;border:0;background:none;font:12px var(--font-main);color:var(--color-muted,#8a8a8a);transition:color .2s}
+#globe canvas{width:96px;height:96px;opacity:.85;transition:opacity .2s}
+#globe:hover{color:var(--color-text,#e0e0e0)}
+#globe:hover canvas{opacity:1}
 /* Soft scrims keep the header and caption legible over street-level detail. */
 .map-stage::before,.map-stage::after{content:'';position:absolute;left:0;right:0;z-index:1;pointer-events:none}
 .map-stage::before{top:0;height:240px;background:linear-gradient(#121212e6,#12121200)}
@@ -57,6 +61,8 @@ button:focus-visible,select:focus-visible,a:focus-visible,canvas:focus-visible{o
   #region-select{font-size:16px}
   #index{width:min(280px,calc(100vw - 48px));max-height:calc(100dvh - 285px - env(safe-area-inset-bottom))}
   .map-controls{right:20px;bottom:calc(96px + env(safe-area-inset-bottom))}
+  #globe{right:24px;bottom:calc(150px + env(safe-area-inset-bottom));width:64px}
+  #globe canvas{width:64px;height:64px}
   .map-caption{left:24px;bottom:calc(158px + env(safe-area-inset-bottom));max-width:calc(100% - 48px)}
   .map-meta{bottom:calc(80px + env(safe-area-inset-bottom));font-size:8px}
   body .nav-links a{display:inline-flex;align-items:center;min-height:24px}

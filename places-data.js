@@ -58,8 +58,16 @@ window.travelPlaces = [
     {
         id: 'north-america', name: 'North America', bounds: [[-140, 12], [-50, 65]],
         places: [
-            { id: 'canada', name: 'Canada', mapId: '124', center: [-106, 57] },
-            { id: 'mexico', name: 'Mexico', mapId: '484', center: [-102, 24] },
+            { id: 'canada', name: 'Canada', mapId: '124', center: [-106, 57], places: [
+                { id: 'toronto', name: 'Toronto', context: 'Ontario', coordinates: [-79.3832, 43.6532] },
+                { id: 'winnipeg', name: 'Winnipeg', context: 'Manitoba', coordinates: [-97.1384, 49.8951] },
+                { id: 'vancouver', name: 'Vancouver', context: 'British Columbia', coordinates: [-123.1207, 49.2827] },
+                { id: 'whistler', name: 'Whistler', context: 'British Columbia', coordinates: [-122.9574, 50.1163] }
+            ] },
+            { id: 'mexico', name: 'Mexico', mapId: '484', center: [-102, 24], places: [
+                { id: 'puerto-vallarta', name: 'Puerto Vallarta', coordinates: [-105.2253, 20.6534] },
+                { id: 'cancun', name: 'Cancún', coordinates: [-86.8515, 21.1619] }
+            ] },
             { id: 'united-states', name: 'United States', mapId: '840', center: [-99, 39], bounds: [[-126, 24], [-66, 50]], places: [
                 { id: 'madison', name: 'Madison', context: 'Wisconsin', coordinates: [-89.4012, 43.0731], familiar: true },
                 { id: 'minnesota', name: 'Minnesota', coordinates: [-94.6859, 46.7296], kind: 'state', familiar: true },
