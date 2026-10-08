@@ -175,29 +175,33 @@
     move({ ...camera, pitch: 25, bearing: 0 });
   }
 
+  // Set like a book index: each country on one line, its cities beside it.
   function updateIndex() {
     placeIndex.replaceChildren();
-    for (const country of currentRegion ? countries.filter(c => c.region.id === currentRegion.id) : countries) {
-      const group = document.createElement('div');
-      const item = button(country.name, () => choose(country));
-      item.setAttribute('aria-pressed', String((selected?.country?.id || selected?.id) === country.id));
-      group.append(item);
-      if (selected?.id === country.id || selected?.country?.id === country.id) {
-        const cities = document.createElement('div');
-        cities.className = 'cities';
-        for (const place of points.filter(point => point.country.id === country.id && point.id !== country.id)) {
-          const city = button(place.name, () => choose(place));
-          city.setAttribute('aria-pressed', String(selected?.id === place.id));
-          if (place.context) {
-            const note = document.createElement('small');
-            note.textContent = place.context;
-            city.append(note);
-          }
-          cities.append(city);
-        }
-        group.append(cities);
+    for (const region of currentRegion ? [currentRegion] : regions) {
+      if (!currentRegion) {
+        const heading = document.createElement('h3');
+        heading.textContent = region.name;
+        placeIndex.append(heading);
       }
-      placeIndex.append(group);
+      for (const country of countries.filter(c => c.region.id === region.id)) {
+        const row = document.createElement('p');
+        const item = button(country.name, () => choose(country));
+        item.setAttribute('aria-pressed', String(selected?.id === country.id));
+        row.append(item);
+        const cities = points.filter(point => point.country.id === country.id && point.id !== country.id);
+        if (cities.length) {
+          const list = document.createElement('span');
+          list.className = 'cities';
+          cities.forEach((place, i) => {
+            const city = button(place.name, () => choose(place));
+            city.setAttribute('aria-pressed', String(selected?.id === place.id));
+            list.append(...(i ? [', ', city] : [city]));
+          });
+          row.append(list);
+        }
+        placeIndex.append(row);
+      }
     }
   }
   function setBrowseOpen(open) {
