@@ -41,7 +41,11 @@ window.travelPlaces = [
                 { id: 'copenhagen', name: 'Copenhagen', coordinates: [12.5683, 55.6761] }
             ] },
             { id: 'germany', name: 'Germany', mapId: '276', center: [10.4, 51] },
-            { id: 'ireland', name: 'Ireland', mapId: '372', center: [-8, 53.3] },
+            { id: 'ireland', name: 'Ireland', mapId: '372', center: [-8, 53.3], places: [
+                { id: 'dublin', name: 'Dublin', coordinates: [-6.2603, 53.3498] },
+                { id: 'galway', name: 'Galway', coordinates: [-9.0568, 53.2707] },
+                { id: 'aran-islands', name: 'Aran Islands', coordinates: [-9.6667, 53.1167], kind: 'island' }
+            ] },
             { id: 'portugal', name: 'Portugal', mapId: '620', center: [-8.2, 39.5], bounds: [[-10, 36.5], [-5.5, 42.5]], places: [
                 { id: 'porto', name: 'Porto', coordinates: [-8.6291, 41.1579] }
             ] },
@@ -51,7 +55,7 @@ window.travelPlaces = [
             ] },
             { id: 'switzerland', name: 'Switzerland', mapId: '756', center: [8.2, 46.8] },
             { id: 'united-kingdom', name: 'United Kingdom', mapId: '826', center: [-2.5, 54.5], places: [
-                { id: 'northern-ireland', name: 'Northern Ireland', coordinates: [-6.7, 54.7], kind: 'region' }
+                { id: 'belfast', name: 'Belfast', context: 'Northern Ireland', coordinates: [-5.9301, 54.5973] }
             ] }
         ]
     },
