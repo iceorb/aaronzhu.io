@@ -30,9 +30,11 @@ The page fetches third-party tiles at runtime, with no API keys or accounts:
 These attributions are linked in the page's bottom corner. Those hosts see the
 visitor's IP address and the tiles they view.
 
-`visited-countries-10m.json` contains the 19 visited countries/territories from
+`visited-countries-10m.json` contains the 20 visited countries/territories from
 Natural Earth v5.1.2 `ne_10m_admin_0_countries.geojson`, with coordinates rounded
-to four decimals and only names and numeric country IDs retained. It draws the
+to four decimals and only names and numeric country IDs retained.
+France keeps only metropolitan France and Corsica; its source ISO_N3 is -99, so
+its ID comes from ISO_N3_EH (250). It draws the
 visited-country tint and outline, and frames a country when one is selected.
 https://github.com/nvkelso/natural-earth-vector/blob/v5.1.2/geojson/ne_10m_admin_0_countries.geojson
 https://www.naturalearthdata.com/about/terms-of-use/

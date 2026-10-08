@@ -40,6 +40,9 @@ window.travelPlaces = [
             { id: 'denmark', name: 'Denmark', mapId: '208', center: [10, 56], places: [
                 { id: 'copenhagen', name: 'Copenhagen', coordinates: [12.5683, 55.6761] }
             ] },
+            { id: 'france', name: 'France', mapId: '250', center: [2.5, 46.6], places: [
+                { id: 'paris', name: 'Paris', coordinates: [2.3522, 48.8566], familiar: true }
+            ] },
             { id: 'germany', name: 'Germany', mapId: '276', center: [10.4, 51] },
             { id: 'ireland', name: 'Ireland', mapId: '372', center: [-8, 53.3], places: [
                 { id: 'dublin', name: 'Dublin', coordinates: [-6.2603, 53.3498] },
