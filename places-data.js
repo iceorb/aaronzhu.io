@@ -25,7 +25,13 @@ window.travelPlaces = [
             { id: 'indonesia', name: 'Indonesia', mapId: '360', center: [118, -3], places: [
                 { id: 'bali', name: 'Bali', coordinates: [115.1889, -8.4095], kind: 'island' }
             ] },
-            { id: 'japan', name: 'Japan', mapId: '392', center: [138, 37] },
+            { id: 'japan', name: 'Japan', mapId: '392', center: [138, 37], places: [
+                { id: 'tokyo', name: 'Tokyo', coordinates: [139.6917, 35.6895] },
+                { id: 'osaka', name: 'Osaka', coordinates: [135.5023, 34.6937] },
+                { id: 'sapporo', name: 'Sapporo', context: 'Hokkaido', coordinates: [141.3545, 43.0618] },
+                { id: 'rusutsu', name: 'Rusutsu', context: 'Hokkaido', coordinates: [140.8986, 42.7481] },
+                { id: 'niseko', name: 'Niseko', context: 'Hokkaido', coordinates: [140.6874, 42.8048] }
+            ] },
             { id: 'singapore', name: 'Singapore', mapId: '702', center: [103.8198, 1.3521], tiny: true },
             { id: 'south-korea', name: 'South Korea', mapId: '410', center: [127.8, 36.4], places: [
                 { id: 'seoul', name: 'Seoul', coordinates: [126.978, 37.5665], familiar: true }
@@ -43,7 +49,11 @@ window.travelPlaces = [
             { id: 'france', name: 'France', mapId: '250', center: [2.5, 46.6], places: [
                 { id: 'paris', name: 'Paris', coordinates: [2.3522, 48.8566], familiar: true }
             ] },
-            { id: 'germany', name: 'Germany', mapId: '276', center: [10.4, 51] },
+            { id: 'germany', name: 'Germany', mapId: '276', center: [10.4, 51], places: [
+                { id: 'frankfurt', name: 'Frankfurt', coordinates: [8.6821, 50.1109] },
+                { id: 'munich', name: 'Munich', coordinates: [11.582, 48.1351] },
+                { id: 'neuschwanstein', name: 'Neuschwanstein', context: 'Bavaria', coordinates: [10.7498, 47.5576] }
+            ] },
             { id: 'ireland', name: 'Ireland', mapId: '372', center: [-8, 53.3], places: [
                 { id: 'dublin', name: 'Dublin', coordinates: [-6.2603, 53.3498] },
                 { id: 'galway', name: 'Galway', coordinates: [-9.0568, 53.2707] },
@@ -56,7 +66,9 @@ window.travelPlaces = [
                 { id: 'barcelona', name: 'Barcelona', coordinates: [2.1734, 41.3851] },
                 { id: 'madrid', name: 'Madrid', coordinates: [-3.7038, 40.4168] }
             ] },
-            { id: 'switzerland', name: 'Switzerland', mapId: '756', center: [8.2, 46.8] },
+            { id: 'switzerland', name: 'Switzerland', mapId: '756', center: [8.2, 46.8], places: [
+                { id: 'lucerne', name: 'Lucerne', coordinates: [8.3093, 47.0502] }
+            ] },
             { id: 'united-kingdom', name: 'United Kingdom', mapId: '826', center: [-2.5, 54.5], places: [
                 { id: 'belfast', name: 'Belfast', context: 'Northern Ireland', coordinates: [-5.9301, 54.5973] }
             ] }
