@@ -16,12 +16,10 @@ https://www.naturalearthdata.com/about/terms-of-use/
 
 The full-viewport globe renders simplified geographic context rather than
 street-level detail. Drag to rotate, scroll or pinch to zoom, or select a region
-to fly there. The list button opens the country and city index. Keyboard controls
+to fly there. The Index button opens the country and city index. Keyboard controls
 are arrow keys, plus/minus, and Home to reset; Escape closes the place index.
-The globe opens in a monochrome ink style: hairline outlines, rivers, and
-graticule, with visited countries hatched. The pen button (or `?style=relief`)
-switches to shaded relief, where familiar places have a pale-blue ring and
-visited countries have a blue fill.
+The globe has one monochrome ink style: hairline outlines, rivers, and
+graticule, with visited countries hatched and familiar places ringed.
 D3 7.9.0 and topojson-client 3.1.0 are vendored in `../vendor` with their licenses.
 There are no map API keys, tracking requests, or runtime CDN dependencies.
 
@@ -40,10 +38,3 @@ Natural Earth v5.1.2 `ne_10m_admin_0_countries.geojson`, with coordinates rounde
 to four decimals and only names and numeric country IDs retained. These finer
 coastlines replace the 50m outlines around visited places on the globe.
 https://github.com/nvkelso/natural-earth-vector/blob/v5.1.2/geojson/ne_10m_admin_0_countries.geojson
-
-`shaded-relief.jpg` is a JPEG conversion (quality 82, original 10800×5400 size)
-of Natural Earth's public-domain `SR_50M.tif`, version 3.2.0, from:
-https://naciscdn.org/naturalearth/50m/raster/SR_50M.zip
-https://www.naturalearthdata.com/downloads/50m-raster-data/50m-shaded-relief/
-The geographic hillshading is a texture of the terrain. The globe still opens if
-this optional image cannot load.

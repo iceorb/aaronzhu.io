@@ -18,19 +18,13 @@
   const camera = { longitude: -25, latitude: 24, zoom: 1 };
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const gl = canvas.getContext('webgl', { alpha: true, antialias: true, premultipliedAlpha: false });
-  let currentRegion = null, selected = null, terrain = true, ready = false;
-  // Ink is the default engraved-atlas treatment; `?style=relief` opens the shaded relief instead.
-  let ink = new URLSearchParams(location.search).get('style') !== 'relief';
-  const inkButton = document.querySelector('#ink');
-  const palettes = {
-    relief: { provinces: '#c7d8f230', selectedFill: '#b7ddff26', selectedStroke: '#dcefffef', active: '#ffffff',
-      familiarRing: '#a8d9ffbb', ring: '#a9bdd8', familiarDot: '#e4f3ff', dot: '#cbd9ee' },
-    ink: { provinces: '#e6dfcf2e', selectedFill: '#e6dfcf14', selectedStroke: '#f1ebdd', active: '#f6f1e6',
-      familiarRing: '#e6dfcfcc', ring: '#e6dfcf88', familiarDot: '#f1ebdd', dot: '#d8d1c1' }
-  };
+  let currentRegion = null, selected = null, ready = false;
+  // One warm off-white on near-black, like an engraved atlas plate.
+  const colors = { provinces: '#e6dfcf2e', selectedFill: '#e6dfcf14', selectedStroke: '#f1ebdd', active: '#f6f1e6',
+    familiarRing: '#e6dfcfcc', ring: '#e6dfcf88', familiarDot: '#f1ebdd', dot: '#d8d1c1' };
   let width = 1, height = 1, ratio = 1, radius = 1, center = [0, 0];
   let animation = 0, frame = 0, features = [], details, blocked = [];
-  let renderGlobe = () => {}, globeTexture = () => null;
+  let renderGlobe = () => {};
   const labelNodes = new Map();
   const wrap = value => ((value + 180) % 360 + 360) % 360 - 180;
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
@@ -213,12 +207,11 @@
     const projection = d3.geoOrthographic().rotate([-camera.longitude, -camera.latitude])
       .translate(center).scale(radius * camera.zoom).clipAngle(90).precision(.4);
     const path = d3.geoPath(projection, context);
-    const colors = palettes[ink ? 'ink' : 'relief'];
     // Vector boundaries remain crisp when looking closer at a country.
     if (camera.zoom > 2) {
       context.beginPath(); path(details.provinces);
-      context.setLineDash(ink ? [2, 3] : []);
-      context.strokeStyle = colors.provinces; context.lineWidth = ink ? .5 : .65; context.stroke();
+      context.setLineDash([2, 3]);
+      context.strokeStyle = colors.provinces; context.lineWidth = .5; context.stroke();
       context.setLineDash([]);
     }
     const selectedFeature = selected && features.find(feature => +feature.id === +(selected.mapId || selected.country?.mapId));
@@ -233,8 +226,8 @@
       const active = selected?.id === place.id;
       context.beginPath(); context.arc(x, y, active ? 11 : place.familiar ? 7 : 3, 0, Math.PI * 2);
       context.strokeStyle = active ? colors.active : place.familiar ? colors.familiarRing : colors.ring;
-      context.lineWidth = ink ? .75 : 1; context.stroke();
-      context.beginPath(); context.arc(x, y, active ? 3.5 : place.familiar ? 3 : ink ? 1.6 : 2, 0, Math.PI * 2);
+      context.lineWidth = .75; context.stroke();
+      context.beginPath(); context.arc(x, y, active ? 3.5 : place.familiar ? 3 : 1.6, 0, Math.PI * 2);
       context.fillStyle = place.familiar || active ? colors.familiarDot : colors.dot; context.fill();
     }
     const occupied = [...blocked, ...projected.map(({ position: [x, y] }) => [x - 8, y - 8, x + 8, y + 8])];
@@ -286,40 +279,7 @@
       }
     }
     features = topojson.feature(topology, topology.objects.countries).features.filter(feature => !visited.has(+feature.id)).concat(fine.features);
-    const terrainImage = new Image();
-    terrainImage.src = 'assets/maps/shaded-relief.jpg';
-    try { await terrainImage.decode(); } catch { terrain = false; }
-
-    function texture(withTerrain) {
-      if (ink) return inkTexture();
-      const surface = document.createElement('canvas');
-      surface.width = Math.min(4096, gl.getParameter(gl.MAX_TEXTURE_SIZE));
-      surface.height = surface.width / 2;
-      const ctx = surface.getContext('2d');
-      const projection = d3.geoEquirectangular().scale(surface.width / (2 * Math.PI)).translate([surface.width / 2, surface.height / 2]);
-      const path = d3.geoPath(projection, ctx);
-      ctx.fillStyle = '#101a2c'; ctx.fillRect(0, 0, surface.width, surface.height);
-      ctx.beginPath(); path(d3.geoGraticule().step([15, 15])());
-      ctx.strokeStyle = '#7396ce24'; ctx.lineWidth = .8; ctx.stroke();
-      for (const feature of features) {
-        const familiar = visited.has(+feature.id);
-        ctx.beginPath(); path(feature);
-        ctx.fillStyle = familiar ? '#678fe0' : '#39465e'; ctx.fill();
-      }
-      if (withTerrain) {
-        ctx.save(); ctx.beginPath(); path({ type: 'FeatureCollection', features }); ctx.clip();
-        ctx.globalCompositeOperation = 'multiply'; ctx.globalAlpha = .22;
-        ctx.drawImage(terrainImage, 0, 0, surface.width, surface.height); ctx.restore();
-      }
-      for (const feature of features) {
-        ctx.beginPath(); path(feature);
-        ctx.strokeStyle = visited.has(+feature.id) ? '#bed9ffa6' : '#a8bfdf52';
-        ctx.lineWidth = visited.has(+feature.id) ? 1.1 : .6; ctx.stroke();
-      }
-      ctx.beginPath(); path(details.lakes); ctx.fillStyle = '#101a2c'; ctx.fill();
-      return upload(surface);
-    }
-    function inkTexture() {
+    function texture() {
       const surface = document.createElement('canvas');
       surface.width = Math.min(4096, gl.getParameter(gl.MAX_TEXTURE_SIZE));
       surface.height = surface.width / 2;
@@ -357,8 +317,7 @@
       gl.generateMipmap(gl.TEXTURE_2D);
       return value;
     }
-    const textures = {};
-    globeTexture = () => textures[ink] ||= texture(terrain);
+    const globeTexture = texture();
     function shader(type, source) {
       const result = gl.createShader(type);
       gl.shaderSource(result, source); gl.compileShader(result);
@@ -373,7 +332,7 @@
     gl.attachShader(program, shader(gl.FRAGMENT_SHADER, `
       precision highp float;
       uniform vec2 u_size, u_center, u_rotation;
-      uniform float u_radius, u_ratio, u_ink;
+      uniform float u_radius, u_ratio;
       uniform sampler2D u_texture;
       const float PI = 3.14159265359;
       void main() {
@@ -382,7 +341,7 @@
         float distance = length(p);
         if (distance > 1.0) {
           float halo = exp(-(distance - 1.0) * 55.0) * 0.22;
-          gl_FragColor = vec4(mix(vec3(0.28, 0.49, 0.95), vec3(0.90, 0.87, 0.81), u_ink), halo * (1.0 - u_ink * 0.6));
+          gl_FragColor = vec4(0.90, 0.87, 0.81, halo * 0.4);
           return;
         }
         float z = sqrt(max(0.0, 1.0 - dot(p, p)));
@@ -393,9 +352,9 @@
         vec3 color = texture2D(u_texture, uv).rgb;
         vec3 normal = vec3(p, z);
         float light = 0.70 + 0.30 * max(dot(normal, normalize(vec3(-0.45, 0.6, 1.2))), 0.0);
-        color *= mix(light, 0.92 + 0.08 * light, u_ink);
+        color *= 0.92 + 0.08 * light;
         float rim = pow(1.0 - z, 4.0);
-        color = mix(color, mix(vec3(0.30, 0.48, 0.78), vec3(0.90, 0.87, 0.81), u_ink), rim * mix(0.36, 0.18, u_ink));
+        color = mix(color, vec3(0.90, 0.87, 0.81), rim * 0.18);
         float edge = 1.0 - smoothstep(1.0 - 1.5 / u_radius, 1.0, distance);
         gl_FragColor = vec4(color, edge);
       }
@@ -407,14 +366,13 @@
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
     const position = gl.getAttribLocation(program, 'a_position');
     gl.enableVertexAttribArray(position); gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-    const uniforms = Object.fromEntries(['size', 'center', 'rotation', 'radius', 'ratio', 'texture', 'ink'].map(name => [name, gl.getUniformLocation(program, 'u_' + name)]));
+    const uniforms = Object.fromEntries(['size', 'center', 'rotation', 'radius', 'ratio', 'texture'].map(name => [name, gl.getUniformLocation(program, 'u_' + name)]));
     renderGlobe = () => {
       gl.viewport(0, 0, canvas.width, canvas.height);
       gl.uniform2f(uniforms.size, width, height); gl.uniform2fv(uniforms.center, center);
       gl.uniform2f(uniforms.rotation, camera.longitude * radians, camera.latitude * radians);
       gl.uniform1f(uniforms.radius, radius * camera.zoom); gl.uniform1f(uniforms.ratio, ratio);
-      gl.uniform1f(uniforms.ink, ink ? 1 : 0);
-      gl.uniform1i(uniforms.texture, 0); gl.bindTexture(gl.TEXTURE_2D, globeTexture());
+      gl.uniform1i(uniforms.texture, 0); gl.bindTexture(gl.TEXTURE_2D, globeTexture);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
     };
     for (const place of points) {
@@ -538,17 +496,6 @@
   document.querySelector('#zoom-in').onclick = () => zoom(1.25);
   document.querySelector('#zoom-out').onclick = () => zoom(.8);
   document.querySelector('#reset').onclick = reset;
-  function setInk(value) {
-    ink = value;
-    document.body.classList.toggle('ink', ink);
-    inkButton.setAttribute('aria-pressed', String(ink));
-    const url = new URL(location.href);
-    if (ink) url.searchParams.delete('style'); else url.searchParams.set('style', 'relief');
-    history.replaceState(null, '', url);
-    scheduleDraw();
-  }
-  setInk(ink);
-  inkButton.onclick = () => setInk(!ink);
   canvas.addEventListener('webglcontextlost', event => {
     event.preventDefault(); ready = false; cancelAnimationFrame(animation);
     loading.hidden = false; loading.textContent = 'Globe paused. Reload to resume.';
