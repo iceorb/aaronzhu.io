@@ -35,3 +35,17 @@ document.documentElement.classList.add('dark');
         }
     });
 })();
+
+// Essays show their read time and length, worked out from the text itself.
+document.addEventListener('DOMContentLoaded', () => {
+    const meta = document.querySelector('.post-meta');
+    const content = document.querySelector('.post-content');
+    if (!meta || !content) return;
+    const words = (content.textContent.match(/\S+/g) || []).length;
+    const minutes = Math.max(1, Math.round(words / 230));
+    const span = text => Object.assign(document.createElement('span'), { textContent: text });
+    const readTime = [...meta.children].find(el => /min read/i.test(el.textContent));
+    if (readTime) readTime.textContent = `${minutes} min read`;
+    else meta.append(span('·'), span(`${minutes} min read`));
+    meta.append(span('·'), span(`${words.toLocaleString('en-US')} words`));
+});
