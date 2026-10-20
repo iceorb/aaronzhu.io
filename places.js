@@ -17,6 +17,28 @@
   let currentRegion = null, selected = null, outlines = [];
 
   const ink = '#e6dfcf', paper = '#121212';
+  const kinds = {
+    mountain: { name: 'Mountains', color: '#d8b283', path: 'M2 13 8 3l6 10H2Zm3.8-6.3L8 8l2.2-1.3' },
+    snowboarding: { name: 'Snowboarding', color: '#96cce5', path: 'M12.8 2.2c1.1 1.1 .5 3 -1 4.5l-5.1 5.1c-1.5 1.5 -3.4 2.1 -4.5 1s-.5-3 1-4.5l5.1-5.1c1.5-1.5 3.4-2.1 4.5-1ZM6 7l3 3M8 5l3 3' }
+  };
+  const isActivity = ['in', ['get', 'kind'], ['literal', Object.keys(kinds)]];
+  const placeColor = fallback => ['match', ['get', 'kind'], 'mountain', kinds.mountain.color, 'snowboarding', kinds.snowboarding.color, fallback];
+  function placeIcon(kind) {
+    const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    icon.setAttribute('viewBox', '0 0 16 16');
+    icon.setAttribute('aria-hidden', 'true');
+    icon.classList.add('place-icon');
+    const path = document.createElementNS(icon.namespaceURI, 'path');
+    path.setAttribute('d', kinds[kind].path);
+    icon.append(path);
+    return icon;
+  }
+  for (const [kind, category] of Object.entries(kinds)) {
+    const item = document.createElement('span');
+    item.className = 'kind-' + kind; item.textContent = category.name;
+    item.prepend(placeIcon(kind));
+    document.querySelector('#place-legend').append(item);
+  }
   const alpha = (value) => ink + Math.round(value * 255).toString(16).padStart(2, '0');
   const byZoom = (...stops) => ['interpolate', ['exponential', 1.5], ['zoom'], ...stops];
   const roads = (classes, opacity, widths) => ({
@@ -39,7 +61,7 @@
   const placeData = {
     type: 'FeatureCollection',
     features: points.map(place => ({ type: 'Feature', geometry: { type: 'Point', coordinates: place.coordinates },
-      properties: { id: place.id, name: place.name, familiar: !!place.familiar } }))
+      properties: { id: place.id, name: place.name, familiar: !!place.familiar, kind: place.kind || 'place' } }))
   };
 
   const style = {
@@ -85,7 +107,7 @@
         paint: { 'line-color': ink, 'line-width': 1.8 } },
       { ...roads(['path', 'track'], .14, [14, .3, 18, 1]), id: 'paths', minzoom: 14,
         paint: { 'line-color': alpha(.14), 'line-width': byZoom(14, .3, 18, 1), 'line-dasharray': [1, 2] } },
-      { ...roads(['minor', 'service'], .22, [12, .2, 18, 5]), id: 'streets', minzoom: 12 },
+      { ...roads(['minor', 'service'], .22, [11, .2, 18, 5]), id: 'streets', minzoom: 11 },
       { ...roads(['secondary', 'tertiary'], .28, [9, .3, 18, 7]), id: 'avenues', minzoom: 8 },
       { ...roads(['primary', 'trunk'], .36, [6, .3, 18, 8]), id: 'arterials', minzoom: 6 },
       { ...roads(['motorway'], .42, [5, .4, 18, 9]), id: 'motorways', minzoom: 5 },
@@ -95,12 +117,12 @@
         filter: ['!=', ['get', 'hide_3d'], true],
         paint: {
           'fill-extrusion-color': ['interpolate', ['linear'], ['get', 'render_height'], 0, '#23221f', 40, '#312e29', 150, '#423e37', 400, '#5a544a'],
-          'fill-extrusion-height': ['interpolate', ['linear'], ['zoom'], 13, 0, 13.6, ['get', 'render_height']],
+          'fill-extrusion-height': ['coalesce', ['get', 'render_height'], 0],
           'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0],
           'fill-extrusion-opacity': .9, 'fill-extrusion-vertical-gradient': true
         } },
       { ...label(byZoom(14, 9, 18, 11), .55, { 'symbol-placement': 'line', 'text-letter-spacing': .08 }),
-        id: 'street-names', 'source-layer': 'transportation_name', minzoom: 15 },
+        id: 'street-names', 'source-layer': 'transportation_name', minzoom: 14 },
       { ...label(11, .45, { 'text-font': ['Noto Sans Italic'], 'text-transform': 'none' }),
         id: 'water-names', 'source-layer': 'water_name' },
       { ...label(byZoom(4, 10, 12, 13), .7), id: 'towns', 'source-layer': 'place', minzoom: 4,
@@ -110,18 +132,20 @@
       { ...label(10, .5, { 'text-letter-spacing': .25 }), id: 'countries', 'source-layer': 'place', minzoom: 2, maxzoom: 6,
         filter: ['==', ['get', 'class'], 'country'] },
       // Places: ink rings, larger and brighter for the ones that were more than a visit.
-      { id: 'place-ring', type: 'circle', source: 'places',
+      { id: 'place-ring', type: 'circle', source: 'places', filter: ['!', isActivity],
         paint: { 'circle-radius': ['case', ['get', 'familiar'], 7, 4], 'circle-color': 'transparent',
           'circle-stroke-color': ['case', ['get', 'familiar'], alpha(.85), alpha(.6)], 'circle-stroke-width': .9 } },
-      { id: 'place-dot', type: 'circle', source: 'places',
+      { id: 'place-dot', type: 'circle', source: 'places', filter: ['!', isActivity],
         paint: { 'circle-radius': ['case', ['get', 'familiar'], 2.6, 1.6], 'circle-color': ink } },
+      { id: 'place-kind', type: 'symbol', source: 'places', filter: isActivity,
+        layout: { 'icon-image': ['get', 'kind'], 'icon-allow-overlap': true, 'icon-ignore-placement': true } },
       { id: 'place-selected', type: 'circle', source: 'places', filter: ['==', ['get', 'id'], ''],
         paint: { 'circle-radius': 11, 'circle-color': 'transparent', 'circle-stroke-color': '#f6f1e6', 'circle-stroke-width': 1.2 } },
       { id: 'place-names', type: 'symbol', source: 'places',
         layout: { 'text-field': ['get', 'name'], 'text-size': 11, 'text-transform': 'uppercase', 'text-letter-spacing': .1,
           'text-font': ['case', ['get', 'familiar'], ['literal', ['Noto Sans Italic']], ['literal', ['Noto Sans Regular']]],
           'text-variable-anchor': ['left', 'right', 'top', 'bottom'], 'text-radial-offset': 1.1, 'text-optional': true },
-        paint: { 'text-color': ['case', ['get', 'familiar'], '#f1ebdd', '#d8d1c1'], 'text-halo-color': paper, 'text-halo-width': 1.5 } }
+        paint: { 'text-color': placeColor(['case', ['get', 'familiar'], '#f1ebdd', '#d8d1c1']), 'text-halo-color': paper, 'text-halo-width': 1.5 } }
     ]
   };
 
@@ -130,8 +154,8 @@
     return { center: [-25, 24], zoom: Math.log2(.36 * size * 2 * Math.PI / 512), pitch: 0, bearing: 0 };
   };
   const cityCamera = (target) => {
-    const close = { state: 7, region: 8, island: 10, desert: 12.4 }[target.kind];
-    return { center: target.coordinates, zoom: close || 14.3, pitch: close ? (target.kind === 'desert' ? 68 : 40) : 62, bearing: close ? 0 : -24 };
+    const close = { state: 7, region: 8, island: 10, desert: 12.4, mountain: 12.4, snowboarding: 12 }[target.kind];
+    return { center: target.coordinates, zoom: close || 14.3, pitch: kinds[target.kind] ? 62 : close ? (target.kind === 'desert' ? 68 : 40) : 62, bearing: close ? 0 : -24 };
   };
   // The page opens on the streets of New York unless a link names another place.
   const start = points.find(place => '#place=' + place.id === location.hash) || points.find(place => place.id === 'new-york');
@@ -141,6 +165,25 @@
   });
   map.getCanvas().setAttribute('aria-label', 'Travel map. Drag to move, right-drag or two-finger drag to tilt, scroll or pinch to zoom. Arrow keys move, plus and minus zoom, Home resets.');
   map.on('error', event => console.warn(event.error?.message || event));
+  map.on('style.load', () => {
+    // Retain building-level tiles farther into tilted city views. The default
+    // drops distant tiles below the provider's building minimum (zoom 13).
+    // A finite tile budget keeps the high-pitch horizon from loading unbounded detail.
+    map.setSourceTileLodParams(4, 8, 'streets');
+  });
+  // Draw the same peak and board outlines used by the index into map sprites.
+  map.on('styleimagemissing', ({ id }) => {
+    if (!Object.hasOwn(kinds, id)) return;
+    const surface = document.createElement('canvas');
+    surface.width = surface.height = 40;
+    const ctx = surface.getContext('2d');
+    ctx.scale(2, 2); ctx.translate(2, 2);
+    ctx.lineCap = ctx.lineJoin = 'round';
+    const path = new Path2D(kinds[id].path);
+    ctx.strokeStyle = paper; ctx.lineWidth = 3.5; ctx.stroke(path);
+    ctx.strokeStyle = kinds[id].color; ctx.lineWidth = 1.5; ctx.stroke(path);
+    map.addImage(id, ctx.getImageData(0, 0, 40, 40), { pixelRatio: 2 });
+  });
 
   const button = (name, action) => {
     const node = document.createElement('button');
@@ -189,7 +232,8 @@
         const item = button(country.name, () => choose(country));
         item.setAttribute('aria-pressed', String(selected?.id === country.id));
         row.append(item);
-        const cities = points.filter(point => point.country.id === country.id && point.id !== country.id);
+        const localPlaces = points.filter(point => point.country.id === country.id && point.id !== country.id);
+        const cities = localPlaces.filter(place => !kinds[place.kind]);
         if (cities.length) {
           const list = document.createElement('span');
           list.className = 'cities';
@@ -198,6 +242,26 @@
             city.setAttribute('aria-pressed', String(selected?.id === place.id));
             list.append(...(i ? [', ', city] : [city]));
           });
+          row.append(list);
+        }
+        for (const [kind, category] of Object.entries(kinds)) {
+          const entries = localPlaces.filter(place => place.kind === kind);
+          if (!entries.length) continue;
+          const list = document.createElement('span');
+          list.className = 'activities kind-' + kind;
+          const label = document.createElement('span');
+          label.className = 'activity-heading'; label.textContent = category.name;
+          list.append(label);
+          const names = document.createElement('span');
+          names.className = 'activity-places';
+          entries.forEach((place, i) => {
+            const item = button(place.name, () => choose(place));
+            item.setAttribute('aria-pressed', String(selected?.id === place.id));
+            item.setAttribute('aria-label', place.name + ', ' + category.name + (place.detail ? ', ' + place.detail : ''));
+            if (place.detail) item.title = place.detail;
+            names.append(...(i ? [', ', item] : [item]));
+          });
+          list.append(names);
           row.append(list);
         }
         placeIndex.append(row);
@@ -220,7 +284,9 @@
     regionSelect.value = currentRegion.id;
     updateIndex();
     caption.textContent = [place.name, place.context || place.country?.name]
-      .filter((value, index, values) => value && values.indexOf(value) === index).join(', ');
+      .filter((value, index, values) => value && values.indexOf(value) === index).join(', ')
+      + (kinds[place.kind] ? ' — ' + (place.kind === 'mountain' ? 'Mountain' : 'Snowboarding') : '')
+      + (place.detail ? ' · ' + place.detail : '');
     if (!place.places?.length && !placeIndex.hidden) {
       setBrowseOpen(false);
       browse.focus({ preventScroll: true });
@@ -327,13 +393,13 @@
   });
   map.on('click', event => {
     const [hit] = map.queryRenderedFeatures([[event.point.x - 10, event.point.y - 10], [event.point.x + 10, event.point.y + 10]],
-      { layers: ['place-ring', 'place-names'] });
+      { layers: ['place-ring', 'place-kind', 'place-names'] });
     if (hit) return choose(points.find(place => place.id === hit.properties.id));
     if (map.getZoom() > 9) return;
     const [country] = map.queryRenderedFeatures(event.point, { layers: ['visited-fill'] });
     if (country) choose(countries.find(c => +c.mapId === country.properties.mapId));
   });
-  for (const layer of ['place-ring', 'place-names', 'visited-fill']) {
+  for (const layer of ['place-ring', 'place-kind', 'place-names', 'visited-fill']) {
     map.on('mouseenter', layer, () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', layer, () => { map.getCanvas().style.cursor = ''; });
   }

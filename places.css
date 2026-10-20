@@ -33,6 +33,14 @@ button:focus-visible,select:focus-visible,a:focus-visible,canvas:focus-visible{o
 #index button{display:inline;background:none;border:0;padding:0;text-align:left;font:16px/1.5 var(--font-serif);color:#cfcac0}
 #index .cities{margin-left:8px;font:13px/1.5 var(--font-main);color:var(--quiet)}
 #index .cities button{font:13px/1.5 var(--font-main);color:var(--quiet)}
+.place-icon{display:inline-block;width:16px;height:16px;vertical-align:-3px;margin-right:5px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.kind-mountain{--place-color:#d8b283;color:var(--place-color)}
+.kind-snowboarding{--place-color:#96cce5;color:var(--place-color)}
+#index .activities{display:block;margin:9px 0 10px 8px;padding-left:10px;border-left:1px solid #ffffff1a;font:13px/1.7 var(--font-main);color:var(--quiet)}
+#index .activity-heading{display:block;margin-bottom:2px;font:9px/1.6 var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--quiet)}
+#index .activity-places{display:block}
+#index .activities button{font:inherit;color:#b7b3aa;white-space:nowrap}
+#place-legend{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:10px;font:12px/1.5 var(--font-main)}
 #index button:hover,#index button[aria-pressed=true]{color:#fff;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
 #loading{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:260px;text-align:center;font-size:15px;color:#cfcac0}
 .map-controls{position:absolute;z-index:3;right:32px;bottom:40px;display:flex;align-items:center;gap:4px}

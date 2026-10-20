@@ -1,5 +1,7 @@
 // Add places here. Coordinates are [longitude, latitude].
 // `familiar` gives places that were more than a visit a little extra weight.
+// Use kind: 'mountain' for peaks and kind: 'snowboarding' for resorts.
+// Peak elevation: https://www.usgs.gov/educational-resources/highest-and-lowest-elevations
 // Keep memories personal; dates and durations aren't part of this map.
 window.travelPlaces = [
     {
@@ -29,8 +31,9 @@ window.travelPlaces = [
                 { id: 'tokyo', name: 'Tokyo', coordinates: [139.6917, 35.6895] },
                 { id: 'osaka', name: 'Osaka', coordinates: [135.5023, 34.6937] },
                 { id: 'sapporo', name: 'Sapporo', context: 'Hokkaido', coordinates: [141.3545, 43.0618] },
-                { id: 'rusutsu', name: 'Rusutsu', context: 'Hokkaido', coordinates: [140.8986, 42.7481] },
-                { id: 'niseko', name: 'Niseko', context: 'Hokkaido', coordinates: [140.6874, 42.8048] }
+                { id: 'rusutsu', name: 'Rusutsu', context: 'Hokkaido', coordinates: [140.8986, 42.7481], kind: 'snowboarding' },
+                { id: 'sapporo-teine', name: 'Sapporo Teine', context: 'Hokkaido', coordinates: [141.205, 43.084], kind: 'snowboarding' },
+                { id: 'niseko', name: 'Niseko', context: 'Hokkaido', coordinates: [140.6874, 42.8048], kind: 'snowboarding' }
             ] },
             { id: 'singapore', name: 'Singapore', mapId: '702', center: [103.8198, 1.3521], tiny: true },
             { id: 'south-korea', name: 'South Korea', mapId: '410', center: [127.8, 36.4], places: [
@@ -81,7 +84,7 @@ window.travelPlaces = [
                 { id: 'toronto', name: 'Toronto', context: 'Ontario', coordinates: [-79.3832, 43.6532] },
                 { id: 'winnipeg', name: 'Winnipeg', context: 'Manitoba', coordinates: [-97.1384, 49.8951] },
                 { id: 'vancouver', name: 'Vancouver', context: 'British Columbia', coordinates: [-123.1207, 49.2827] },
-                { id: 'whistler', name: 'Whistler', context: 'British Columbia', coordinates: [-122.9574, 50.1163] }
+                { id: 'whistler', name: 'Whistler', context: 'British Columbia', coordinates: [-122.9574, 50.1163], kind: 'snowboarding' }
             ] },
             { id: 'mexico', name: 'Mexico', mapId: '484', center: [-102, 24], places: [
                 { id: 'puerto-vallarta', name: 'Puerto Vallarta', coordinates: [-105.2253, 20.6534] },
@@ -92,7 +95,10 @@ window.travelPlaces = [
                 { id: 'minnesota', name: 'Minnesota', coordinates: [-94.6859, 46.7296], kind: 'state', familiar: true },
                 { id: 'new-york', name: 'New York', coordinates: [-74.006, 40.7128], familiar: true },
                 { id: 'san-francisco', name: 'San Francisco', coordinates: [-122.4194, 37.7749], familiar: true },
-                { id: 'seattle', name: 'Seattle', context: 'Washington', coordinates: [-122.3321, 47.6062] }
+                { id: 'seattle', name: 'Seattle', context: 'Washington', coordinates: [-122.3321, 47.6062] },
+                { id: 'humphreys-peak', name: 'Humphreys Peak', context: 'Arizona', coordinates: [-111.6779, 35.3464], kind: 'mountain', detail: '12,633 ft (3,851 m) · Highest point in Arizona' },
+                { id: 'copper-mountain', name: 'Copper Mountain', context: 'Colorado', coordinates: [-106.1564, 39.5017], kind: 'snowboarding' },
+                { id: 'palisades-tahoe', name: 'Palisades Tahoe', context: 'California', coordinates: [-120.235, 39.196], kind: 'snowboarding' }
             ] }
         ]
     }
