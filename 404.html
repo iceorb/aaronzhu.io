@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aaron</title>
+    <meta name="robots" content="noindex">
+    <link rel="icon" href="favicon.ico">
+    <style>
+        @font-face {
+            font-family: 'Martina Plantijn';
+            src: url('fonts/TestMartinaPlantijn-Regular-BF663c36d1ec6d5.otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Martina Plantijn';
+            src: url('fonts/TestMartinaPlantijn-Italic-BF663c36d1ed0f9.otf') format('opentype');
+            font-weight: 400;
+            font-style: italic;
+        }
+
+        :root {
+            --color-bg: #fff;
+            --color-text: #333;
+            --color-muted: #6b6b6b;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-bg: #111111;
+                --color-text: #e0e0e0;
+                --color-muted: #a0a0a0;
+            }
+        }
+
+        html, body {
+            margin: 0;
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 16px;
+            background: var(--color-bg);
+            color: var(--color-text);
+            font-family: 'Martina Plantijn', Georgia, serif;
+            text-align: center;
+        }
+
+        p {
+            margin: 0;
+            font-size: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .muted {
+            margin-top: 0.5rem;
+            font-size: 1rem;
+            font-style: italic;
+            color: var(--color-muted);
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <p>Be back soon.</p>
+        <p class="muted">aaronzhu.io is taking a short break.</p>
+    </main>
+</body>
+
+</html>

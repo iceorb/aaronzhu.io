@@ -5,9 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aaron</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="theme.css">
-    <script src="theme.js"></script>
+    <meta name="robots" content="noindex">
+    <link rel="icon" href="favicon.ico">
     <style>
         @font-face {
             font-family: 'Martina Plantijn';
@@ -23,526 +22,56 @@
             font-style: italic;
         }
 
-        @font-face {
-            font-family: 'Martina Plantijn';
-            src: url('fonts/TestMartinaPlantijn-Medium-BF663c36d1e5bed.otf') format('opentype');
-            font-weight: 500;
-            font-style: normal;
-        }
-
         :root {
-            --font-main: 'Outfit', sans-serif;
-            --font-serif: 'Martina Plantijn', serif;
-            --font-mono: monospace;
+            --color-bg: #fff;
             --color-text: #333;
             --color-muted: #6b6b6b;
-            --color-link: #2a5bd7;
-            --color-bg: #fff;
-            --accent: #002FA7;
         }
 
-        * {
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-bg: #111111;
+                --color-text: #e0e0e0;
+                --color-muted: #a0a0a0;
+            }
+        }
+
+        html, body {
             margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            height: 100%;
         }
 
         body {
-            font-family: var(--font-serif);
-            font-weight: 400;
-            color: var(--color-text);
-            background: var(--color-bg);
-            line-height: 1.7;
-            font-size: 18px;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 80px 32px 120px;
-        }
-
-        header {
-            margin-bottom: 56px;
-        }
-
-        .header-line {
-            display: flex;
-            align-items: baseline;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .header-line h1 {
-            margin: 0;
-            line-height: 1.4;
-        }
-
-        .header-line a {
-            font-family: var(--font-main);
-            font-size: 16px;
-            font-weight: 500;
-            color: var(--color-muted);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .header-line a.active {
-            color: var(--color-text);
-        }
-
-        .header-line a:hover {
-            color: var(--color-text);
-        }
-
-        .header-line h1 a {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--color-text);
-        }
-
-        .header-line .dot {
-            color: #bbb;
-            font-size: 14px;
-            user-select: none;
-            margin: 0 4px;
-        }
-
-        #ascii-container {
-            width: 100%;
-            height: 280px;
-            margin-top: 56px;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        #ascii-container canvas {
-            display: block;
-        }
-
-        .ascii-caption {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--color-muted);
-            margin-top: 8px;
-            text-align: right;
-            letter-spacing: 0.04em;
-            opacity: 0.6;
-            transition: opacity 0.2s;
-            user-select: none;
-            cursor: pointer;
-        }
-
-        .ascii-caption:hover {
-            opacity: 1;
-        }
-
-        .bio p {
-            font-family: var(--font-serif);
-            font-weight: 400;
-            font-size: 18px;
-            line-height: 1.55;
-            margin-bottom: 16px;
-            color: var(--color-text);
-        }
-
-        .bio ul {
-            font-family: var(--font-serif);
-            font-size: 18px;
-            line-height: 1.55;
-            color: var(--color-text);
-            margin: -4px 0 16px 20px;
-            padding: 0;
-        }
-
-        .bio ul li {
-            margin-bottom: 2px;
-        }
-
-        .bio a {
-            color: var(--color-link);
-            text-decoration: none;
-            font-weight: 500;
-            transition: opacity 0.2s;
-        }
-
-        .bio a:hover {
-            opacity: 0.7;
-        }
-
-        .highlight {
-            background: var(--highlight-bg);
-            color: var(--highlight-text);
-            padding: 1px 5px;
-            border-radius: 2px;
-            transition: background 0.3s, color 0.3s;
-        }
-
-        footer {
-            margin-top: 48px;
             display: flex;
             align-items: center;
-            gap: 16px;
-        }
-
-        footer a {
-            font-family: var(--font-mono);
-            font-size: 13px;
-            color: var(--color-muted);
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            transition: color 0.2s;
-        }
-
-        footer a:hover {
+            justify-content: center;
+            padding: 0 16px;
+            background: var(--color-bg);
             color: var(--color-text);
+            font-family: 'Martina Plantijn', Georgia, serif;
+            text-align: center;
         }
 
-        footer .sep {
-            color: #ccc;
-            font-size: 13px;
-            user-select: none;
+        p {
+            margin: 0;
+            font-size: 1.5rem;
+            line-height: 1.5;
         }
 
-        /* Mobile spacing updates */
-        @media (max-width: 620px) {
-            .container {
-                padding: 48px 24px 80px;
-            }
-
-            body {
-                font-size: 16px;
-            }
-
-            .header-line {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 12px;
-            }
-
-            .nav-links {
-                display: flex;
-                flex-wrap: wrap;
-                align-items: baseline;
-                gap: 6px;
-                color: var(--color-muted);
-            }
-
-            .mobile-hide {
-                display: none;
-            }
-
-            #ascii-container {
-                height: 200px;
-                margin-top: 40px;
-            }
-
-            header {
-                margin-bottom: 40px;
-            }
+        .muted {
+            margin-top: 0.5rem;
+            font-size: 1rem;
+            font-style: italic;
+            color: var(--color-muted);
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <header>
-            <div class="header-line">
-                <h1><a href="index.html" class="active">Aaron Zhu</a></h1>
-                <div class="nav-links">
-                    <span class="dot mobile-hide">·</span>
-                    <a href="index.html" class="active">Home</a>
-                    <span class="dot">·</span>
-                    <a href="works.html">Things</a>
-                    <span class="dot">·</span>
-                    <a href="reading.html">Reads</a>
-                    <span class="dot">·</span>
-                    <a href="places.html">Places</a>
-                    <span class="dot">·</span>
-                    <a href="acknowledgements.html">Thanks</a>
-                </div>
-            </div>
-        </header>
-
-        <section class="bio">
-            <p>I'm an <span class="highlight">engineer + researcher</span> based in NYC, currently working at <a
-                    href="https://www.mercor.com/mission/" target="_blank" rel="noopener"><span
-                        class="highlight">Mercor</span></a>.</p>
-            <!-- <ul>
-                <li>Predictive intelligence</li>
-                <li>Human behavior modelling</li>
-                <li>Simulated environments and synthetic data</li>
-            </ul> -->
-            <p>I've done applied research at <span class="highlight">DoorDash</span> and <span
-                    class="highlight">TikTok</span>. Before that, research at the <span
-                    class="highlight">Safe Foundational Models Lab</span> (Johns Hopkins/UW-Madison) and the
-                <span class="highlight">Vision &amp; Learning Lab</span> (Yonsei University).
-            </p>
-            <p>My favorite book recently (or rather, novella) is <span class="highlight">Anxiety Is the Dizziness of
-                    Freedom</span> by Ted Chiang.</p>
-
-            <p>I like to travel, snowboard, play tennis, and pick up languages.</p>
-
-        </section>
-
-        <div id="ascii-container"></div>
-        <div class="ascii-caption">refresh ↻ for another</div>
-
-        <footer>
-            <a href="#">Email</a>
-            <span class="sep">/</span>
-            <a href="#">LinkedIn</a>
-        </footer>
-    </div>
-
-    <script>
-        const container = document.getElementById('ascii-container');
-        const canvas = document.createElement('canvas');
-        container.appendChild(canvas);
-        const ctx = canvas.getContext('2d');
-
-        const MODES = ['waves', 'bourse', 'photo', 'hopper'];
-        const HISTORY_KEY = 'asciiModeHistory';
-        const MEMORY = MODES.length - 1;  // remember last N-1 shown
-
-        const MODE = (() => {
-            const fromHash = location.hash.replace('#', '');
-            if (MODES.includes(fromHash)) return fromHash;
-            let history = [];
-            try {
-                history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
-            } catch { }
-            const available = MODES.filter(m => !history.includes(m));
-            const pool = available.length ? available : MODES;
-            const chosen = pool[Math.floor(Math.random() * pool.length)];
-            history.push(chosen);
-            if (history.length > MEMORY) history = history.slice(-MEMORY);
-            try { localStorage.setItem(HISTORY_KEY, JSON.stringify(history)); } catch { }
-            return chosen;
-        })();
-
-        function cycleMode() {
-            if (location.hash) location.hash = '';
-            location.reload();
-        }
-        container.addEventListener('click', cycleMode);
-        document.querySelector('.ascii-caption')?.addEventListener('click', cycleMode);
-
-        if (MODE === 'photo' || MODE === 'hopper') {
-            const photoImg = new Image();
-            photoImg.crossOrigin = 'anonymous';
-            photoImg.src = MODE === 'hopper' ? 'imgs/hopper.jpeg' : 'imgs/bourse.webp';
-
-            function drawPhoto() {
-                const dpr = window.devicePixelRatio || 1;
-                const w = container.clientWidth;
-                const h = container.clientHeight;
-                canvas.width = w * dpr;
-                canvas.height = h * dpr;
-                canvas.style.width = w + 'px';
-                canvas.style.height = h + 'px';
-                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-                ctx.fillStyle = '#111111';
-                ctx.fillRect(0, 0, w, h);
-                if (!photoImg.complete || !photoImg.naturalWidth) return;
-                // cover-fit
-                const targetAR = w / h;
-                const imgAR = photoImg.naturalWidth / photoImg.naturalHeight;
-                let sx = 0, sy = 0, sw = photoImg.naturalWidth, sh = photoImg.naturalHeight;
-                if (imgAR > targetAR) {
-                    sw = sh * targetAR;
-                    sx = (photoImg.naturalWidth - sw) / 2;
-                } else {
-                    sh = sw / targetAR;
-                    sy = (photoImg.naturalHeight - sh) / 2;
-                }
-                ctx.drawImage(photoImg, sx, sy, sw, sh, 0, 0, w, h);
-            }
-
-            photoImg.onload = drawPhoto;
-            window.addEventListener('resize', drawPhoto);
-            drawPhoto();
-        } else {
-
-        const chars = MODE === 'bourse'
-            ? ' .\'`,:;-~+*=ovxz%#&@'.split('')
-            : ' .·:;~+=*<>^/%#&@'.split('');
-        const edgeChars = ['|', '\\', '_', '/'];
-        const charW = MODE === 'bourse' ? 2.5 : 7.5;
-        const charH = MODE === 'bourse' ? 5 : 12;
-        const FONT = MODE === 'bourse' ? '5px Courier New' : '11px Courier New';
-        const EDGE_THRESHOLD = 0.15;
-
-        let cols, rows;
-        const bleed = [];
-        let lum = null;
-        let gradMag = null;
-        let gradAngle = null;
-        let mouse = { x: 0.5, y: 0.5 };
-        let smoothMouse = { x: 0.5, y: 0.5 };
-
-        const sourceImg = new Image();
-        sourceImg.crossOrigin = 'anonymous';
-        if (MODE === 'bourse') sourceImg.src = 'imgs/bourse.webp';
-
-        function sampleImage() {
-            if (!sourceImg.complete || !sourceImg.naturalWidth) return;
-            const off = document.createElement('canvas');
-            off.width = cols;
-            off.height = rows;
-            const octx = off.getContext('2d');
-            const targetAR = cols / rows;
-            const imgAR = sourceImg.naturalWidth / sourceImg.naturalHeight;
-            let sx = 0, sy = 0, sw = sourceImg.naturalWidth, sh = sourceImg.naturalHeight;
-            if (imgAR > targetAR) {
-                sw = sh * targetAR;
-                sx = (sourceImg.naturalWidth - sw) / 2;
-            } else {
-                sh = sw / targetAR;
-                sy = (sourceImg.naturalHeight - sh) / 2;
-            }
-            octx.drawImage(sourceImg, sx, sy, sw, sh, 0, 0, cols, rows);
-            const data = octx.getImageData(0, 0, cols, rows).data;
-            lum = new Float32Array(cols * rows);
-            for (let i = 0; i < cols * rows; i++) {
-                const r = data[i * 4], g = data[i * 4 + 1], b = data[i * 4 + 2];
-                lum[i] = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-            }
-            gradMag = new Float32Array(cols * rows);
-            gradAngle = new Float32Array(cols * rows);
-            let maxMag = 0;
-            for (let y = 1; y < rows - 1; y++) {
-                for (let x = 1; x < cols - 1; x++) {
-                    const tl = lum[(y - 1) * cols + (x - 1)];
-                    const tc = lum[(y - 1) * cols + x];
-                    const tr = lum[(y - 1) * cols + (x + 1)];
-                    const ml = lum[y * cols + (x - 1)];
-                    const mr = lum[y * cols + (x + 1)];
-                    const bl = lum[(y + 1) * cols + (x - 1)];
-                    const bc = lum[(y + 1) * cols + x];
-                    const br = lum[(y + 1) * cols + (x + 1)];
-                    const gx = (tr + 2 * mr + br) - (tl + 2 * ml + bl);
-                    const gy = (bl + 2 * bc + br) - (tl + 2 * tc + tr);
-                    const mag = Math.sqrt(gx * gx + gy * gy);
-                    if (mag > maxMag) maxMag = mag;
-                    gradMag[y * cols + x] = mag;
-                    let a = Math.atan2(gy, gx);
-                    a = ((a % Math.PI) + Math.PI) % Math.PI;
-                    gradAngle[y * cols + x] = a;
-                }
-            }
-            if (maxMag > 0) for (let i = 0; i < cols * rows; i++) gradMag[i] /= maxMag;
-        }
-
-        sourceImg.onload = () => { if (cols && rows) sampleImage(); };
-
-        function sizeCanvas() {
-            const dpr = window.devicePixelRatio || 1;
-            const w = container.clientWidth;
-            const h = container.clientHeight;
-            cols = Math.floor(w / charW);
-            rows = Math.floor(h / charH);
-            const displayW = cols * charW;
-            const displayH = rows * charH;
-            canvas.width = displayW * dpr;
-            canvas.height = displayH * dpr;
-            canvas.style.width = displayW + 'px';
-            canvas.style.height = displayH + 'px';
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            ctx.font = FONT;
-            ctx.textBaseline = 'top';
-            bleed.length = 0;
-            const bleedAmp = MODE === 'bourse' ? 0.08 : 0.12;
-            for (let i = 0; i < cols * rows; i++) bleed.push(Math.random() * bleedAmp - bleedAmp / 2);
-            if (MODE === 'bourse' && sourceImg.complete) sampleImage();
-        }
-
-        document.addEventListener('mousemove', (e) => {
-            const r = canvas.getBoundingClientRect();
-            mouse.x = (e.clientX - r.left) / r.width;
-            mouse.y = (e.clientY - r.top) / r.height;
-        });
-
-        ctx.font = FONT;
-        ctx.textBaseline = 'top';
-
-        let t = 0;
-        sizeCanvas();
-
-        function render() {
-            t += 0.003;
-            smoothMouse.x += (mouse.x - smoothMouse.x) * 0.03;
-            smoothMouse.y += (mouse.y - smoothMouse.y) * 0.03;
-
-            ctx.fillStyle = '#111111';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            for (let y = 0; y < rows; y++) {
-                for (let x = 0; x < cols; x++) {
-                    const nx = x / cols;
-                    const ny = y / rows;
-                    const idx = y * cols + x;
-
-                    let clamped, glyph, alpha, shade;
-
-                    if (MODE === 'bourse' && lum) {
-                        const flow1 = Math.sin(nx * 3.5 + t * 0.7) * Math.cos(ny * 2.8 - t * 0.5);
-                        const flow2 = Math.sin((nx + ny) * 2.2 - t * 0.9) * 0.5;
-                        const flow3 = Math.cos(nx * 1.8 - ny * 3.0 + t * 0.6) * 0.4;
-                        const baseFlow = (flow1 + flow2 + flow3 + 1.5) / 3.0;
-                        const v = lum[idx];
-                        const boosted = Math.pow(v, 0.7);
-                        const shimmer = (baseFlow - 0.5) * 0.1;
-                        clamped = Math.max(0, Math.min(1, boosted + shimmer));
-                        const mag = gradMag[idx];
-                        if (mag > EDGE_THRESHOLD) {
-                            const a = gradAngle[idx];
-                            let bin;
-                            if (a < Math.PI / 8 || a >= 7 * Math.PI / 8) bin = 2;
-                            else if (a < 3 * Math.PI / 8) bin = 3;
-                            else if (a < 5 * Math.PI / 8) bin = 0;
-                            else bin = 1;
-                            glyph = edgeChars[bin];
-                            clamped = Math.max(clamped, 0.55 + mag * 0.45);
-                        } else {
-                            glyph = chars[Math.floor(clamped * (chars.length - 1))];
-                        }
-                        alpha = 0.25 + clamped * 0.75;
-                        shade = Math.floor(140 + clamped * 115);
-                    } else {
-                        const dx = nx - smoothMouse.x;
-                        const dy = ny - smoothMouse.y;
-                        const mouseDist = Math.sqrt(dx * dx + dy * dy);
-                        const mouseInfluence = Math.max(0, 1 - mouseDist / 0.4) * 0.25;
-                        const flow1 = Math.sin(nx * 3.5 + t * 0.7) * Math.cos(ny * 2.8 - t * 0.5);
-                        const flow2 = Math.sin((nx + ny) * 2.2 - t * 0.9) * 0.5;
-                        const flow3 = Math.cos(nx * 1.8 - ny * 3.0 + t * 0.6) * 0.4;
-                        const flow4 = Math.sin(Math.sqrt((nx - 0.5) ** 2 + (ny - 0.5) ** 2) * 6 - t * 1.2) * 0.3;
-                        let val = (flow1 + flow2 + flow3 + flow4 + 1.5) / 3.0;
-                        val += bleed[idx];
-                        val += mouseInfluence;
-                        clamped = Math.max(0, Math.min(1, val));
-                        glyph = chars[Math.floor(clamped * (chars.length - 1))];
-                        alpha = 0.08 + clamped * 0.9;
-                        shade = Math.floor(100 + clamped * 155);
-                    }
-
-                    ctx.fillStyle = `rgba(${shade},${shade},${shade},${alpha})`;
-                    ctx.fillText(glyph, x * charW, y * charH);
-                }
-            }
-
-            requestAnimationFrame(render);
-        }
-
-        render();
-
-        window.addEventListener('resize', sizeCanvas);
-
-        }  // end ASCII modes
-    </script>
+    <main>
+        <p>Be back soon.</p>
+        <p class="muted">aaronzhu.io is taking a short break.</p>
+    </main>
 </body>
 
 </html>
