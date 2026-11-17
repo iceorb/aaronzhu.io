@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verse — Aaron Zhu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js"></script>
+    <style>
+        @font-face {
+            font-family: 'Martina Plantijn';
+            src: url('fonts/TestMartinaPlantijn-Regular-BF663c36d1ec6d5.otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Martina Plantijn';
+            src: url('fonts/TestMartinaPlantijn-Italic-BF663c36d1ed0f9.otf') format('opentype');
+            font-weight: 400;
+            font-style: italic;
+        }
+
+        @font-face {
+            font-family: 'Martina Plantijn';
+            src: url('fonts/TestMartinaPlantijn-Medium-BF663c36d1e5bed.otf') format('opentype');
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Roobert Mono';
+            src: url('fonts/roobert-mono-regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        :root {
+            --font-main: 'Outfit', sans-serif;
+            --font-serif: 'Martina Plantijn', serif;
+            --font-mono: 'Roobert Mono', ui-monospace, SFMono-Regular, monospace;
+            --color-text: #1a1a1a;
+            --color-muted: #6b6b6b;
+            --color-link: #4A90E2;
+            --color-bg: #fff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-serif);
+            font-weight: 400;
+            color: var(--color-text);
+            background: var(--color-bg);
+            line-height: 1.7;
+            font-size: 18px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 32px 120px;
+        }
+
+        header {
+            margin-bottom: 56px;
+        }
+
+        .header-line {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .header-line h1 {
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .header-line a {
+            font-family: var(--font-main);
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--color-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .header-line a.active {
+            color: var(--color-text);
+        }
+
+        .header-line a:hover {
+            color: var(--color-text);
+        }
+
+        .header-line h1 a {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .header-line .dot {
+            color: #bbb;
+            font-size: 14px;
+            user-select: none;
+            margin: 0 4px;
+        }
+
+        .verse-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 4px 14px;
+            font-family: var(--font-main);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .verse-bar button {
+            font: inherit;
+            color: var(--color-muted);
+            background: none;
+            border: 0;
+            padding: 4px 0;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .verse-bar button:hover,
+        .verse-bar button:focus-visible,
+        .verse-bar button[aria-pressed="true"] {
+            color: var(--color-text);
+        }
+
+        .verse-bar button[aria-pressed="true"] {
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 5px;
+        }
+
+        .verse-guide {
+            font-family: var(--font-main);
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--color-muted);
+            margin-bottom: 28px;
+            max-width: 60ch;
+        }
+
+        .verse-sheet {
+            display: grid;
+            grid-template-columns: 2.2em minmax(0, 1fr) 3.2em;
+            column-gap: 12px;
+            position: relative;
+        }
+
+        .verse-gutter {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--color-muted);
+            user-select: none;
+        }
+
+        .verse-gutter div {
+            display: flex;
+            align-items: flex-start;
+            line-height: 1.7rem;
+            padding-top: 2px;
+        }
+
+        .verse-gutter.counts div {
+            justify-content: flex-end;
+        }
+
+        .verse-gutter .off {
+            color: #e0a458;
+        }
+
+        .verse-gutter .ok {
+            color: var(--color-text);
+        }
+
+        .verse-sheet textarea,
+        .verse-mirror {
+            font-family: var(--font-serif);
+            font-size: inherit;
+            line-height: 1.7rem;
+            padding: 0;
+            margin: 0;
+            border: 0;
+            width: 100%;
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+        }
+
+        .verse-sheet textarea {
+            display: block;
+            resize: none;
+            overflow: hidden;
+            outline: none;
+            background: transparent;
+            color: var(--color-text);
+            min-height: 14em;
+        }
+
+        .verse-sheet textarea::placeholder {
+            color: var(--color-muted);
+            opacity: 0.6;
+            font-style: italic;
+        }
+
+        .verse-mirror {
+            position: absolute;
+            visibility: hidden;
+            pointer-events: none;
+            top: 0;
+            left: 0;
+        }
+
+        .verse-status {
+            font-family: var(--font-main);
+            font-size: 13px;
+            color: var(--color-muted);
+            margin-top: 28px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 18px;
+        }
+
+        .verse-status button {
+            font: inherit;
+            color: var(--color-muted);
+            background: none;
+            border: 0;
+            padding: 0;
+            cursor: pointer;
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 4px;
+        }
+
+        .verse-status button:hover {
+            color: var(--color-text);
+        }
+
+        footer {
+            margin-top: 64px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        footer a {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--color-muted);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            transition: color 0.2s;
+        }
+
+        footer a:hover {
+            color: var(--color-text);
+        }
+
+        footer .sep {
+            color: #ccc;
+            font-size: 13px;
+            user-select: none;
+        }
+
+        /* Mobile spacing updates */
+        @media (max-width: 620px) {
+            .container {
+                padding: 48px 24px 80px;
+            }
+
+            body {
+                font-size: 16px;
+            }
+
+            .header-line {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .nav-links {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: baseline;
+                gap: 6px;
+                color: var(--color-muted);
+            }
+
+            .mobile-hide {
+                display: none;
+            }
+
+            header {
+                margin-bottom: 40px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="header-line">
+                <h1><a href="index.html">Aaron Zhu</a></h1>
+                <div class="nav-links">
+                    <span class="dot mobile-hide">·</span>
+                    <a href="index.html">Home</a>
+                    <span class="dot">·</span>
+                    <a href="works.html">Things</a>
+                    <span class="dot">·</span>
+                    <a href="reading.html">Reads</a>
+                    <span class="dot">·</span>
+                    <a href="places.html">Places</a>
+                    <span class="dot">·</span>
+                    <a href="acknowledgements.html">Thanks</a>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="verse-bar" role="group" aria-label="Form" id="forms"></div>
+            <p class="verse-guide" id="guide"></p>
+            <div class="verse-sheet">
+                <div class="verse-gutter rhymes" id="rhymes" aria-hidden="true"></div>
+                <div style="position:relative;min-width:0">
+                    <div class="verse-mirror" id="mirror" aria-hidden="true"></div>
+                    <textarea id="poem" spellcheck="true" aria-label="Poem" placeholder="Shall I compare thee to a summer's day?"></textarea>
+                </div>
+                <div class="verse-gutter counts" id="counts" aria-hidden="true"></div>
+            </div>
+            <div class="verse-status">
+                <span id="status" aria-live="polite"></span>
+                <button type="button" id="copy">copy</button>
+                <button type="button" id="clear">clear</button>
+            </div>
+        </main>
+
+        <footer>
+            <a href="#">Email</a>
+            <span class="sep">/</span>
+            <a href="#">Linkedin</a>
+        </footer>
+    </div>
+    <script>
+        // Each form: the rhyme label and syllable target for every line.
+        // A target is a number, a [min, max] range, or null for "any".
+        const rep = (n, v) => Array.from({ length: n }, () => v);
+        const FORMS = {
+            sonnet: {
+                name: 'Sonnet',
+                guide: 'Shakespearean. Fourteen lines of iambic pentameter: three quatrains and a closing couplet. The turn usually lands at line 9 or in the couplet.',
+                rhyme: [...'ABABCDCDEFEFGG'], syl: rep(14, 10)
+            },
+            petrarchan: {
+                name: 'Petrarchan',
+                guide: 'Italian sonnet. An octave that poses the problem and a sestet that answers it, with the turn at line 9. Iambic pentameter.',
+                rhyme: [...'ABBAABBACDECDE'], syl: rep(14, 10)
+            },
+            villanelle: {
+                name: 'Villanelle',
+                guide: 'Nineteen lines on two rhymes. Line 1 returns as lines 6, 12 and 18. Line 3 returns as lines 9, 15 and 19. Write those two refrains first.',
+                rhyme: ['A1', 'b', 'A2', 'a', 'b', 'A1', 'a', 'b', 'A2', 'a', 'b', 'A1', 'a', 'b', 'A2', 'a', 'b', 'A1', 'A2'],
+                syl: rep(19, 10)
+            },
+            haiku: {
+                name: 'Haiku',
+                guide: 'Three lines of five, seven and five syllables. One image, one season, a cut between two parts. No rhyme.',
+                rhyme: ['', '', ''], syl: [5, 7, 5]
+            },
+            limerick: {
+                name: 'Limerick',
+                guide: 'Five bouncing lines. Lines 1, 2 and 5 are long and rhyme. Lines 3 and 4 are short and rhyme with each other.',
+                rhyme: [...'AABBA'], syl: [[7, 10], [7, 10], [5, 7], [5, 7], [7, 10]]
+            },
+            free: {
+                name: 'Free verse',
+                guide: 'No set pattern. The left margin shows the rhymes it hears and the right margin counts syllables, so you can see what shape the poem is taking.',
+                rhyme: null, syl: null
+            }
+        };
+
+        const $ = id => document.getElementById(id);
+        const poem = $('poem'), mirror = $('mirror');
+        let form = 'sonnet';
+        try {
+            const saved = JSON.parse(localStorage.getItem('verse') || '{}');
+            if (FORMS[saved.form]) form = saved.form;
+            if (typeof saved.text === 'string') poem.value = saved.text;
+        } catch { }
+
+        // English syllable estimate. Good to within one on most words.
+        const SYL_FIX = {
+            the: 1, every: 2, evening: 2, heaven: 2, fire: 1, hour: 1, our: 1, flower: 2, power: 2, being: 2,
+            poem: 2, poet: 2, quiet: 2, lion: 2, idea: 3, area: 3, create: 2, beautiful: 3, something: 2,
+            sometimes: 2, somewhere: 2, someone: 2, everything: 3, different: 2, business: 2, people: 2,
+            little: 2, table: 2, able: 2, wandering: 3, memory: 3, family: 3, cruel: 2, diamond: 2, violet: 3, eyes: 1, temperate: 3, lovely: 2, loneliness: 3
+        };
+        function syllables(word) {
+            let w = word.toLowerCase().replace(/[^a-z']/g, '').replace(/'s$|'$/, '');
+            if (!w) return 0;
+            if (SYL_FIX[w]) return SYL_FIX[w];
+            w = w.replace(/'/g, '');
+            if (w.length <= 3) return 1;
+            w = w.replace(/([aeiouy]l)es?$/, '$1').replace(/([^aeiou])ying$/, '$1iaing').replace(/^some(?=[a-z]{3})/, 'sum').replace(/([^aeiou])e(?=(?:ly|ful|less|ness)$)/, '$1');
+            w = w.replace(/(?:[^laeiouy]es|[^dt]ed|[^laeiouy]e)$/, m => m[0]).replace(/^y/, '');
+            const groups = w.match(/[aeiouy]{1,2}/g);
+            return groups ? groups.length : 1;
+        }
+        const lineSyllables = line =>
+            (line.match(/[A-Za-z']+|\d+/g) || []).reduce((n, w) => n + (/\d/.test(w) ? w.length : syllables(w)), 0);
+
+        // Rhyme key: the spelling from the last vowel sound onward, lightly normalised.
+        function rhymeKey(line) {
+            const words = line.toLowerCase().match(/[a-z']+/g);
+            if (!words) return '';
+            let w = words[words.length - 1].replace(/'s$/, '').replace(/'/g, '');
+            w = w.replace(/igh/g, 'i').replace(/(?!^)y/g, 'i').replace(/ck/g, 'k').replace(/ph/g, 'f');
+            w = w.replace(/([aeiou][^aeiou]+)e(s?)$/, '$1$2');
+            w = w.replace(/([^aeiou])\1+$/, '$1');
+            w = w.replace(/ea|ee|ie$/g, 'e').replace(/ou|ow/g, 'o').replace(/ai|ay|ei|ey/g, 'a').replace(/oo|ue|ew/g, 'u');
+            const m = w.match(/[aeiou]+[^aeiou]*$/);
+            return m ? m[0] : w;
+        }
+
+        function render() {
+            const spec = FORMS[form];
+            const lines = poem.value.split('\n');
+            const n = Math.max(lines.length, spec.rhyme ? spec.rhyme.length : 1);
+
+            mirror.replaceChildren(...Array.from({ length: n }, (_, i) => {
+                const d = document.createElement('div');
+                d.textContent = lines[i] || '​';
+                return d;
+            }));
+            poem.style.height = 'auto';
+            poem.style.height = Math.max(mirror.offsetHeight, poem.scrollHeight) + 'px';
+
+            const firstKey = {}, firstText = {}, heard = {};
+            let verse = 0, written = 0, nextLetter = 0;
+            const rhymeCells = [], countCells = [];
+
+            for (let i = 0; i < n; i++) {
+                const text = (lines[i] || '').trim();
+                const h = mirror.children[i].offsetHeight + 'px';
+                const r = document.createElement('div'), c = document.createElement('div');
+                r.style.height = c.style.height = h;
+
+                const blankInside = !text && i < lines.length && lines.slice(i + 1).some(l => l.trim());
+                if (!blankInside) {
+                    const label = spec.rhyme ? spec.rhyme[verse] : null;
+                    const target = spec.syl ? spec.syl[verse] : null;
+                    if (text) {
+                        written++;
+                        const key = rhymeKey(text);
+                        if (spec.rhyme) {
+                            if (label) {
+                                const group = label[0].toUpperCase();
+                                r.textContent = label;
+                                if (!(group in firstKey)) firstKey[group] = key;
+                                else r.className = key === firstKey[group] ? 'ok' : 'off';
+                                if (/\d/.test(label)) {
+                                    const norm = text.toLowerCase().replace(/[^a-z ]/g, '');
+                                    if (!(label in firstText)) firstText[label] = norm;
+                                    else r.className = norm === firstText[label] ? 'ok' : 'off';
+                                }
+                                if (r.className === 'off') r.title = 'May not match the earlier ' + label + ' line';
+                            }
+                        } else if (key) {
+                            if (!(key in heard)) heard[key] = { cell: r, letter: null };
+                            else {
+                                const g = heard[key];
+                                if (!g.letter) {
+                                    g.letter = String.fromCharCode(65 + (nextLetter++ % 26));
+                                    g.cell.textContent = g.letter;
+                                }
+                                r.textContent = g.letter;
+                            }
+                        }
+                        const s = lineSyllables(text);
+                        if (target == null) c.textContent = s;
+                        else {
+                            const [lo, hi] = Array.isArray(target) ? target : [target, target];
+                            c.textContent = s + '/' + (lo === hi ? lo : lo + '–' + hi);
+                            c.className = s >= lo && s <= hi ? 'ok' : 'off';
+                        }
+                    } else if (label != null || target != null) {
+                        r.textContent = label || '';
+                        if (target != null) c.textContent = Array.isArray(target) ? target.join('–') : target;
+                        r.style.opacity = c.style.opacity = 0.45;
+                    }
+                    verse++;
+                }
+                rhymeCells.push(r);
+                countCells.push(c);
+            }
+            $('rhymes').replaceChildren(...rhymeCells);
+            $('counts').replaceChildren(...countCells);
+
+            const total = spec.rhyme ? spec.rhyme.length : null;
+            $('status').textContent = total
+                ? (written > total ? written + ' lines, ' + (written - total) + ' over' : written + ' of ' + total + ' lines')
+                : written + (written === 1 ? ' line' : ' lines');
+            try { localStorage.setItem('verse', JSON.stringify({ form, text: poem.value })); } catch { }
+        }
+
+        function setForm(key) {
+            form = key;
+            $('guide').textContent = FORMS[key].guide;
+            for (const b of $('forms').children) b.setAttribute('aria-pressed', b.dataset.form === key);
+            render();
+        }
+
+        for (const [key, f] of Object.entries(FORMS)) {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.textContent = f.name;
+            b.dataset.form = key;
+            b.addEventListener('click', () => setForm(key));
+            $('forms').appendChild(b);
+        }
+
+        poem.addEventListener('input', render);
+        window.addEventListener('resize', render);
+        document.fonts?.ready.then(render);
+        $('copy').addEventListener('click', async e => {
+            try {
+                await navigator.clipboard.writeText(poem.value);
+                e.target.textContent = 'copied';
+            } catch {
+                poem.select();
+                e.target.textContent = 'press ⌘C';
+            }
+            setTimeout(() => (e.target.textContent = 'copy'), 1500);
+        });
+        $('clear').addEventListener('click', () => {
+            if (poem.value.trim() && !confirm('Clear the poem?')) return;
+            poem.value = '';
+            render();
+            poem.focus();
+        });
+        setForm(form);
+    </script>
+</body>
+
+</html>
