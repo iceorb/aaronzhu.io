@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animation Variations</title>
+    <style>
+        :root {
+            --font-main: 'Outfit', sans-serif;
+            --color-text: #e0e0e0;
+            --color-muted: #a0a0a0;
+            --color-bg: #111111;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main, sans-serif);
+            color: var(--color-text);
+            background: var(--color-bg);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 32px 120px;
+        }
+
+        h1 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .intro {
+            font-size: 14px;
+            color: var(--color-muted);
+            margin-bottom: 48px;
+        }
+
+        .variation {
+            margin-bottom: 56px;
+        }
+
+        .label {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-family: monospace;
+            font-size: 13px;
+            color: var(--color-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .label .num {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .label .name {
+            color: var(--color-muted);
+        }
+
+        .ascii-box {
+            width: 100%;
+            height: 240px;
+            overflow: hidden;
+            border: 1px solid #2a2a2a;
+        }
+
+        .ascii-box canvas {
+            display: block;
+        }
+
+        @media (max-width: 620px) {
+            .container {
+                padding: 40px 20px 80px;
+            }
+
+            .ascii-box {
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Animation variations</h1>
+        <p class="intro">Hover/move your mouse over each. #1 is the original.</p>
+
+        <div id="grid"></div>
+    </div>
+
+    <script>
+        const variations = [
+            {
+                name: 'Original — flowing waves, mouse pull',
+                chars: ' .·:;~+=*<>^/%#&@',
+                setup: (s) => s,
+                value: (x, y, t, mouse, s) => {
+                    const nx = x / s.cols, ny = y / s.rows;
+                    const dx = nx - mouse.x, dy = ny - mouse.y;
+                    const mouseDist = Math.sqrt(dx * dx + dy * dy);
+                    const mouseInfluence = Math.max(0, 1 - mouseDist / 0.4) * 0.25;
+                    const f1 = Math.sin(nx * 3.5 + t * 0.7) * Math.cos(ny * 2.8 - t * 0.5);
+                    const f2 = Math.sin((nx + ny) * 2.2 - t * 0.9) * 0.5;
+                    const f3 = Math.cos(nx * 1.8 - ny * 3.0 + t * 0.6) * 0.4;
+                    const f4 = Math.sin(Math.sqrt((nx - 0.5) ** 2 + (ny - 0.5) ** 2) * 6 - t * 1.2) * 0.3;
+                    return (f1 + f2 + f3 + f4 + 1.5) / 3.0 + mouseInfluence;
+                }
+            },
+            {
+                name: 'Binary — matrix rain',
+                chars: '01',
+                value: (x, y, t, mouse, s) => {
+                    const nx = x / s.cols, ny = y / s.rows;
+                    const col = x * 0.7;
+                    const fall = ((y + t * 20 + Math.sin(col) * 3) % s.rows) / s.rows;
+                    const f1 = Math.sin(col + t * 0.5);
+                    const dx = nx - mouse.x, dy = ny - mouse.y;
+                    const mouseInfluence = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / 0.3) * 0.3;
+                    return (1 - fall) * 0.8 + f1 * 0.1 + mouseInfluence;
+                }
+            },
+            {
+                name: 'Block density',
+                chars: ' ░▒▓█',
+                value: (x, y, t, mouse, s) => {
+                    const nx = x / s.cols, ny = y / s.rows;
+                    const dx = nx - mouse.x, dy = ny - mouse.y;
+                    const mouseInfluence = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / 0.4) * 0.3;
+                    const f1 = Math.sin(nx * 4 + t * 0.6) * Math.cos(ny * 3 - t * 0.4);
+                    const f2 = Math.sin((nx - ny) * 3 + t * 0.7) * 0.5;
+                    return (f1 + f2 + 1.2) / 2.5 + mouseInfluence;
+                }
+            },
+            {
+                name: 'Repel — mouse pushes a void',
+                chars: ' .·:;~+=*<>^/%#&@',
+                value: (x, y, t, mouse, s) => {
+                    const nx = x / s.cols, ny = y / s.rows;
+                    const dx = nx - mouse.x, dy = ny - mouse.y;
+                    const mouseDist = Math.sqrt(dx * dx + dy * dy);
+                    const mouseVoid = Math.max(0, 1 - mouseDist / 0.3) * 0.7;
+                    const f1 = Math.sin(nx * 3.5 + t * 0.7) * Math.cos(ny * 2.8 - t * 0.5);
+                    const f2 = Math.sin((nx + ny) * 2.2 - t * 0.9) * 0.5;
+                    const f3 = Math.cos(nx * 1.8 - ny * 3.0 + t * 0.6) * 0.4;
+                    return (f1 + f2 + f3 + 1.5) / 3.0 - mouseVoid;
+                }
+            },
+            {
+                name: 'Spiral — rotating around center',
+                chars: ' .·:;~+=*<>^/%#&@',
+                value: (x, y, t, mouse, s) => {
+                    const nx = x / s.cols - 0.5, ny = y / s.rows - 0.5;
+                    const r = Math.sqrt(nx * nx + ny * ny);
+                    const a = Math.atan2(ny, nx);
+                    const dxm = (nx + 0.5) - mouse.x, dym = (ny + 0.5) - mouse.y;
+                    const mouseInfluence = Math.max(0, 1 - Math.sqrt(dxm * dxm + dym * dym) / 0.3) * 0.25;
+                    const f1 = Math.sin(a * 4 + r * 10 - t * 1.2);
+                    const f2 = Math.cos(r * 8 - t * 0.8) * 0.5;
+                    return (f1 + f2 + 1.2) / 2.5 + mouseInfluence;
+                }
+            },
+            {
+                name: 'Diagonal stripes',
+                chars: ' /-\\|=+*#',
+                value: (x, y, t, mouse, s) => {
+                    const nx = x / s.cols, ny = y / s.rows;
+                    const dx = nx - mouse.x, dy = ny - mouse.y;
+                    const mouseInfluence = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / 0.35) * 0.3;
+                    const f1 = Math.sin((nx + ny) * 8 - t * 1.5);
+                    const f2 = Math.cos((nx - ny) * 5 + t * 0.8) * 0.4;
+                    return (f1 + f2 + 1.2) / 2.5 + mouseInfluence;
+                }
+            },
+            {
+                name: 'Minimal — sparse dots',
+                chars: '  ··•',
+                value: (x, y, t, mouse, s) => {
+                    const nx = x / s.cols, ny = y / s.rows;
+                    const dx = nx - mouse.x, dy = ny - mouse.y;
+                    const mouseInfluence = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / 0.3) * 0.4;
+                    const f1 = Math.sin(nx * 5 + t * 0.4) * Math.cos(ny * 4 - t * 0.3);
+                    const f2 = Math.sin((nx + ny) * 3 - t * 0.5) * 0.4;
+                    return (f1 + f2 + 1.2) / 2.8 + mouseInfluence;
+                }
+            },
+            {
+                name: 'Punctuation drift',
+                chars: ' .,;:\'"~*^`',
+                value: (x, y, t, mouse, s) => {
+                    const nx = x / s.cols, ny = y / s.rows;
+                    const dx = nx - mouse.x, dy = ny - mouse.y;
+                    const mouseInfluence = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / 0.4) * 0.3;
+                    const f1 = Math.sin(nx * 2 + t * 0.3) * Math.cos(ny * 1.5 - t * 0.2);
+                    const f2 = Math.sin((nx + ny * 0.5) * 3 - t * 0.6) * 0.5;
+                    const drift = Math.sin(ny * 4 + t * 0.4) * 0.3;
+                    return (f1 + f2 + drift + 1.5) / 3.0 + mouseInfluence;
+                }
+            },
+            {
+                name: 'Ripple — waves emit from mouse',
+                chars: ' .·:;~+=*<>^/%#&@',
+                value: (x, y, t, mouse, s) => {
+                    const nx = x / s.cols, ny = y / s.rows;
+                    const dx = nx - mouse.x, dy = ny - mouse.y;
+                    const mouseDist = Math.sqrt(dx * dx + dy * dy);
+                    const ripple = Math.sin(mouseDist * 25 - t * 3) * Math.exp(-mouseDist * 3) * 0.8;
+                    const f1 = Math.sin(nx * 2.5 + t * 0.4) * Math.cos(ny * 2 - t * 0.3) * 0.3;
+                    return (f1 + 0.8) / 1.6 + ripple;
+                }
+            },
+            {
+                name: 'Chaotic — fast turbulence',
+                chars: ' .·:;~+=*<>^/%#&@',
+                value: (x, y, t, mouse, s) => {
+                    const nx = x / s.cols, ny = y / s.rows;
+                    const dx = nx - mouse.x, dy = ny - mouse.y;
+                    const mouseInfluence = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / 0.3) * 0.3;
+                    const f1 = Math.sin(nx * 6 + t * 2.2) * Math.cos(ny * 5 - t * 1.8);
+                    const f2 = Math.sin((nx + ny) * 4 - t * 2.5) * 0.5;
+                    const f3 = Math.cos(nx * 3 - ny * 5 + t * 2) * 0.4;
+                    const f4 = Math.sin((nx * ny) * 20 + t * 3) * 0.3;
+                    return (f1 + f2 + f3 + f4 + 1.5) / 3.2 + mouseInfluence;
+                }
+            },
+        ];
+
+        const charW = 7.5;
+        const charH = 12;
+        const grid = document.getElementById('grid');
+
+        variations.forEach((v, i) => {
+            const wrap = document.createElement('div');
+            wrap.className = 'variation';
+            wrap.innerHTML = `
+                <div class="label">
+                    <span class="num">${i + 1}</span>
+                    <span class="name">${v.name}</span>
+                </div>
+                <div class="ascii-box"></div>
+            `;
+            grid.appendChild(wrap);
+            const box = wrap.querySelector('.ascii-box');
+            startAnimation(box, v);
+        });
+
+        function startAnimation(container, variation) {
+            const canvas = document.createElement('canvas');
+            container.appendChild(canvas);
+            const ctx = canvas.getContext('2d');
+            const chars = variation.chars.split('');
+
+            const state = { cols: 0, rows: 0 };
+            const bleed = [];
+            let t = 0;
+            const mouse = { x: 0.5, y: 0.5 };
+            const smoothMouse = { x: 0.5, y: 0.5 };
+
+            function sizeCanvas() {
+                const dpr = window.devicePixelRatio || 1;
+                const w = container.clientWidth;
+                const h = container.clientHeight;
+                state.cols = Math.floor(w / charW);
+                state.rows = Math.floor(h / charH);
+                const displayW = state.cols * charW;
+                const displayH = state.rows * charH;
+                canvas.width = displayW * dpr;
+                canvas.height = displayH * dpr;
+                canvas.style.width = displayW + 'px';
+                canvas.style.height = displayH + 'px';
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                ctx.font = '11px Courier New';
+                ctx.textBaseline = 'top';
+                bleed.length = 0;
+                for (let i = 0; i < state.cols * state.rows; i++) {
+                    bleed.push(Math.random() * 0.12 - 0.06);
+                }
+            }
+
+            container.addEventListener('mousemove', (e) => {
+                const r = canvas.getBoundingClientRect();
+                mouse.x = (e.clientX - r.left) / r.width;
+                mouse.y = (e.clientY - r.top) / r.height;
+            });
+
+            sizeCanvas();
+
+            function render() {
+                t += 0.003;
+                smoothMouse.x += (mouse.x - smoothMouse.x) * 0.03;
+                smoothMouse.y += (mouse.y - smoothMouse.y) * 0.03;
+
+                ctx.fillStyle = '#111111';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                for (let y = 0; y < state.rows; y++) {
+                    for (let x = 0; x < state.cols; x++) {
+                        let val = variation.value(x, y, t, smoothMouse, state);
+                        val += bleed[y * state.cols + x];
+                        const clamped = Math.max(0, Math.min(1, val));
+                        const ci = Math.floor(clamped * (chars.length - 1));
+                        const alpha = 0.08 + clamped * 0.9;
+                        const shade = Math.floor(100 + clamped * 155);
+                        ctx.fillStyle = `rgba(${shade},${shade},${shade},${alpha})`;
+                        ctx.fillText(chars[ci], x * charW, y * charH);
+                    }
+                }
+                requestAnimationFrame(render);
+            }
+            render();
+
+            window.addEventListener('resize', sizeCanvas);
+        }
+    </script>
+</body>
+
+</html>
